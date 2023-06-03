@@ -25,8 +25,7 @@
 
       modules = [
         {
-          # Home Manager needs a bit of information about you and the paths it should
-          # manage.
+          # Home-manager user and home path
           home.username = "skylab";
           home.homeDirectory = "/home/skylab";
 
@@ -41,41 +40,41 @@
 
           # The home.packages option allows you to install Nix packages into your
           # environment.
-          home.packages = [
+          home.packages = with pkgs; [
             # Adds custom packages to the environment
-            pkgs.alejandra # Nix formatter
-            pkgs.bakoma_ttf # Latex fonts
-            pkgs.bat # Modern cat
-            pkgs.corefonts # Microsoft corefonts
-            pkgs.direnv # Directory specific environments
-            pkgs.docker # Container manager
-            pkgs.exa # Modern ls
-            pkgs.fzf # Fuzzy finder
-            pkgs.gcc # GNU C compiler
-            pkgs.git # Version control
-            pkgs.git-crypt # Encrypt git files
-            pkgs.helix # Editor
-            pkgs.hyfetch # Neofetch fork
-            pkgs.libcaca # Image-to-text utilities
-            pkgs.maple-mono-NF # Editor font
-            pkgs.neovim # Editor
-            pkgs.nil # Nix LSP
-            pkgs.nix-direnv # Direnv integration with nix
-            pkgs.nodePackages.bash-language-server # Bash LSP
-            pkgs.ranger # CLI file manager
-            pkgs.rclone # File sync utility
-            pkgs.ripgrep # Modern grep
-            pkgs.scanmem # Running process memory editor
-            pkgs.starship # Shell-agnostic customizable prompt
-            pkgs.tealdeer # Tldr man pages
-            pkgs.ttyper # Terminal monkeytype
-            pkgs.unicode-paracode # Unicode search tool
-            pkgs.vscode # Editor
-            pkgs.wl-clipboard # Wayland clipboard tool
-            pkgs.x11docker # GUI docker apps tool
-            pkgs.zathura # Pdf viewer with vi bindings
-            pkgs.zellij # Modern tmux
-            pkgs.zoxide # Cd with directory caching
+            alejandra # Nix formatter
+            bakoma_ttf # Latex fonts
+            bat # Modern cat
+            corefonts # Microsoft corefonts
+            direnv # Directory specific environments
+            docker # Container manager
+            exa # Modern ls
+            fzf # Fuzzy finder
+            gcc # GNU C compiler
+            git # Version control
+            git-crypt # Encrypt git files
+            helix # Editor
+            hyfetch # Neofetch fork
+            libcaca # Image-to-text utilities
+            maple-mono-NF # Editor font
+            neovim # Editor
+            nil # Nix LSP
+            nix-direnv # Direnv integration with nix
+            nodePackages.bash-language-server # Bash LSP
+            ranger # CLI file manager
+            rclone # File sync utility
+            ripgrep # Modern grep
+            scanmem # Running process memory editor
+            starship # Shell-agnostic customizable prompt
+            tealdeer # Tldr man pages
+            ttyper # Terminal monkeytype
+            unicode-paracode # Unicode search tool
+            vscode # Editor
+            wl-clipboard # Wayland clipboard tool
+            x11docker # GUI docker apps tool
+            zathura # Pdf viewer with vi bindings
+            zellij # Modern tmux
+            zoxide # Cd with directory caching
 
             # # It is sometimes useful to fine-tune packages, for example, by applying
             # # overrides. You can do that directly here, just don't forget the
@@ -83,12 +82,13 @@
             # # fonts?
             # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
 
-            # # You can also create simple shell scripts directly inside your
-            # # configuration. For example, this adds a command 'my-hello' to your
-            # # environment:
-            # (pkgs.writeShellScriptBin "my-hello" ''
-            #   echo "Hello, ${config.home.username}!"
-            # '')
+            # Simple shell scripts in the environment
+            (writeShellScriptBin "update-home-manager" ''
+              DIR=$(pwd)
+              cd ~/.config/home-manager
+              nix flake update && home-manager switch
+              cd $DIR
+            '')
           ];
 
           # Home Manager is pretty good at managing dotfiles. The primary way to manage
