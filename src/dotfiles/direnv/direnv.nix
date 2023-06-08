@@ -1,4 +1,4 @@
-{
+{ ... }: {
   # Direnv setup
   enable = true;
   nix-direnv.enable = true;
