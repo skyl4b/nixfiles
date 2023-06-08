@@ -1,17 +1,24 @@
 { pkgs, ... }:
 
 let
-  # List dotfiles, filtering out files that don't end with ".nix"
-  dotfiles = builtins.filter (file: pkgs.lib.hasSuffix ".nix" file)
-    (map (file: toString file)
-      (pkgs.lib.filesystem.listFilesRecursive ./dotfiles));
+  # Dotfiles loader
+  dotfiles = builtins.readDir ./dotfiles;
 
-  # Import each program's configuration and convert it
-  # to a single map
-  configs = builtins.listToAttrs (builtins.map (file: {
-    name = pkgs.lib.removeSuffix ".nix" (baseNameOf file);
-    value = import file { inherit pkgs; };
-  }) dotfiles);
+  # Filter to config paths inside directories or ".nix" files
+  configPaths = builtins.mapAttrs (name: type:
+    if type == "directory" then
+      ./. + "/dotfiles/${name}/config.nix"
+    else if pkgs.lib.hasSuffix ".nix" name then
+      ./. + "/dotfiles/${name}"
+    else
+      null) dotfiles;
+
+  # Import each program's configuration into a map
+  configs = builtins.listToAttrs (builtins.map (config: {
+    name = pkgs.lib.removeSuffix ".nix" (baseNameOf config);
+    value = import configPaths.${config} { inherit pkgs; };
+  }) (builtins.filter (config: configPaths.${config} != null)
+    (builtins.attrNames configPaths)));
 in configs // {
   # Extra configs
 
