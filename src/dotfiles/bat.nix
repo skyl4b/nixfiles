@@ -3,6 +3,7 @@
 
   # Set bat config
   config = { theme = "Catppuccin-mocha"; };
+
   # Add themes
   themes = {
     Catppuccin-mocha = builtins.readFile (pkgs.fetchFromGitHub {
