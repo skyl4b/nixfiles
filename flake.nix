@@ -81,6 +81,7 @@
               ttyper # Terminal monkeytype
               unicode-paracode # Unicode search tool
               vscode # Editor
+              w3m # Terminal web browser
               wl-clipboard # Wayland clipboard tool
               x11docker # GUI docker apps tool
               zathura # Pdf viewer with vi bindings
