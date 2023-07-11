@@ -14,7 +14,6 @@ end
 
 -- For example, changing the color scheme:
 config.color_scheme = 'catppuccin-mocha'
--- config.color_scheme = 'Ubuntu'
 config.foreground_text_hsb = {  -- Multiplying factors
   hue = 1.0,
   saturation = 1.0,
@@ -36,9 +35,11 @@ config.enable_tab_bar = false
 config.window_decorations = "RESIZE"
 
 -- Set webgpu front_end
--- config.front_end = "WebGpu"
-config.front_end = "Software" -- Disable GPU rendering with nix
+config.front_end = "WebGpu"
+-- config.front_end = "Software" -- Disable GPU rendering with nix
+
+-- Dont hide mouse
+config.hide_mouse_cursor_when_typing = false
 
 -- and finally, return the configuration to wezterm
 return config
-
