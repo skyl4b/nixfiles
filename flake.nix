@@ -7,15 +7,20 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    bat-theme = {
+      url = "github:catppuccin/bat";
+      flake = false;
+    };
   };
 
-  outputs = { nixpkgs, home-manager,... }:
+  outputs = { nixpkgs, home-manager, bat-theme, ... }:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
       };
+      extras = { inherit bat-theme; };
       home-manager-path = "~/.config/home-manager";
       username = "skylab";
     in {
@@ -150,7 +155,7 @@
             fonts.fontconfig.enable = true;
 
             # Program configuration in the environment
-            programs = import src/programs.nix { inherit pkgs; };
+            programs = import src/programs.nix { inherit pkgs; inherit extras; };
           }];
         };
     };
