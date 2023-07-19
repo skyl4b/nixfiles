@@ -22,7 +22,6 @@
         #   args = ["/dev/stdin" "-o" "/dev/stdout"];
         # }
         language-server.command = "typst-lsp";
-        soft-wrap.enable = true;
         auto-pairs = {
           "(" = ")";
           "{" = "}";
@@ -63,8 +62,10 @@
       shell = [ "bash" "-l" "-c" ];
       cursor-shape.insert = "bar";
       indent-guides.render = true;
+      soft-wrap.enable = true;
     };
 
+    keys.normal.V = "select_mode";
     keys.insert.j.k = "normal_mode";
   };
 }
