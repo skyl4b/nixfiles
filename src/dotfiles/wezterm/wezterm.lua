@@ -41,5 +41,8 @@ config.front_end = "WebGpu"
 -- Dont hide mouse
 config.hide_mouse_cursor_when_typing = false
 
+-- Set kitty keyboard protocol
+config.enable_kitty_keyboard = true
+
 -- and finally, return the configuration to wezterm
 return config
