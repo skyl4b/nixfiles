@@ -39,6 +39,26 @@
       }
 
       { name = "rust"; }
+
+      {
+        name = "latex";
+        indent = {
+          tab-width = 2;
+          unit = "  ";
+        };
+        formatter = {
+          command = "latexindent -l main.tex -o main_f.tex";
+          args = [ "-s" "-l" "-g" "/dev/null" "-m" "–GCString" "-" ];
+        };
+      }
+
+      {
+        name = "bibtex";
+        indent = {
+          tab-width = 2;
+          unit = "  ";
+        };
+      }
     ];
 
     grammar = [{

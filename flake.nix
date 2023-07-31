@@ -8,19 +8,27 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     bat-theme = {
-      url = "github:catppuccin/bat";
+      url =
+        "https://raw.githubusercontent.com/catppuccin/bat/master/Catppuccin-mocha.tmTheme";
+      flake = false;
+    };
+    nnn = {
+      url = "github:jarun/nnn";
       flake = false;
     };
   };
 
-  outputs = { nixpkgs, home-manager, bat-theme, ... }:
+  outputs = { nixpkgs, home-manager, bat-theme, nnn, ... }:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
       };
-      extras = { inherit bat-theme; };
+      extras = {
+        inherit bat-theme;
+        nnn-plugins = nnn + "/plugins";
+      };
       home-manager-path = "~/.config/home-manager";
       username = "skylab";
     in {
@@ -155,7 +163,10 @@
             fonts.fontconfig.enable = true;
 
             # Program configuration in the environment
-            programs = import src/programs.nix { inherit pkgs; inherit extras; };
+            programs = import src/programs.nix {
+              inherit pkgs;
+              inherit extras;
+            };
           }];
         };
     };
