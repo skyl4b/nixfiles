@@ -1,4 +1,4 @@
-{ pkgs, extras, ... }:
+{ inputs }:
 
 let
   # Dotfiles loader
@@ -8,18 +8,15 @@ let
   configPaths = builtins.mapAttrs (name: type:
     if type == "directory" then
       ./. + "/dotfiles/${name}/config.nix"
-    else if pkgs.lib.hasSuffix ".nix" name then
+    else if inputs.pkgs.lib.hasSuffix ".nix" name then
       ./. + "/dotfiles/${name}"
     else
       null) dotfiles;
 
   # Import each program's configuration into a map
   configs = builtins.listToAttrs (builtins.map (config: {
-    name = pkgs.lib.removeSuffix ".nix" (baseNameOf config);
-    value = import configPaths.${config} {
-      inherit pkgs;
-      inherit extras;
-    };
+    name = inputs.pkgs.lib.removeSuffix ".nix" (baseNameOf config);
+    value = import configPaths.${config} { inherit inputs; };
   }) (builtins.filter (config: configPaths.${config} != null)
     (builtins.attrNames configPaths)));
 in configs // {

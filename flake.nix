@@ -16,17 +16,21 @@
       url = "github:jarun/nnn";
       flake = false;
     };
+    helix-git = {
+      url = "github:helix-editor/helix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { nixpkgs, home-manager, bat-theme, nnn, ... }:
+  outputs = base-inputs@{ nixpkgs, home-manager, nnn, ... }:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
       };
-      extras = {
-        inherit bat-theme;
+      inputs = base-inputs // {
+        inherit pkgs;
         nnn-plugins = nnn + "/plugins";
       };
       home-manager-path = "~/.config/home-manager";
@@ -55,12 +59,18 @@
               # environment.
               packages = with pkgs; [
                 # Adds custom packages to the environment
-                (aspellWithDicts # Spell checking
-                  (ds: with ds; [ de en en-computers en-science fr pt_BR ]))
+                # (aspellWithDicts # Spell checking
+                #   (ds: with ds; [ de en en-computers en-science fr pt_BR ]))
+                hunspell
+                hunspellDicts.en_US-large
+                hunspellDicts.de_DE
+                hunspellDicts.fr-moderne
+                hunspellDicts.pt_BR
                 (hiPrio
                   gcc) # GNU C compiler, priority to prevent a collision with clang
                 bakoma_ttf # Latex fonts
                 bat # Modern cat
+                cachix # Nix binary caching
                 clang # LLVM C compiler
                 corefonts # Microsoft corefonts
                 coreutils # Basic GNU utilities
@@ -75,19 +85,39 @@
                 git # Version control
                 git-crypt # Encrypt git files
                 gnuplot # CLI plotting tool
-                helix # Editor
-                hyfetch # Neofetch fork
+                # helix # Editor
+                # hyfetch # Neofetch fork
                 lazydocker # Docker TUI
                 libcaca # Image-to-text utilities
                 libertine # Linux libertine fonts
                 maple-mono-NF # Editor font
                 neovim # Editor
                 nerdfonts # Fonts with symbols
-                nil # Nix LSP
                 nix-direnv # Direnv integration with nix
+
+                nodePackages.bash-language-server # Bash LSP
+                nodePackages.dockerfile-language-server-nodejs # Dockerfile LSP
+                nodePackages.vscode-langservers-extracted # HTML/CSS/JSON/ESLint LSPs
+                marksman # Markdown LSP
+                ltex-ls # Spell-checking LSP
+                nil # Nix LSP
                 nixfmt # Nix code formatter
-                nodejs # Javascript for LSPs
-                ranger # CLI file manager
+                (python3.withPackages (ps:
+                  with ps; [
+                    python-lsp-server # Python LSP
+                    python-lsp-ruff # Python formatter
+                    python-lsp-black # Python linter integration
+                    pyls-isort # Python import formatter
+                  ]))
+                ruff # Python linter
+                taplo # TOML LSP
+                nodePackages.yaml-language-server # YAML LSP
+                clang-tools # C tools, includes LSP
+                texlab # Latex / Bibtex LSP
+                lldb # C / Rust Debugging
+                typst-lsp # Typst LSP
+
+                # ranger # CLI file manager
                 rclone # File sync utility
                 ripgrep # Modern grep
                 scanmem # Running process memory editor
@@ -148,7 +178,8 @@
               # if you don't want to manage your shell through Home Manager.
               sessionVariables = {
                 HOME_MANAGER_PATH = home-manager-path;
-                # EDITOR = "emacs";
+                EDITOR = "hx";
+                VISUAL = "hx";
               };
 
               # Custom directories added to PATH in the environment
@@ -163,10 +194,7 @@
             fonts.fontconfig.enable = true;
 
             # Program configuration in the environment
-            programs = import src/programs.nix {
-              inherit pkgs;
-              inherit extras;
-            };
+            programs = import src/programs.nix { inherit inputs; };
           }];
         };
     };

@@ -1,9 +1,5 @@
-{ pkgs, ... }: {
+{ ... }: {
   enable = true;
-
-  # Don't install hyfetch here, only configure it
-  package = pkgs.runCommandLocal "no-hyfetch" { } "mkdir $out";
-  # I prefer to have all packages in a single list
 
   # Set hyfetch config
   settings = {
@@ -17,6 +13,6 @@
     lightness = 0.65;
     mode = "rgb";
     preset = "rainbow";
-    pride_month_disable = true; # Not reproducible with it enabled :(
+    pride_month_disable = true; # Build is not reproducible with it enabled :(
   };
 }

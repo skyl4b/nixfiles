@@ -1,9 +1,62 @@
-{ ... }: {
+{ inputs }: {
   # Helix setup
   enable = true;
 
+  # Set helix git package
+  package = inputs.helix-git.packages.${inputs.pkgs.system}.default;
+
   # Language specific configuration
   languages = {
+    # LSPs
+    language-server = {
+      rust-analyzer = {
+        check.command = "clippy";
+        cargo.features = "all";
+      };
+
+      typst-lsp.command = "typst-lsp";
+
+      ltex = {
+        command = "ltex-ls";
+        args = [ "--log-file=/dev/null" ];
+        config.ltex = {
+          enabled = true;
+          language = "en-US";
+          ltex-ls.logLevel = "warning";
+          additionalRules = {
+            enablePickyRules = true;
+            motherTongue = "pt-BR";
+          };
+        };
+      };
+
+      texlab.config.texlab = {
+        build = {
+          executable = "latexmk";
+          args = [
+            "-cd"
+            "-shell-escape"
+            "-pdf"
+            "-interaction=nonstopmode"
+            "-synctex=1"
+            "-auxdir=out"
+            "-outdir=out"
+            "%f"
+          ];
+          auxDirectory = "out";
+          logDirectory = "out";
+          forwardSearchAfter = true;
+          onSave = true;
+        };
+        chktex.onEdit = true;
+        forwardSearch = {
+          executable = "zathura";
+          args = [ "--synctex-forward" "%l:1:%f" "%p" ];
+        };
+      };
+    };
+
+    # Languages
     language = [
       {
         name = "typst";
@@ -21,7 +74,7 @@
         #   command = "typst-fmt";
         #   args = ["/dev/stdin" "-o" "/dev/stdout"];
         # }
-        language-server.command = "typst-lsp";
+        language-servers = [ "typst-lsp" ];
         auto-pairs = {
           "(" = ")";
           "{" = "}";
@@ -47,9 +100,10 @@
           unit = "  ";
         };
         formatter = {
-          command = "latexindent -l main.tex -o main_f.tex";
-          args = [ "-s" "-l" "-g" "/dev/null" "-m" "–GCString" "-" ];
+          command = "latexindent";
+          args = [ "-l" "-g" "/dev/null" "-m" "-" ];
         };
+        language-servers = [ "texlab" "ltex" ];
       }
 
       {
@@ -61,31 +115,51 @@
       }
     ];
 
+    # Grammars
     grammar = [{
       name = "typst";
       source.path = "/home/skylab/.config/helix/tree-sitter-typst";
     }];
-
-    language-server.rust-analyzer = {
-      check.command = "clippy";
-      cargo.features = "all";
-    };
   };
 
   settings = {
     theme = "catppuccin_mocha";
 
     editor = {
-      line-number = "relative";
-      cursorline = true;
       bufferline = "multiple";
-      shell = [ "bash" "-l" "-c" ];
+      color-modes = true;
       cursor-shape.insert = "bar";
+      cursorline = true;
       indent-guides.render = true;
+      line-number = "relative";
+      lsp = {
+        display-inlay-hints = true;
+        display-messages = true;
+      };
+      shell = [ "bash" "-l" "-c" ];
       soft-wrap.enable = true;
     };
 
-    keys.normal.V = "select_mode";
-    keys.insert.j.k = "normal_mode";
+    keys.normal = {
+      V = "select_mode";
+      C-h = "move_char_left";
+      C-l = "move_char_right";
+      C-s = [ "save_selection" ":w" ];
+      Z.Z = ":wq";
+
+      # Jumplist manipulation
+      "'" = {
+        a = [ "save_selection" ];
+        n = [ "jump_forward" ];
+        p = [ "jump_backward" ];
+        j = [ "jumplist_picker" ];
+      };
+    };
+    keys.insert = {
+      j.k = "normal_mode";
+      C-h = "move_char_left";
+      C-l = "move_char_right";
+      C-s = [ "save_selection" ":w" ];
+    };
   };
 }
