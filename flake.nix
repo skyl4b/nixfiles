@@ -160,7 +160,7 @@
                     cd $DIR
                   '')
                   (writeShellScriptBin "update" ''
-                    flakpak update
+                    flatpak update
                     home-manager-update
                   '')
                 ];
