@@ -21,8 +21,12 @@
         args = [ "--log-file=/dev/null" ];
         config.ltex = {
           enabled = true;
+          completionEnabled = true;
           language = "en-US";
-          ltex-ls.logLevel = "warning";
+          ltex-ls = {
+            path = "ltex-ls";
+            logLevel = "warning";
+          };
           additionalRules = {
             enablePickyRules = true;
             motherTongue = "pt-BR";
@@ -45,6 +49,7 @@
           ];
           auxDirectory = "out";
           logDirectory = "out";
+          pdfDirectory = "out";
           forwardSearchAfter = true;
           onSave = true;
         };
@@ -134,7 +139,7 @@
       line-number = "relative";
       lsp = {
         display-inlay-hints = true;
-        display-messages = true;
+        display-messages = false;
       };
       shell = [ "bash" "-l" "-c" ];
       soft-wrap.enable = true;
