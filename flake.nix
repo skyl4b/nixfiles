@@ -27,16 +27,21 @@
     };
   };
 
-  outputs = base-inputs@{ nixpkgs, home-manager, agenix, nnn, ... }:
+  outputs = base-inputs@{ nixpkgs, home-manager, ... }:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
+        overlays = [
+          (final: prev: {
+            agenix = base-inputs.agenix.packages.${system}.default;
+          })
+        ];
       };
       inputs = base-inputs // {
         inherit pkgs;
-        nnn-plugins = nnn + "/plugins";
+        nnn-plugins = base-inputs.nnn + "/plugins";
       };
       home-manager-path = "~/.config/home-manager";
       username = "skylab";
@@ -46,7 +51,7 @@
           inherit pkgs;
 
           modules = [
-            agenix.homeManagerModules.default
+            base-inputs.agenix.homeManagerModules.default
             {
               home = {
                 # Home-manager user and home path
@@ -69,7 +74,7 @@
                   # Adds custom packages to the environment
                   # (aspellWithDicts # Spell checking
                   #   (ds: with ds; [ de en en-computers en-science fr pt_BR ]))
-                  agenix.packages.${system}.default
+                  agenix
                   hunspell
                   hunspellDicts.en_US-large
                   hunspellDicts.de_DE
