@@ -27,7 +27,7 @@
     };
   };
 
-  outputs = base-inputs@{ nixpkgs, home-manager, nnn, agenix, ... }:
+  outputs = base-inputs@{ nixpkgs, home-manager, agenix, nnn, ... }:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
@@ -69,7 +69,7 @@
                   # Adds custom packages to the environment
                   # (aspellWithDicts # Spell checking
                   #   (ds: with ds; [ de en en-computers en-science fr pt_BR ]))
-                  agenix.packages.x86_64-linux.default
+                  agenix.packages.${system}.default
                   hunspell
                   hunspellDicts.en_US-large
                   hunspellDicts.de_DE
