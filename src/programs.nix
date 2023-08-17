@@ -9,9 +9,4 @@ let
     name = inputs.pkgs.lib.removeSuffix ".nix" (baseNameOf program);
     value = import ./dotfiles/${program} { inherit inputs; };
   }) (builtins.attrNames dotfiles));
-in configs // {
-  # Extra configs
-
-  # Let Home Manager install and manage itself
-  home-manager.enable = true;
-}
+in configs
