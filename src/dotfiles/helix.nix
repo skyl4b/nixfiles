@@ -151,6 +151,7 @@
       C-l = "move_char_right";
       C-s = [ "save_selection" ":w" ];
       Z.Z = ":wq";
+      "#" = "toggle_comments";
 
       # Jumplist manipulation
       "'" = {
