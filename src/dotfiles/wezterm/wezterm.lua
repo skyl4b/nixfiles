@@ -20,12 +20,15 @@ config.foreground_text_hsb = {  -- Multiplying factors
   brightness = 1.0,
 }
 
+-- Set background
+config.window_background_opacity = 0.90;
+
 -- Set font
 config.font = wezterm.font 'Maple Mono NF'
 config.font_size = 12.0
 config.freetype_load_target = "Light"
 
--- Never prompt confirmation
+-- Never prompt confirmation for closing
 config.window_close_confirmation = 'NeverPrompt'
 
 -- Set no tabs
