@@ -128,7 +128,7 @@
   };
 
   settings = {
-    theme = "catppuccin_mocha";
+    theme = "catppuccin_transparent";
 
     editor = {
       bufferline = "multiple";
@@ -167,5 +167,11 @@
       C-l = "move_char_right";
       C-s = [ "save_selection" ":w" ];
     };
+  };
+
+  # Custom theme
+  themes.catppuccin_transparent = {
+    inherits = "catppuccin_mocha";
+    "ui.background" = { };
   };
 }
