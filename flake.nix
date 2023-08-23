@@ -35,7 +35,7 @@
         config.allowUnfree = true;
         overlays = [
           (final: prev: {
-            agenix = base-inputs.agenix.packages.${system}.default;
+            agenix = base-inputs.agenix.packages.${prev.system}.default;
           })
         ];
       };
