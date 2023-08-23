@@ -30,14 +30,11 @@
   outputs = base-inputs@{ nixpkgs, home-manager, ... }:
     let
       system = "x86_64-linux";
+      utils = import ./src/utils.nix { inputs = base-inputs; };
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
-        overlays = [
-          (final: prev: {
-            agenix = base-inputs.agenix.packages.${prev.system}.default;
-          })
-        ];
+        overlays = builtins.attrValues (utils.importDir ./src/overlays);
       };
       inputs = base-inputs // {
         inherit pkgs;
