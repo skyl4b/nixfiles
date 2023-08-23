@@ -213,7 +213,7 @@
           fonts.fontconfig.enable = true;
 
           # Program configuration in the environment
-          programs = import ./src/programs.nix { inherit inputs; };
+          programs = import ./src/dotfiles { inherit inputs; };
         }];
       };
     };
