@@ -25,6 +25,10 @@
       url = "github:helix-editor/helix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    copilot-lsp-src = {
+      url = "github:github/copilot.vim";
+      flake = false;
+    };
   };
 
   outputs = base-inputs@{ nixpkgs, home-manager, ... }:
@@ -72,6 +76,7 @@
               # (aspellWithDicts # Spell checking
               #   (ds: with ds; [ de en en-computers en-science fr pt_BR ]))
               agenix
+              copilot-lsp
               hunspell
               hunspellDicts.en_US-large
               hunspellDicts.de_DE

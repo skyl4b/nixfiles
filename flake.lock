@@ -36,6 +36,22 @@
         "url": "https://raw.githubusercontent.com/catppuccin/bat/master/Catppuccin-mocha.tmTheme"
       }
     },
+    "copilot-lsp-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1692642729,
+        "narHash": "sha256-nW0e4q8wjjXWUxE8Gu8j/LDLCV6SToq59CWysEG1/oo=",
+        "owner": "github",
+        "repo": "copilot.vim",
+        "rev": "172955782814a49fbebca2d1a2ccce2059103329",
+        "type": "github"
+      },
+      "original": {
+        "owner": "github",
+        "repo": "copilot.vim",
+        "type": "github"
+      }
+    },
     "crane": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -167,11 +183,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1692638711,
-        "narHash": "sha256-J0LgSFgJVGCC1+j5R2QndadWI1oumusg6hCtYAzLID4=",
+        "lastModified": 1692734709,
+        "narHash": "sha256-SCFnyHCyYjwEmgUsHDDuU0TsbVMKeU1vwkR+r7uS2Rg=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "91a22f76cd1716f9d0149e8a5c68424bb691de15",
+        "rev": "b85ed9dcbf187b909ef7964774f8847d554fab3b",
         "type": "github"
       },
       "original": {
@@ -201,6 +217,7 @@
       "inputs": {
         "agenix": "agenix",
         "bat-theme": "bat-theme",
+        "copilot-lsp-src": "copilot-lsp-src",
         "helix-git": "helix-git",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
