@@ -1,4 +1,4 @@
-{ inputs }:
+inputs:
 
 final: prev: {
   copilot-lsp = import ../packages/copilot-lsp.nix {

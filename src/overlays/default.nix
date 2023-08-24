@@ -1,4 +1,4 @@
 args:
 
 let utils = import ../utils.nix args;
-in utils.importDir ./.
+in builtins.attrValues (utils.importDir ./.)

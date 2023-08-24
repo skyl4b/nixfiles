@@ -1,8 +1,8 @@
-{ inputs }: {
+{ pkgs, inputs, ... }: {
   enable = true;
 
   # Enable nnn nerd icons
-  package = inputs.pkgs.nnn.override ({ withNerdIcons = true; });
+  package = pkgs.nnn.override ({ withNerdIcons = true; });
 
   bookmarks = {
     d = "~/Documents";
@@ -12,5 +12,5 @@
     v = "~/Videos";
   };
 
-  plugins.src = inputs.nnn-plugins;
+  plugins.src = inputs.nnn + "/plugins";
 }

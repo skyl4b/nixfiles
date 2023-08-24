@@ -1,9 +1,9 @@
-{ inputs }: {
+{ pkgs, inputs, ... }: {
   # Helix setup
   enable = true;
 
   # Set helix git package
-  package = inputs.helix-git.packages.${inputs.pkgs.system}.default;
+  package = inputs.helix-git.packages.${pkgs.system}.default;
 
   # Language specific configuration
   languages = {

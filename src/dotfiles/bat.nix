@@ -1,4 +1,4 @@
-{ inputs }: {
+{ pkgs, inputs, ... }: {
   enable = true;
 
   # Set bat config
@@ -8,10 +8,5 @@
   themes = { Catppuccin-mocha = builtins.readFile inputs.bat-theme; };
 
   # Add extra useful tools
-  extraPackages = with inputs.pkgs.bat-extras; [
-    batdiff
-    batman
-    batgrep
-    batwatch
-  ];
+  extraPackages = with pkgs.bat-extras; [ batdiff batman batgrep batwatch ];
 }

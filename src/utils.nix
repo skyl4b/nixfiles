@@ -1,4 +1,4 @@
-{ inputs }:
+args:
 
 with builtins; rec {
   take = n: lst:
@@ -20,6 +20,6 @@ with builtins; rec {
   importDir = dir:
     listToAttrs (map (file: {
       name = removeSuffix ".nix" (baseNameOf file);
-      value = import (dir + "/${file}") { inherit inputs; };
+      value = import (dir + "/${file}") args;
     }) (filterDefault (readDir dir)));
 }

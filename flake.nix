@@ -31,25 +31,20 @@
     };
   };
 
-  outputs = base-inputs@{ nixpkgs, home-manager, ... }:
+  outputs = inputs@{ nixpkgs, home-manager, ... }:
     let
       system = "x86_64-linux";
-      utils = import ./src/utils.nix { inputs = base-inputs; };
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
-        overlays = builtins.attrValues (utils.importDir ./src/overlays);
-      };
-      inputs = base-inputs // {
-        inherit pkgs;
-        nnn-plugins = base-inputs.nnn + "/plugins";
+        overlays = import ./src/overlays inputs;
       };
       home-manager-path = "~/.config/home-manager";
       username = "skylab";
       hc = config:
         home-manager.lib.homeManagerConfiguration (config // {
           inherit pkgs;
-          modules = [ base-inputs.agenix.homeManagerModules.default ]
+          modules = [ inputs.agenix.homeManagerModules.default ]
             ++ config.modules;
         });
     in {
@@ -215,7 +210,10 @@
           fonts.fontconfig.enable = true;
 
           # Program configuration in the environment
-          programs = import ./src/dotfiles { inherit inputs; };
+          programs = import ./src/dotfiles {
+            inherit pkgs;
+            inherit inputs;
+          };
         }];
       };
     };
