@@ -170,7 +170,10 @@
       C-l = "move_char_right";
       C-s = [ "save_selection" ":w" ];
     };
-    keys.select.x = [ "extend_line" ];
+    keys.select = {
+      x = [ "extend_line" ];
+      ";" = [ "collapse_selection" "normal_mode" ];
+    };
   };
 
   # Custom theme
