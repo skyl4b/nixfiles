@@ -146,7 +146,7 @@
     };
 
     keys.normal = {
-      V = "select_mode";
+      V = [ "extend_to_line_bounds" "select_mode" ];
       C-h = "move_char_left";
       C-l = "move_char_right";
       C-s = [ "save_selection" ":w" ];
