@@ -153,6 +153,9 @@
       Z.Z = ":wq";
       "#" = "toggle_comments";
 
+      # Force empty line single selection
+      x = [ "extend_to_line_bounds" "select_mode" ];
+
       # Jumplist manipulation
       "'" = {
         a = [ "save_selection" ];
@@ -167,6 +170,7 @@
       C-l = "move_char_right";
       C-s = [ "save_selection" ":w" ];
     };
+    keys.select.x = [ "extend_line" ];
   };
 
   # Custom theme
