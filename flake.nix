@@ -71,7 +71,6 @@
               # (aspellWithDicts # Spell checking
               #   (ds: with ds; [ de en en-computers en-science fr pt_BR ]))
               agenix
-              copilot-lsp
               hunspell
               hunspellDicts.en_US-large
               hunspellDicts.de_DE
@@ -109,7 +108,7 @@
 
               nodePackages.bash-language-server # Bash LSP
               nodePackages.dockerfile-language-server-nodejs # Dockerfile LSP
-              nodePackages.vscode-langservers-extracted # HTML/CSS/JSON/ESLint LSPs
+              nodePackages.vscode-langservers-extracted # HTML / CSS / JSON / ESLint LSPs
               marksman # Markdown LSP
               ltex-ls # Spell-checking LSP
               nil # Nix LSP
