@@ -6,15 +6,8 @@
   userEmail = "eduardo.farinati@ufrgs.br";
 
   # Git aliases
-  aliases = {
-    root = "rev-parse --show-toplevel";
-  };
+  aliases = { };
 
   # Globally ignored paths
-  ignores = [
-    "*.swp"
-    ".bin"
-    ".envrc"
-    ".direnv"
-  ];
+  ignores = [ "*.swp" ".bin" ".envrc" ".direnv" ];
 }
