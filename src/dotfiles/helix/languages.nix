@@ -56,6 +56,17 @@
   # Languages
   language = [
     {
+      name = "bash";
+      indent = {
+        tab-width = 4;
+        unit = "    ";
+      };
+      formatter = {
+        command = "shfmt";
+        args = [ "-i" "4" ];
+      };
+    }
+    {
       name = "typst";
       scope = "source.typst";
       injection-regex = "^typ(st)?$";
@@ -110,11 +121,37 @@
         unit = "  ";
       };
     }
+    {
+      name = "modelica";
+      scope = "source.mo";
+      file-types = [ "mo" ];
+      injection-regex = "modelica";
+      comment-token = "//";
+      roots = [ ];
+      indent = {
+        tab-width = 2;
+        unit = "  ";
+      };
+      # Remove trailing space with git
+      formatter = {
+        command = "git";
+        args = [ "stripspace" ];
+      };
+    }
   ];
 
   # Grammars
-  grammar = [{
-    name = "typst";
-    source.path = "/home/skylab/.config/helix/tree-sitter-typst";
-  }];
+  grammar = [
+    {
+      name = "typst";
+      source.path = "/home/skylab/.config/helix/tree-sitter-typst";
+    }
+    {
+      name = "modelica";
+      source = {
+        git = "https://github.com/OpenModelica/tree-sitter-modelica";
+        rev = "84e97c7c6ea057aca86d9707bcac4cacb6ea90b6";
+      };
+    }
+  ];
 }
