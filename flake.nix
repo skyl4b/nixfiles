@@ -22,7 +22,7 @@
       flake = false;
     };
     helix-git = {
-      url = "github:helix-editor/helix";
+      url = "github:skyl4b/helix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     copilot-lsp-src = {
@@ -106,6 +106,7 @@
               nerdfonts # Fonts with symbols
               nix-direnv # Direnv integration with nix
 
+              copilot-lsp
               nodePackages.bash-language-server # Bash LSP
               nodePackages.dockerfile-language-server-nodejs # Dockerfile LSP
               nodePackages.vscode-langservers-extracted # HTML / CSS / JSON / ESLint LSPs
