@@ -138,6 +138,7 @@
               shfmt # Shell formatter
               starship # Shell-agnostic customizable prompt
               tealdeer # Tldr man pages
+              thefuck # Corrects the last shell command
               ttyper # Terminal monkeytype
               unicode-paracode # Unicode search tool
               vscode # Editor
