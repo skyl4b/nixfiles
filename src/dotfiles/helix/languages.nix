@@ -68,21 +68,11 @@
     }
     {
       name = "typst";
-      scope = "source.typst";
-      injection-regex = "^typ(st)?$";
-      file-types = [ "typ" ];
-      comment-token = "//";
-      indent = {
-        tab-width = 2;
-        unit = "  ";
-      };
-      roots = [ ];
       # Disabled until some update, broken
       # formatter = { 
       #   command = "typst-fmt";
       #   args = ["/dev/stdin" "-o" "/dev/stdout"];
       # }
-      language-servers = [ "typst-lsp" ];
       auto-pairs = {
         "(" = ")";
         "{" = "}";
