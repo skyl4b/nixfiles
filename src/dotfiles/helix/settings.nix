@@ -2,6 +2,7 @@
   theme = "catppuccin_transparent";
 
   editor = {
+    auto-format = false;
     bufferline = "multiple";
     color-modes = true;
     cursor-shape.insert = "bar";
@@ -12,6 +13,7 @@
       display-inlay-hints = true;
       display-messages = false;
     };
+    file-picker.hidden = false;
     shell = [ "bash" "-l" "-c" ];
     soft-wrap.enable = true;
   };
