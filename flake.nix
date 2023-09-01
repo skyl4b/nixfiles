@@ -81,6 +81,7 @@
               bakoma_ttf # Latex fonts
               bat # Modern cat
               cachix # Nix binary caching
+              cheat # Interactive CLI cheatsheets
               clang # LLVM C compiler
               corefonts # Microsoft corefonts
               coreutils # Basic GNU utilities
@@ -98,6 +99,7 @@
               gnuplot # CLI plotting tool
               # helix # Editor
               # hyfetch # Neofetch fork
+              httpie # Modern HTTP CLI client
               lazydocker # Docker TUI
               languagetool # Spell-checking tool
               libcaca # Image-to-text utilities
@@ -107,7 +109,7 @@
               nerdfonts # Fonts with symbols
               nix-direnv # Direnv integration with nix
 
-              copilot-lsp
+              copilot-lsp # Custom copilot LSP
               nodePackages.bash-language-server # Bash LSP
               nodePackages.dockerfile-language-server-nodejs # Dockerfile LSP
               nodePackages.vscode-langservers-extracted # HTML / CSS / JSON / ESLint LSPs
