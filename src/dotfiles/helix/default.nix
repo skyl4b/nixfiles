@@ -6,7 +6,7 @@
   package = inputs.helix-git.packages.${pkgs.system}.default;
 
   # Language specific configuration
-  languages = import ./languages.nix;
+  languages = import ./languages.nix inputs.helix-git;
 
   # General settings
   settings = import ./settings.nix;

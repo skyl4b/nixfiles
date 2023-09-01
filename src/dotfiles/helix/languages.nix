@@ -1,12 +1,27 @@
-{
+helix-git:
+
+let
+  defaultLanguages = (builtins.fromTOML
+    (builtins.readFile (helix-git + "/languages.toml"))).language;
+
+  languagesLsps = builtins.map ({ name, language-servers, ... }: {
+    inherit name;
+    inherit language-servers;
+  }) (builtins.filter (language: builtins.hasAttr "language-servers" language)
+    defaultLanguages);
+
+  languagesWithCopilot = builtins.map ({ name, language-servers }: {
+    inherit name;
+    language-servers = language-servers ++ [ "copilot" ];
+  }) languagesLsps;
+
+in {
   # LSPs
   language-server = {
     rust-analyzer = {
       check.command = "clippy";
       cargo.features = "all";
     };
-
-    typst-lsp.command = "typst-lsp";
 
     ltex = {
       command = "ltex-ls";
@@ -51,10 +66,15 @@
         args = [ "--synctex-forward" "%l:1:%f" "%p" ];
       };
     };
+
+    copilot = {
+      command = "copilot";
+      args = [ "--stdio" ];
+    };
   };
 
   # Languages
-  language = [
+  language = languagesWithCopilot ++ [
     {
       name = "bash";
       indent = {
@@ -101,7 +121,7 @@
         command = "latexindent";
         args = [ "-l" "-g" "/dev/null" "-m" "-" ];
       };
-      language-servers = [ "texlab" "ltex" ];
+      language-servers = [ "texlab" "ltex" "copilot" ];
     }
 
     {
