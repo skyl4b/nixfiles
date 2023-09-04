@@ -42,6 +42,7 @@
     C-h = "move_char_left";
     C-l = "move_char_right";
     C-s = [ "save_selection" ":w" ];
+    ret = [ "insert_newline" "commit_undo_checkpoint" ];
   };
   keys.select = {
     x = [ "extend_line" ];
