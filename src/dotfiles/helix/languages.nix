@@ -153,10 +153,6 @@ in {
   # Grammars
   grammar = [
     {
-      name = "typst";
-      source.path = "/home/skylab/.config/helix/tree-sitter-typst";
-    }
-    {
       name = "modelica";
       source = {
         git = "https://github.com/OpenModelica/tree-sitter-modelica";
