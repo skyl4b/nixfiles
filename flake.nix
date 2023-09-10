@@ -89,7 +89,6 @@
               docker # Container manager
               emacs-all-the-icons-fonts # Emacs icons
               emacs29-pgtk # Editor
-              exa # Modern ls
               fd # Modern find
               fzf # Fuzzy finder
               gh # Github CLI tool
