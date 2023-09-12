@@ -8,6 +8,7 @@
     cursor-shape.insert = "bar";
     cursorline = true;
     indent-guides.render = true;
+    insert-final-newline = true;
     line-number = "relative";
     lsp = {
       display-inlay-hints = true;
