@@ -87,6 +87,7 @@
               coreutils # Basic GNU utilities
               direnv # Directory specific environments
               docker # Container manager
+              exercism # Programming languages learning
               emacs-all-the-icons-fonts # Emacs icons
               emacs29-pgtk # Editor
               fd # Modern find
