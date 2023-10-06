@@ -113,6 +113,7 @@
               nodePackages.bash-language-server # Bash LSP
               nodePackages.dockerfile-language-server-nodejs # Dockerfile LSP
               nodePackages.vscode-langservers-extracted # HTML / CSS / JSON / ESLint LSPs
+              nodePackages.prettier # JS / TS / HTML / JSON / YAML code formatter
               marksman # Markdown LSP
               ltex-ls # Spell-checking LSP
               nil # Nix LSP

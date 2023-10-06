@@ -148,16 +148,21 @@ in {
         args = [ "stripspace" ];
       };
     }
-  ];
-
-  # Grammars
-  grammar = [
     {
-      name = "modelica";
-      source = {
-        git = "https://github.com/OpenModelica/tree-sitter-modelica";
-        rev = "84e97c7c6ea057aca86d9707bcac4cacb6ea90b6";
+      name = "yaml";
+      formatter = {
+        command = "prettier";
+        args = [ "--parser" "yaml" ];
       };
     }
   ];
+
+  # Grammars
+  grammar = [{
+    name = "modelica";
+    source = {
+      git = "https://github.com/OpenModelica/tree-sitter-modelica";
+      rev = "84e97c7c6ea057aca86d9707bcac4cacb6ea90b6";
+    };
+  }];
 }
