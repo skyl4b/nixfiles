@@ -14,6 +14,7 @@
       display-inlay-hints = true;
       display-messages = false;
     };
+    true-color = true;
     file-picker.hidden = false;
     shell = [ "bash" "-l" "-c" ];
     soft-wrap.enable = true;
