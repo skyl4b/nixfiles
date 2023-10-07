@@ -13,8 +13,7 @@
       inputs.home-manager.follows = "home-manager";
     };
     bat-theme = {
-      url =
-        "https://raw.githubusercontent.com/catppuccin/bat/master/Catppuccin-mocha.tmTheme";
+      url = "github:catppuccin/bat";
       flake = false;
     };
     nnn = {
