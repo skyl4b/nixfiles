@@ -40,6 +40,22 @@
         "type": "github"
       }
     },
+    "bottom-theme": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1672359880,
+        "narHash": "sha256-VaHX2I/Gn82wJWzybpWNqU3dPi3206xItOlt0iF6VVQ=",
+        "owner": "catppuccin",
+        "repo": "bottom",
+        "rev": "c0efe9025f62f618a407999d89b04a231ba99c92",
+        "type": "github"
+      },
+      "original": {
+        "owner": "catppuccin",
+        "repo": "bottom",
+        "type": "github"
+      }
+    },
     "copilot-lsp-src": {
       "flake": false,
       "locked": {
@@ -221,6 +237,7 @@
       "inputs": {
         "agenix": "agenix",
         "bat-theme": "bat-theme",
+        "bottom-theme": "bottom-theme",
         "copilot-lsp-src": "copilot-lsp-src",
         "helix-git": "helix-git",
         "home-manager": "home-manager",

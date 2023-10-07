@@ -28,6 +28,10 @@
       url = "github:github/copilot.vim";
       flake = false;
     };
+    bottom-theme = {
+      url = "github:catppuccin/bottom";
+      flake = false;
+    };
   };
 
   outputs = inputs@{ nixpkgs, home-manager, ... }:
