@@ -124,9 +124,10 @@
               (python3.withPackages (ps:
                 with ps; [
                   python-lsp-server # Python LSP
-                  python-lsp-ruff # Python formatter
-                  python-lsp-black # Python linter integration
-                  pyls-isort # Python import formatter
+                  python-lsp-ruff # Python linter and import sorter
+                  python-lsp-black # Python formatter
+                  pylsp-mypy # Python type checking
+                  jedi # Python autocompletion
                 ]))
               ruff # Python linter
               taplo # TOML LSP

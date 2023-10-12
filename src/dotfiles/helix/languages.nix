@@ -71,6 +71,64 @@ in {
       command = "copilot";
       args = [ "--stdio" ];
     };
+
+    pylsp.config.pylsp = {
+      plugins = {
+        jedi.auto_import_modules = [ ];
+        jedi_completion = {
+          enabled = true;
+          fuzzy = true;
+          eager = true;
+        };
+        black = {
+          enabled = true;
+          line_length = 79;
+          preview = true;
+        };
+        ruff = {
+          enabled = true;
+          line-length = 79;
+          extendSelect = [
+            "I"
+            "N"
+            "UP"
+            "YTT"
+            "ASYNC"
+            "B"
+            "A"
+            "C4"
+            "T10"
+            "DJ"
+            "EXE"
+            "FA"
+            "ISC"
+            "ICN001"
+            "RET"
+            "SLOT"
+            "SIM"
+            "TCH"
+            "INT"
+            "ARG"
+            "PTH"
+            "TD"
+            "PD"
+            "PL"
+            "FLY"
+            "NPY"
+            "AIR"
+            "PERF"
+            "FURB"
+            "RUF"
+          ];
+          format = [ "I" ];
+        };
+        pylsp_mypy = {
+          enabled = true;
+          live_mode = true;
+          overrides = [ "--ignore-missing-imports" true ];
+        };
+      };
+    };
   };
 
   # Languages
