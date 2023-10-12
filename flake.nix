@@ -12,6 +12,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
+    nixgl = {
+      url = "github:guibou/nixGL";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     bat-theme = {
       url = "github:catppuccin/bat";
       flake = false;
@@ -40,7 +44,7 @@
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
-        overlays = import ./src/overlays inputs;
+        overlays = (import ./src/overlays inputs) ++ [ inputs.nixgl.overlay ];
       };
       home-manager-path = "~/.config/home-manager";
       username = "skylab";
@@ -156,6 +160,10 @@
               zathura # Pdf viewer with vi bindings
               zellij # Modern tmux
               zoxide # Cd with directory caching
+
+              # Mesa drivers wrapper for GUI apps on non
+              # NixOS hosts
+              nixgl.nixGLIntel
 
               # # It is sometimes useful to fine-tune packages, for example, by applying
               # # overrides. You can do that directly here, just don't forget the
