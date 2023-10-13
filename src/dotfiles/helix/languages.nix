@@ -74,11 +74,14 @@ in {
 
     pylsp.config.pylsp = {
       plugins = {
-        jedi.auto_import_modules = [ ];
+        jedi = {
+          auto_import_modules = [ ];
+          # environment = "pythonpath"; Set this in each environment
+        };
         jedi_completion = {
-          enabled = true;
           fuzzy = true;
-          eager = true;
+          include_class_objects = true;
+          include_function_objects = true;
         };
         black = {
           enabled = true;
@@ -126,6 +129,7 @@ in {
           enabled = true;
           live_mode = true;
           overrides = [ "--ignore-missing-imports" true ];
+          # Set "--python-executable" "pythonpath" in each environment
         };
       };
     };
