@@ -99,7 +99,6 @@
               emacs29-pgtk # Editor
               fd # Modern find
               fzf # Fuzzy finder
-              gh # Github CLI tool
               git # Version control
               git-crypt # Encrypt git files
               git-extras # Useful extra commands for git
