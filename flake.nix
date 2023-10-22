@@ -131,6 +131,7 @@
                   python-lsp-black # Python formatter
                   pylsp-mypy # Python type checking
                   jedi # Python autocompletion
+                  debugpy # Python debug adapter protocol
                 ]))
               ruff # Python linter
               taplo # TOML LSP

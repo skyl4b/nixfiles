@@ -217,6 +217,32 @@ in {
         args = [ "--parser" "yaml" ];
       };
     }
+    {
+      name = "markdown";
+      language-servers = [ "marksman" "ltex" "copilot" ];
+    }
+    {
+      name = "python";
+      debugger = {
+        name = "debugpy";
+        transport = "stdio";
+        command = "python";
+        args = [ "-m" "debugpy.adapter" ];
+        templates = [{
+          name = "source";
+          request = "launch";
+          completion = [{
+            name = "entrypoint";
+            completion = "filename";
+            default = ".";
+          }];
+          args = {
+            mode = "debug";
+            program = "{0}";
+          };
+        }];
+      };
+    }
   ];
 
   # Grammars
