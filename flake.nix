@@ -106,6 +106,7 @@
               # helix # Editor
               # hyfetch # Neofetch fork
               httpie # Modern HTTP CLI client
+              inetutils # Networking tools
               lazydocker # Docker TUI
               languagetool # Spell-checking tool
               libcaca # Image-to-text utilities
@@ -132,6 +133,7 @@
                   pylsp-mypy # Python type checking
                   jedi # Python autocompletion
                   debugpy # Python debug adapter protocol
+                  pudb # Python console debugger (Supports remote)
                 ]))
               ruff # Python linter
               taplo # TOML LSP
