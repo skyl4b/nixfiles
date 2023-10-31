@@ -8,18 +8,34 @@ with builtins; rec {
     let
       suffixLen = stringLength suffix;
       len = stringLength str;
-    in if suffixLen <= len && suffix
-    == substring (len - suffixLen) suffixLen str then
+    in
+    if suffixLen <= len && suffix
+      == substring (len - suffixLen) suffixLen str then
       substring 0 (len - suffixLen) str
     else
       str;
 
-  filterDefault = files:
-    builtins.filter (file: file != "default.nix") (attrNames files);
+  # Filters default.nix from a set
+  filterDefault = files: filter (file: file != "default.nix") (attrNames files);
 
   importDir = dir:
-    listToAttrs (map (file: {
-      name = removeSuffix ".nix" (baseNameOf file);
-      value = import (dir + "/${file}") args;
-    }) (filterDefault (readDir dir)));
+    let
+      rawEntries = readDir dir;
+      validEntries = filter
+        (entry:
+          let
+            fullPath = "${dir}/${entry}";
+            # Filters files with the .nix extension or directories
+            # with default.nix files
+          in
+          ((rawEntries.${entry} != "directory" && (removeSuffix ".nix" entry)
+            != entry) || pathExists "${fullPath}/default.nix"))
+        (filterDefault rawEntries);
+    in
+    listToAttrs (map
+      (entry: {
+        name = removeSuffix ".nix" (baseNameOf entry);
+        value = import ("${dir}/${entry}") args;
+      })
+      validEntries);
 }
