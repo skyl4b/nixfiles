@@ -44,7 +44,10 @@
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
-        overlays = (import ./src/overlays inputs) ++ [ inputs.nixgl.overlay ];
+        overlays = (import ./src/overlays {
+          inherit inputs;
+          path = ./src/overlays;
+        }) ++ [ inputs.nixgl.overlay ];
       };
       home-manager-path = "~/.config/home-manager";
       username = "skylab";
@@ -54,7 +57,8 @@
           modules = [ inputs.agenix.homeManagerModules.default ]
             ++ config.modules;
         });
-    in {
+    in
+    {
       homeConfigurations.${username} = hc {
         modules = [{
           home = {
@@ -112,7 +116,6 @@
               libcaca # Image-to-text utilities
               libertine # Linux libertine fonts
               maple-mono-NF # Editor font
-              neovim # Editor
               nerdfonts # Fonts with symbols
               nix-direnv # Direnv integration with nix
 
@@ -121,10 +124,12 @@
               nodePackages.dockerfile-language-server-nodejs # Dockerfile LSP
               nodePackages.vscode-langservers-extracted # HTML / CSS / JSON / ESLint LSPs
               nodePackages.prettier # JS / TS / HTML / JSON / YAML code formatter
+              nodePackages.pyright # Another Python LSP
               marksman # Markdown LSP
               ltex-ls # Spell-checking LSP
               nil # Nix LSP
-              nixfmt # Nix code formatter
+              statix # Nix linter
+              nixpkgs-fmt # Nix formatter
               (python3.withPackages (ps:
                 with ps; [
                   python-lsp-server # Python LSP
@@ -133,7 +138,7 @@
                   pylsp-mypy # Python type checking
                   jedi # Python autocompletion
                   debugpy # Python debug adapter protocol
-                  pudb # Python console debugger (Supports remote)
+                  ruff-lsp # Ruff LSP without plugin
                 ]))
               ruff # Python linter
               taplo # TOML LSP
@@ -142,14 +147,20 @@
               texlab # Latex / Bibtex LSP
               lldb # C / Rust Debugging
               typst-lsp # Typst LSP
+              lua-language-server # Lua LSP
+              stylua # Lua formatter
+              luajitPackages.luacheck # Lua linter
+
 
               # ranger # CLI file manager
               rclone # File sync utility
-              ripgrep # Modern grep
               scanmem # Running process memory editor
               shellcheck # Shell checker
               shfmt # Shell formatter
+              bashdb # Bash debugger
               starship # Shell-agnostic customizable prompt
+              hyperfine # CLI benchmarking tool
+              parallel-full # CLI parallelize command tool
               tealdeer # Tldr man pages
               thefuck # Corrects the last shell command
               ttyper # Terminal monkeytype
@@ -166,6 +177,24 @@
               # Mesa drivers wrapper for GUI apps on non
               # NixOS hosts
               nixgl.nixGLIntel
+
+              # Wrap my own neovim
+              # Copy the standard runtime to $XDG_DATA_HOME/nvim/runtime
+              # and alias VIMRUNTIME to it
+              ((pkgs.neovim-unwrapped.overrideAttrs {
+                pname = "my-neovim";
+                # shellHook = "";
+                postInstall = ''
+                  rm -rf $out/share/nvim/
+                  rm -rf $out/lib/nvim/parser
+                '';
+              }).override {
+                treesitter-parsers = { };
+                nodejs = true;
+                python3 = true;
+              })
+              tree-sitter
+              nodejs
 
               # # It is sometimes useful to fine-tune packages, for example, by applying
               # # overrides. You can do that directly here, just don't forget the
@@ -211,10 +240,10 @@
             #  /etc/profiles/per-user/skylab/etc/profile.d/hm-session-vars.sh
             #
             # if you don't want to manage your shell through Home Manager.
-            sessionVariables = {
+            sessionVariables = rec {
               HOME_MANAGER_PATH = home-manager-path;
-              EDITOR = "hx";
-              VISUAL = "hx";
+              EDITOR = "nvim";
+              VISUAL = EDITOR;
             };
 
             # Custom directories added to PATH in the environment
