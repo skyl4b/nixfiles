@@ -150,7 +150,8 @@
               lua-language-server # Lua LSP
               stylua # Lua formatter
               luajitPackages.luacheck # Lua linter
-
+              docker-compose-language-service # Docker compose LSP
+              hadolint # Dockerfile linter
 
               # ranger # CLI file manager
               rclone # File sync utility
