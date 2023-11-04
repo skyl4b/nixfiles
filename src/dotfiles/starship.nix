@@ -212,7 +212,7 @@
     };
 
     nix_shell = {
-      symbol = "";
+      symbol = " ";
       format = "[$symbol$state]($style) ";
       impure_msg = "i";
       pure_msg = "p";
