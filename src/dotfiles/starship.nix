@@ -5,7 +5,7 @@
   settings = {
     # Set user-defined pallete
     palette = "catppuccin_mocha";
-    
+
     # Wait 10 milliseconds for starship to check files
     scan_timeout = 10;
 
@@ -24,7 +24,7 @@
     };
 
     bun = {
-      format = 	"[$symbol($version )]($style)";
+      format = "[$symbol($version )]($style)";
     };
 
     c = {
@@ -68,7 +68,7 @@
 
     dart = {
       symbol = " ";
-      format = 	"[$symbol($version )]($style)";
+      format = "[$symbol($version )]($style)";
     };
 
     deno = {
@@ -76,7 +76,7 @@
     };
 
     directory = {
-      read_only = " ";
+      read_only = " 󰌾";
       truncation_length = 3;
       # Catppuccin "lavender"
       style = "bold lavender";
@@ -148,7 +148,7 @@
     };
 
     haxe = {
-      symbol = "⌘ ";
+      symbol = " ";
       format = "[$symbol($version )]($style)";
     };
 
@@ -156,8 +156,15 @@
       format = "[$symbol($version )]($style)";
     };
 
+    hg_branch = {
+      symbol = " ";
+      format = "[$symbol$branch(:$topic)]($style) ";
+      disabled = false;
+    };
+
     hostname = {
       ssh_only = false;
+      ssh_symbol = " ";
       format = "[$ssh_symbol$hostname]($style):";
     };
 
@@ -190,24 +197,18 @@
     };
 
     memory_usage = {
-      symbol = " ";
+      symbol = "󰍛 ";
       format = "$symbol [$ram( \| $swap)]($style) ";
       disabled = true;
     };
 
     meson = {
-      symbol = "喝 ";
+      symbol = "󰔷 ";
       format = "[$symbol$project]($style) ";
     };
 
-    hg_branch = {
-      symbol = " ";
-      format = "[$symbol$branch(:$topic)]($style) ";
-      disabled = false;
-    };
-
     nim = {
-      symbol = " ";
+      symbol = "󰆥 ";
       format = "[$symbol($version )]($style)";
     };
 
@@ -252,10 +253,10 @@
         EndeavourOS = " ";
         Fedora = " ";
         FreeBSD = " ";
-        Garuda = "﯑ ";
+        Garuda = "󰛓 ";
         Gentoo = " ";
-        HardenedBSD = "ﲊ ";
-        Illumos = " ";
+        HardenedBSD = "󰞌 ";
+        Illumos = "󰈸 ";
         Linux = " ";
         Mabox = " ";
         Macos = " ";
@@ -265,24 +266,24 @@
         Mint = " ";
         NetBSD = " ";
         NixOS = " ";
-        OpenBSD = " ";
+        OpenBSD = "󰈺 ";
         openSUSE = " ";
-        OracleLinux = " ";
+        OracleLinux = "󰌷 ";
         Pop = " ";
         Raspbian = " ";
         Redhat = " ";
         RedHatEnterprise = " ";
-        Redox = " ";
-        Solus = "ﴱ ";
+        Redox = "󰀘 ";
+        Solus = "󰠳 ";
         SUSE = " ";
         Ubuntu = " ";
         Unknown = " ";
-        Windows = " ";
+        Windows = "󰍲 ";
       };
     };
 
     package = {
-      symbol = " ";
+      symbol = "󰏗 ";
       format = "[$symbol$version]($style) ";
     };
 
@@ -295,8 +296,8 @@
     };
 
     pijul_channel = {
-      symbol = "🪺 ";
-      format = 	"[$symbol$channel]($style) ";
+      symbol = " ";
+      format = "[$symbol$channel]($style) ";
     };
 
     pulumi = {
@@ -313,7 +314,7 @@
     };
 
     rlang = {
-      symbol = "ﳒ ";
+      symbol = "󰟔 ";
       format = "[$symbol($version )]($style)";
     };
 
@@ -347,7 +348,7 @@
 
     swift = {
       format = "[$symbol($version )]($style)";
-      symbol = "";
+      symbol = " ";
     };
 
     terraform = {
