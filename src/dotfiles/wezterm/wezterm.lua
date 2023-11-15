@@ -21,12 +21,30 @@ config.foreground_text_hsb = { -- Multiplying factors
 }
 
 -- Set background
-config.window_background_opacity = 0.90
+config.window_background_opacity = 0.95
 
 -- Set font
-config.font = wezterm.font("CaskaydiaCove Nerd Font")
-config.font_size = 13.0
+config.font = wezterm.font_with_fallback({
+	{
+		family = "Monaspace Krypton",
+		harfbuzz_features = {
+			"ss01=1",
+			"ss02=1",
+			"ss03=1",
+			"ss04=1",
+			"ss05=1",
+			"ss06=1",
+			"ss07=1",
+			"ss08=1",
+			"calt=1",
+			"dlig=1",
+		},
+	},
+	{ family = "Symbols Nerd Font Mono", scale = 0.90 },
+})
+config.font_size = 12.0
 config.freetype_load_target = "Light"
+config.use_cap_height_to_scale_fallback_fonts = true
 
 -- Never prompt confirmation for closing
 config.window_close_confirmation = "NeverPrompt"

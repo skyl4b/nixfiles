@@ -115,8 +115,9 @@
               languagetool # Spell-checking tool
               libcaca # Image-to-text utilities
               libertine # Linux libertine fonts
-              maple-mono-NF # Editor font
-              nerdfonts # Fonts with symbols
+              maple-mono # Apple-like font
+              monaspace # Innovative font from githubnext
+              (pkgs.nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; }) # Fonts with symbols
               nix-direnv # Direnv integration with nix
 
               copilot-lsp # Custom copilot LSP
@@ -125,6 +126,7 @@
               nodePackages.vscode-langservers-extracted # HTML / CSS / JSON / ESLint LSPs
               nodePackages.prettier # JS / TS / HTML / JSON / YAML code formatter
               nodePackages.pyright # Another Python LSP
+              prettierd # Prettier as a daemon
               marksman # Markdown LSP
               ltex-ls # Spell-checking LSP
               nil # Nix LSP
@@ -152,8 +154,14 @@
               luajitPackages.luacheck # Lua linter
               docker-compose-language-service # Docker compose LSP
               hadolint # Dockerfile linter
+              ollama # Run LLMs locally
+              cargo # Rust build tool
+              rustc # Rust compiler
+              rust-analyzer-unwrapped # Rust LSP
+              clippy # Rust improved linter
 
               # ranger # CLI file manager
+              monocraft # Minecraft-like font
               rclone # File sync utility
               scanmem # Running process memory editor
               shellcheck # Shell checker
@@ -170,7 +178,7 @@
               w3m # Terminal web browser
               wl-clipboard # Wayland clipboard tool
               x11docker # GUI docker apps tool
-              xdg-ninja # Xdg cli helper
+              xdg-ninja # XDG cli helper
               zathura # Pdf viewer with vi bindings
               zellij # Modern tmux
               zoxide # Cd with directory caching
@@ -196,6 +204,7 @@
               })
               tree-sitter
               nodejs
+              deno
 
               # # It is sometimes useful to fine-tune packages, for example, by applying
               # # overrides. You can do that directly here, just don't forget the
