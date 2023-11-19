@@ -109,6 +109,7 @@
               gnuplot # CLI plotting tool
               # helix # Editor
               # hyfetch # Neofetch fork
+              libqalculate # CLI calculator
               httpie # Modern HTTP CLI client
               inetutils # Networking tools
               lazydocker # Docker TUI
