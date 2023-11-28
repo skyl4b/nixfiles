@@ -99,8 +99,7 @@
               direnv # Directory specific environments
               docker # Container manager
               exercism # Programming languages learning
-              emacs-all-the-icons-fonts # Emacs icons
-              emacs29-pgtk # Editor
+              emacs # Master of the universe editor
               fd # Modern find
               fzf # Fuzzy finder
               git # Version control
@@ -127,6 +126,7 @@
               nodePackages.vscode-langservers-extracted # HTML / CSS / JSON / ESLint LSPs
               nodePackages.prettier # JS / TS / HTML / JSON / YAML code formatter
               nodePackages.pyright # Another Python LSP
+              nodePackages.markdownlint-cli # Markdown linter
               prettierd # Prettier as a daemon
               marksman # Markdown LSP
               ltex-ls # Spell-checking LSP
@@ -142,6 +142,8 @@
                   jedi # Python autocompletion
                   debugpy # Python debug adapter protocol
                   ruff-lsp # Ruff LSP without plugin
+                  editorconfig # Editorconfig support
+                  grip # Markdown preview locally
                 ]))
               ruff # Python linter
               taplo # TOML LSP
@@ -183,6 +185,8 @@
               zathura # Pdf viewer with vi bindings
               zellij # Modern tmux
               zoxide # Cd with directory caching
+              trashy # CLI trash handler
+              grex # RegEx builder
 
               # Mesa drivers wrapper for GUI apps on non
               # NixOS hosts
