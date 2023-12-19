@@ -25,13 +25,13 @@
       flake = false;
     };
     helix-git = {
-      url = "github:skyl4b/helix";
+      url = "github:helix-editor/helix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    copilot-lsp-src = {
-      url = "github:github/copilot.vim";
-      flake = false;
-    };
+    # copilot-lsp-src = {
+    #   url = "github:github/copilot.vim";
+    #   flake = false;
+    # };
     bottom-theme = {
       url = "github:catppuccin/bottom";
       flake = false;
@@ -106,8 +106,6 @@
               git-crypt # Encrypt git files
               git-extras # Useful extra commands for git
               gnuplot # CLI plotting tool
-              # helix # Editor
-              # hyfetch # Neofetch fork
               libqalculate # CLI calculator
               httpie # Modern HTTP CLI client
               inetutils # Networking tools
@@ -120,7 +118,7 @@
               (pkgs.nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; }) # Fonts with symbols
               nix-direnv # Direnv integration with nix
 
-              copilot-lsp # Custom copilot LSP
+              # copilot-lsp # Custom copilot LSP
               nodePackages.bash-language-server # Bash LSP
               nodePackages.dockerfile-language-server-nodejs # Dockerfile LSP
               nodePackages.vscode-langservers-extracted # HTML / CSS / JSON / ESLint LSPs
@@ -133,20 +131,19 @@
               nil # Nix LSP
               statix # Nix linter
               nixpkgs-fmt # Nix formatter
-              (python3.withPackages (ps:
+              # Python interactive environment
+              (hiPrio (jupyter-all.withPackages (ps:
                 with ps; [
-                  python-lsp-server # Python LSP
-                  python-lsp-ruff # Python linter and import sorter
-                  python-lsp-black # Python formatter
-                  pylsp-mypy # Python type checking
-                  jedi # Python autocompletion
+                  jupyter-console # Better python REPL
                   debugpy # Python debug adapter protocol
                   ruff-lsp # Ruff LSP without plugin
                   editorconfig # Editorconfig support
                   grip # Markdown preview locally
-                ]))
+                  catppuccin # Pygments catppuccin theme
+                ])))
               ruff # Python linter
               taplo # TOML LSP
+              rustfmt # Rust formatter
               nodePackages.yaml-language-server # YAML LSP
               clang-tools # C tools, includes LSP
               texlab # Latex / Bibtex LSP
@@ -162,8 +159,6 @@
               rustc # Rust compiler
               rust-analyzer-unwrapped # Rust LSP
               clippy # Rust improved linter
-
-              # ranger # CLI file manager
               monocraft # Minecraft-like font
               rclone # File sync utility
               scanmem # Running process memory editor
