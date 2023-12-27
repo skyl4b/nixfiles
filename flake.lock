@@ -196,13 +196,44 @@
         "type": "github"
       }
     },
+    "nixos-hardware": {
+      "locked": {
+        "lastModified": 1703537399,
+        "narHash": "sha256-UXLtyffpCzEp3/ggsARM7VRpj84odwM4yh/clyZsz2I=",
+        "owner": "nixos",
+        "repo": "nixos-hardware",
+        "rev": "05fc10e09377a5e28c54b723da8691daaf44b0b5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "repo": "nixos-hardware",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1702830618,
-        "narHash": "sha256-lvhwIvRwhOLgzbRuYkqHy4M5cQHYs4ktL6/hyuBS6II=",
+        "lastModified": 1703200384,
+        "narHash": "sha256-q5j06XOsy0qHOarsYPfZYJPWbTbc8sryRxianlEPJN0=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "91a00709aebb3602f172a0bf47ba1ef013e34835",
+        "rev": "0b3d618173114c64ab666f557504d6982665d328",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-23.11",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgsUnstable": {
+      "locked": {
+        "lastModified": 1703255338,
+        "narHash": "sha256-Z6wfYJQKmDN9xciTwU3cOiOk+NElxdZwy/FiHctCzjU=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "6df37dc6a77654682fe9f071c62b4242b5342e04",
         "type": "github"
       },
       "original": {
@@ -236,8 +267,12 @@
         "helix-git": "helix-git",
         "home-manager": "home-manager",
         "nixgl": "nixgl",
+        "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
-        "nnn": "nnn"
+        "nixpkgsUnstable": "nixpkgsUnstable",
+        "nnn": "nnn",
+        "system76-acpi-dkms": "system76-acpi-dkms",
+        "system76-dkms": "system76-dkms"
       }
     },
     "rust-overlay": {
@@ -262,6 +297,38 @@
       "original": {
         "owner": "oxalica",
         "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "system76-acpi-dkms": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1689789919,
+        "narHash": "sha256-KqJJpD0NXuITEPn5P6guNJ6Jsa0oqbRO69ag5Ug0KJc=",
+        "owner": "pop-os",
+        "repo": "system76-acpi-dkms",
+        "rev": "03a5804847a64fd977989316ea25082e2766723e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pop-os",
+        "repo": "system76-acpi-dkms",
+        "type": "github"
+      }
+    },
+    "system76-dkms": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1684961628,
+        "narHash": "sha256-nVUtZOxI84e/cVqscFqICFVZlVPNg5xc1v0kibazdf8=",
+        "owner": "pop-os",
+        "repo": "system76-dkms",
+        "rev": "8c2ff2142c287fb15009ea5e81824a57febebff0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pop-os",
+        "repo": "system76-dkms",
         "type": "github"
       }
     },
