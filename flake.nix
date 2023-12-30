@@ -23,16 +23,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Use latest system76 drivers workaround
-    system76-dkms = {
-      url = "github:pop-os/system76-dkms";
-      flake = false;
-    };
-    system76-acpi-dkms = {
-      url = "github:pop-os/system76-acpi-dkms";
-      flake = false;
-    };
-
     # copilot-lsp-src = {
     #   url = "github:github/copilot.vim";
     #   flake = false;
@@ -57,20 +47,11 @@
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
-        overlays = [
-          (
-            final: prev: {
-              linuxPackages = prev.linuxPackages // {
-                system76 = prev.linuxPackages.system76.overrideAttrs {
-                  src = inputs.system76-dkms;
-                };
-                system76-acpi = prev.linuxPackage.system76-acpi.overrideAttrs {
-                  src = inputs.system76-acpi-dkms;
-                };
-              };
-            }
-          )
-        ];
+        overlays = (import ./src/overlays {
+          inherit inputs;
+          path = ./src/overlays;
+          #}) ++ [ inputs.nixgl.overlay ];
+        });
       };
       pkgsUnstable = import nixpkgsUnstable {
         inherit system;
@@ -95,22 +76,6 @@
         {
           system = "x86_64-linux";
           modules = [
-            ({
-              nixpkgs.overlays = [
-                (
-                  final: prev: {
-                    linuxPackages = prev.linuxPackages // {
-                      system76 = prev.linuxPackages.system76.overrideAttrs {
-                        src = inputs.system76-dkms;
-                      };
-                      system76-acpi = prev.linuxPackages.system76-acpi.overrideAttrs {
-                        src = inputs.system76-acpi-dkms;
-                      };
-                    };
-                  }
-                )
-              ];
-            })
             inputs.nixos-hardware.nixosModules.common-cpu-intel
             inputs.nixos-hardware.nixosModules.common-gpu-intel
             inputs.nixos-hardware.nixosModules.common-gpu-nvidia
@@ -121,7 +86,13 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users."${username}" = import ./home.nix { inherit pkgs; inherit pkgsUnstable; inherit username; inherit inputs; inherit home-manager-path; };
+              home-manager.users."${username}" = import ./home.nix {
+                inherit pkgs;
+                inherit pkgsUnstable;
+                inherit username;
+                inherit inputs;
+                inherit home-manager-path;
+              };
             }
           ];
         };
