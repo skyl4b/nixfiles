@@ -120,6 +120,7 @@
               zoxide # Cd with directory caching
               trashy # CLI trash handler
               grex # RegEx builder
+              gdb # GNU debugger
 
               # Mesa drivers wrapper for GUI apps on non
               # NixOS hosts
