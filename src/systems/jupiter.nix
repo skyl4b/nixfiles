@@ -9,72 +9,97 @@
   ];
 
   # Bootloader
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
-  networking.hostName = "jupiter"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
-  networking.networkmanager.enable = true;
-
-  # Set your time zone.
-  time.timeZone = "America/Sao_Paulo";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
-
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_IE.UTF-8";
-    LC_IDENTIFICATION = "en_IE.UTF-8";
-    LC_MEASUREMENT = "en_IE.UTF-8";
-    LC_MONETARY = "en_IE.UTF-8";
-    LC_NAME = "en_IE.UTF-8";
-    LC_NUMERIC = "en_IE.UTF-8";
-    LC_PAPER = "en_IE.UTF-8";
-    LC_TELEPHONE = "en_IE.UTF-8";
-    LC_TIME = "en_IE.UTF-8";
+  boot = {
+    loader.systemd-boot.enable = true;
+    loader.efi.canTouchEfiVariables = true;
   };
 
-  # Enable the X11 / Wayland windowing systems
-  services.xserver.enable = true;
+  # Networking configuration
+  networking = {
+    # Hostname
+    hostName = "jupiter";
+    # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
+    # Configure network proxy if necessary
+    # networking.proxy.default = "http://user:password@proxy:port/";
+    # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
-  # Configure keymap in X11
-  services.xserver = {
-    layout = "us";
-    xkbVariant = "intl";
+    # Enable networking
+    networkmanager.enable = true;
+  };
+
+  # Timezone settings
+  time.timeZone = "America/Sao_Paulo";
+
+  # Internationalisation configuration
+  i18n = {
+    defaultLocale = "en_US.UTF-8";
+
+    extraLocaleSettings = {
+      LC_ADDRESS = "en_IE.UTF-8";
+      LC_IDENTIFICATION = "en_IE.UTF-8";
+      LC_MEASUREMENT = "en_IE.UTF-8";
+      LC_MONETARY = "en_IE.UTF-8";
+      LC_NAME = "en_IE.UTF-8";
+      LC_NUMERIC = "en_IE.UTF-8";
+      LC_PAPER = "en_IE.UTF-8";
+      LC_TELEPHONE = "en_IE.UTF-8";
+      LC_TIME = "en_IE.UTF-8";
+    };
+  };
+
+  # Enable portals
+  xdg = {
+    portal = {
+      enable = true;
+      xdgOpenUsePortal = true;
+    };
+  };
+
+  # Setup services
+  services = {
+    xserver = {
+      # Enable the X11 / Wayland windowing systems
+      enable = true;
+
+      # Configure keymap
+      layout = "us";
+      xkbVariant = "intl";
+
+      # Enable the GNOME Desktop Environment.
+      displayManager.gdm.enable = true;
+      desktopManager.gnome.enable = true;
+    };
+
+    # Enable CUPS to print documents.
+    printing.enable = true;
+    pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+      # If you want to use JACK applications, uncomment this
+      #jack.enable = true;
+
+      # use the example session manager (no others are packaged yet so this is enabled by default,
+      # no need to redefine it in your config for now)
+      #media-session.enable = true;
+    };
+
+    # Enable flatpak
+    flatpak.enable = true;
+
+    # Enable firmware updater
+    fwupd.enable = true;
   };
 
   # Configure console keymap
   console.keyMap = "us-acentos";
 
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
-
   # Enable sound with pipewire.
   sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
-  };
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
@@ -84,7 +109,7 @@
     isNormalUser = true;
     description = "Eduardo Farinati Leite";
     extraGroups = [ "networkmanager" "wheel" "docker" "adm" ];
-    packages = with pkgs; [ ];
+    # packages = with pkgs; [ ];
   };
 
   # Allow unfree packages
@@ -93,19 +118,31 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    # Harware tools
     glxinfo
     libva-utils
     vulkan-tools
-    neovim
+    lshw
+
+    # Basic utils for editing
     git
     curl
-    lshw
+    neovim
+
+    # Browsers
     firefox
     brave
+
+    # Virtual machines software
+    virt-manager
+
+    # Gnome tools
     gnome.gnome-software
     gnome.gnome-tweaks
     gnomeExtensions.appindicator
     gnomeExtensions.dash-to-dock
+
+    # PopOs tools and fixes
     gnomeExtensions.pop-shell
     pop-launcher
     firmware-manager
@@ -114,23 +151,23 @@
   # Use wayland on enabled chromium apps
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
-  # Enable nix experimental features
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  nix.optimise.automatic = true;
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 3d";
+  # Nix package manager configuration
+  nix = {
+    # Enable nix experimental features
+    settings.experimental-features = [ "nix-command" "flakes" ];
+    optimise.automatic = true;
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 3d";
+    };
   };
 
-  # Enable docker
-  virtualisation.docker.enable = true;
-
-  # Enable flatpak
-  services.flatpak.enable = true;
-
-  # Enable firmware updater
-  services.fwupd.enable = true;
+  # Enable the NixOS virtualisation module
+  virtualisation = {
+    docker.enable = true;
+    libvirtd.enable = true;
+  };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
