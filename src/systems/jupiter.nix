@@ -5,7 +5,7 @@
 { config, pkgs, ... }: {
   imports = [
     # Include the results of the hardware scan.
-    ./hardware/addr3.nix
+    ./hardware/addw3.nix
   ];
 
   # Bootloader
