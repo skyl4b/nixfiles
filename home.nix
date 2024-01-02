@@ -121,6 +121,7 @@
               trashy # CLI trash handler
               grex # RegEx builder
               gdb # GNU debugger
+              gnumake # GNU builder
 
               # Mesa drivers wrapper for GUI apps on non
               # NixOS hosts
