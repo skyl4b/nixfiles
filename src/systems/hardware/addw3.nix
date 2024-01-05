@@ -74,6 +74,20 @@
         intelBusId = "PCI:0:2:0";
         nvidiaBusId = "PCI:1:0:0";
       };
+
+      # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
+      # See: https://github.com/NixOS/nixos-hardware/issues/348#issuecomment-997123102
+      powerManagement = {
+        enable = true;
+
+        # Fine-grained power management. Turns off GPU when not in use.
+        # Experimental and only works on modern Nvidia GPUs (Turing or newer).
+        finegrained = true;
+      };
+
+      # Ensure Nvidia GPU stays awake even during headless mode
+      # See: https://stackoverflow.com/questions/45360006/what-does-persistence-mode-actually-do-which-reduces-cuda-startup-time
+      # nvidiaPersistenced = true;
     };
 
     # Systen76 firmware and utils
@@ -81,8 +95,26 @@
     system76.power-daemon.enable = true;
   };
 
-  # Nvidia driver dependencies
-  services.xserver.videoDrivers = [ "nvidia" ];
+  services = {
+    # Power profiles (Gnome) conflicts with system76-power
+    # See: https://github.com/pop-os/system76-power/issues/299
+    power-profiles-daemon.enable = false;
+
+    # Nvidia driver dependencies
+    xserver.videoDrivers = [ "nvidia" ];
+
+    # System76 custom scheduler to prioritize low latency
+    system76-scheduler.enable = true;
+
+    # Gnome dual gpu integration
+    switcherooControl.enable = true;
+
+    # Bug gnome shell runs on discrete gpu when using wayland
+    # See: https://gitlab.gnome.org/GNOME/mutter/-/issues/2969
+    # And: https://discourse.nixos.org/t/dual-gpu-setup-nvidia-smi-shows-gnome-shell-and-doesnt-sleep/37681
+    # gnome.gnome-remote-desktop.enable = false;
+  };
+
+  # Nvidia docker dependencies
   virtualisation.docker.enableNvidia = true;
-  services.system76-scheduler.enable = true;
 }

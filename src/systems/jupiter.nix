@@ -108,7 +108,14 @@
   users.users.skylab = {
     isNormalUser = true;
     description = "Eduardo Farinati Leite";
-    extraGroups = [ "networkmanager" "wheel" "docker" "adm" ];
+    extraGroups = [
+      "wheel"
+      "networkmanager"
+      "adm"
+      "docker"
+      "kvm"
+      "libvirt"
+    ];
     # packages = with pkgs; [ ];
   };
 
@@ -123,6 +130,7 @@
     libva-utils
     vulkan-tools
     lshw
+    lm_sensors
 
     # Basic utils for editing
     git

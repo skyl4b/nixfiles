@@ -47,20 +47,20 @@
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
-        overlays = (import ./src/overlays {
+        overlays = import ./src/overlays {
           inherit inputs;
           path = ./src/overlays;
           #}) ++ [ inputs.nixgl.overlay ];
-        });
+        };
       };
       pkgsUnstable = import nixpkgsUnstable {
         inherit system;
         config.allowUnfree = true;
-        overlays = (import ./src/overlays {
+        overlays = import ./src/overlays {
           inherit inputs;
           path = ./src/overlays;
           #}) ++ [ inputs.nixgl.overlay ];
-        });
+        };
       };
       home-manager-path = "~/.config/nixfiles";
       username = "skylab";
@@ -84,14 +84,16 @@
             ./src/systems/jupiter.nix
             home-manager.nixosModules.home-manager
             {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users."${username}" = import ./home.nix {
-                inherit pkgs;
-                inherit pkgsUnstable;
-                inherit username;
-                inherit inputs;
-                inherit home-manager-path;
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                users."${username}" = import (./src/homes + "/${username}.nix") {
+                  inherit pkgs;
+                  inherit pkgsUnstable;
+                  inherit username;
+                  inherit inputs;
+                  inherit home-manager-path;
+                };
               };
             }
           ];
