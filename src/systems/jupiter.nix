@@ -114,7 +114,7 @@
       "adm"
       "docker"
       "kvm"
-      "libvirt"
+      "libvirtd"
     ];
     # packages = with pkgs; [ ];
   };
@@ -125,6 +125,9 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    # Nix tools
+    cachix
+
     # Harware tools
     glxinfo
     libva-utils
@@ -141,9 +144,6 @@
     firefox
     brave
 
-    # Virtual machines software
-    virt-manager
-
     # Gnome tools
     gnome.gnome-software
     gnome.gnome-tweaks
@@ -155,6 +155,15 @@
     pop-launcher
     firmware-manager
   ];
+
+  # Program settings
+  programs = {
+    # Virtual machine software
+    virt-manager.enable = true;
+
+    # XWayland for legacy apps
+    xwayland.enable = true;
+  };
 
   # Use wayland on enabled chromium apps
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
@@ -176,19 +185,6 @@
     docker.enable = true;
     libvirtd.enable = true;
   };
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
