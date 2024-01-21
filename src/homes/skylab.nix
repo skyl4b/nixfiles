@@ -37,7 +37,7 @@
       #direnv # Directory specific environments
       #docker # Container manager
       exercism # Programming languages learning
-      emacs # Master of the universe editor
+      emacs29-pgtk # Master of the universe editor
       fd # Modern find
       fzf # Fuzzy finder
       #git # Version control
