@@ -56,7 +56,7 @@ config.enable_tab_bar = false
 config.window_decorations = "RESIZE"
 
 -- Set webgpu front_end
-config.front_end = "WebGpu"
+-- config.front_end = "WebGpu"
 -- config.front_end = "Software" -- Disable GPU rendering with nix
 
 -- Dont hide mouse
@@ -67,6 +67,10 @@ config.enable_kitty_keyboard = true
 
 -- Disable warnings about missing glyphs
 config.warn_about_missing_glyphs = false
+
+-- HACK: Disable wayland since its broken until next update
+config.enable_wayland = false
+config.front_end = "OpenGL"
 
 -- and finally, return the configuration to wezterm
 return config
