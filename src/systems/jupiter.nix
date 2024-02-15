@@ -3,9 +3,19 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 { config, pkgs, ... }: {
+  # Include modules
   imports = [
-    # Include the results of the hardware scan.
+    # Hardware specific configuration
     ./hardware/addw3.nix
+
+    # Cachix caches
+    ./cachix
+
+    # Gnome desktop environment
+    # ./desktops/gnome.nix
+
+    # Hyprland desktop environment
+    ./desktops/hyprland.nix
   ];
 
   # Bootloader
@@ -66,24 +76,37 @@
       layout = "us";
       xkbVariant = "intl";
 
-      # Enable the GNOME Desktop Environment.
+      # Enable touchpad support
+      libinput.enable = true;
+
+      # Greeter
       displayManager.gdm.enable = true;
-      desktopManager.gnome.enable = true;
     };
+
+    # greetd = {
+    #   enable = true;
+    #   settings = {
+    #     default_session = {
+    #       command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd Hyprland";
+    #       user = "greeter";
+    #     };
+    #   };
+    # };
 
     # Enable CUPS to print documents.
     printing.enable = true;
+
+    # Setup audio with pipewire
     pipewire = {
       enable = true;
-      alsa.enable = true;
-      alsa.support32Bit = true;
-      pulse.enable = true;
-      # If you want to use JACK applications, uncomment this
-      #jack.enable = true;
 
-      # use the example session manager (no others are packaged yet so this is enabled by default,
-      # no need to redefine it in your config for now)
-      #media-session.enable = true;
+      # Audio drivers
+      alsa = {
+        enable = true;
+        support32Bit = true;
+      };
+      pulse.enable = true;
+      jack.enable = true;
     };
 
     # Enable flatpak
@@ -98,11 +121,15 @@
 
   # Enable sound with pipewire.
   sound.enable = true;
-  hardware.pulseaudio.enable = false;
-  security.rtkit.enable = true;
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
+  hardware = {
+    pulseaudio.enable = false;
+
+    # Enable bluetooth support
+    bluetooth.enable = true;
+  };
+
+  security.rtkit.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.skylab = {
@@ -115,6 +142,7 @@
       "docker"
       "kvm"
       "libvirtd"
+      "video"
     ];
     # packages = with pkgs; [ ];
   };
@@ -133,6 +161,7 @@
     libva-utils
     vulkan-tools
     lshw
+    pciutils
     lm_sensors
 
     # Basic utils for editing
@@ -149,6 +178,10 @@
     gnome.gnome-tweaks
     gnomeExtensions.appindicator
     gnomeExtensions.dash-to-dock
+
+    # Misc tools
+    xwaylandvideobridge # Fix screensharing with xwayland
+    psmisc # Extra utilities that use procfs (killall for ex.)
 
     # PopOs tools and fixes
     gnomeExtensions.pop-shell

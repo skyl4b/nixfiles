@@ -2,7 +2,7 @@
 # such as pop shell
 { pkgs, ... }: {
   # Enable the GNOME Desktop Environment
-  services.desktopManager.gnome.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
 
   # Gnome useful packages
   environment.systemPackages = with pkgs; [
