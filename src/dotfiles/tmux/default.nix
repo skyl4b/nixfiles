@@ -9,7 +9,7 @@
   clock24 = true;
 
   # Don't ask for confirmation when killing a window
-  # disableConfirmationPrompt = true;
+  disableConfirmationPrompt = true;
 
   # Vi mode
   keyMode = "vi";
@@ -46,6 +46,7 @@
         set -g @catppuccin_status_right_separator_inverse "no"
         set -g @catppuccin_status_fill "icon"
         set -g @catppuccin_status_connect_separator "no"
+        set -g @catppuccin_window_current_background "#cdd6f4"
 
         # Set the statusbar modules
         set -g @catppuccin_status_modules_right "session"
