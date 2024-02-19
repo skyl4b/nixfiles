@@ -17,8 +17,8 @@
   # Enable mouse support
   mouse = true;
 
-  # 256 color support
-  terminal = "screen-256color";
+  # True color support
+  terminal = "tmux-256color";
 
   # Set the default shell
   shell = "$SHELL";
@@ -30,7 +30,7 @@
       plugin = catppuccin;
       extraConfig = ''
         # Catppuccin flavor
-        set -g @catppuccin_flavour 'mocha'
+        set -g @catppuccin_flavour "mocha"
 
         # Style the statusbar
         set -g @catppuccin_window_left_separator ""
@@ -50,6 +50,15 @@
 
         # Set the statusbar modules
         set -g @catppuccin_status_modules_right "session"
+      '';
+    }
+
+    {
+      plugin = resurrect;
+      extraConfig = ''
+        # Tmux resurrect bindings (save and restore session)
+        set -g @resurrect-save "S"
+        set -g @resurrect-restore "R"
       '';
     }
   ];
