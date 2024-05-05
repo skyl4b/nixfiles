@@ -2,7 +2,10 @@
   # Enable "tmux", a terminal multiplexer
   enable = true;
 
-  # Start windows at one
+  # Set ctrl + space as prefix
+  prefix = "C-Space";
+
+  # Start enumerating windows at one
   baseIndex = 1;
 
   # 24 hour clock
@@ -22,6 +25,14 @@
 
   # Set the default shell
   shell = "$SHELL";
+
+  # Rather than constraining window size to the maximum size of any client 
+  # connected to the *session*, constrain window size to the maximum size of any 
+  # client connected to *that window*
+  aggressiveResize = true;
+
+  # Maximum number of lines held in window history
+  historyLimit = 10000;
 
   # Extra configuration / plugins
   extraConfig = builtins.readFile ./tmux.conf;
