@@ -15,7 +15,10 @@
       display-messages = false;
     };
     true-color = true;
-    file-picker.hidden = false;
+    file-picker = {
+      hidden = false;
+      git-ignore = false;
+    };
     shell = [ "bash" "-l" "-c" ];
     soft-wrap.enable = true;
   };
@@ -26,7 +29,6 @@
     C-l = "move_char_right";
     C-s = [ "save_selection" ":w" ];
     Z.Z = ":wq";
-    "#" = "toggle_comments";
 
     # Force empty line single selection
     x = [ "extend_to_line_bounds" "select_mode" ];
@@ -38,17 +40,29 @@
       p = [ "jump_backward" ];
       j = [ "jumplist_picker" ];
     };
+
+    # Smart tab extras
+    tab = "move_parent_node_end";
+    S-tab = "move_parent_node_start";
   };
+
   keys.insert = {
     j.k = "normal_mode";
     C-h = "move_char_left";
     C-l = "move_char_right";
     C-s = [ "save_selection" ":w" ];
     ret = [ "insert_newline" "commit_undo_checkpoint" ];
+
+    # Smart tab extras
+    S-tab = "move_parent_node_start";
   };
+
   keys.select = {
     x = [ "extend_line" ];
     ";" = [ "collapse_selection" "normal_mode" ];
-    "#" = "toggle_comments";
+
+    # Smart tab extras
+    tab = "extend_parent_node_end";
+    S-tab = "extend_parent_node_start";
   };
 }
