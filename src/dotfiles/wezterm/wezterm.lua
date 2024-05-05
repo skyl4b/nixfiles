@@ -13,7 +13,7 @@ end
 -- This is where you actually apply your config choices
 
 -- For example, changing the color scheme:
-config.color_scheme = "catppuccin-mocha"
+config.color_scheme = "Catppuccin Mocha (Gogh)"
 config.foreground_text_hsb = { -- Multiplying factors
 	hue = 1.0,
 	saturation = 1.0,
