@@ -47,6 +47,7 @@
 
   hardware = {
     cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+    intelgpu.loadInInitrd = true;
 
     # Enable openGL
     opengl = {
@@ -90,7 +91,7 @@
       # nvidiaPersistenced = true;
     };
 
-    # Systen76 firmware and utils
+    # System76 firmware and utils
     system76.enableAll = true;
     system76.power-daemon.enable = true;
   };
