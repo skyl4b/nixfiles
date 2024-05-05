@@ -156,13 +156,15 @@
     # Nix tools
     cachix
 
-    # Harware tools
+    # Hardware tools
     glxinfo
     libva-utils
     vulkan-tools
     lshw
     pciutils
     lm_sensors
+    pulseaudio # CLI tools that work with pipewire
+    psensor # Graphical sensors monitor
 
     # Basic utils for editing
     git
@@ -172,6 +174,9 @@
     # Browsers
     firefox
     brave
+
+    # XWayland tools
+    xorg.xhost
 
     # Gnome tools
     gnome.gnome-software
@@ -183,9 +188,7 @@
     xwaylandvideobridge # Fix screensharing with xwayland
     psmisc # Extra utilities that use procfs (killall for ex.)
 
-    # PopOs tools and fixes
-    gnomeExtensions.pop-shell
-    pop-launcher
+    # Firmware updater
     firmware-manager
   ];
 
@@ -223,7 +226,7 @@
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
+  networking.firewall.enable = false;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
