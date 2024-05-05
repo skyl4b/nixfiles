@@ -37,7 +37,10 @@
       #direnv # Directory specific environments
       #docker # Container manager
       exercism # Programming languages learning
-      emacs29-pgtk # Master of the universe editor
+      (emacs29.override {
+        withPgtk = true;
+        withNativeCompilation = true;
+      }) # Master of the universe editor
       fd # Modern find
       fzf # Fuzzy finder
       #git # Version control
@@ -56,13 +59,15 @@
       (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; }) # Fonts with symbols
       #nix-direnv # Direnv integration with nix
 
-      # copilot-lsp # Custom copilot LSP
       nodePackages.bash-language-server # Bash LSP
       nodePackages.dockerfile-language-server-nodejs # Dockerfile LSP
       nodePackages.vscode-langservers-extracted # HTML / CSS / JSON / ESLint LSPs
+      nodePackages.typescript-language-server # TS / JS language server
       nodePackages.prettier # JS / TS / HTML / JSON / YAML code formatter
       nodePackages.pyright # Another Python LSP
       nodePackages.markdownlint-cli # Markdown linter
+      nodePackages.live-server # A simple http server with auto reload
+      efm-langserver # Universal LSP (interacts with linters / formatters)
       prettierd # Prettier as a daemon
       marksman # Markdown LSP
       ltex-ls # Spell-checking LSP
@@ -122,6 +127,18 @@
       grex # RegEx builder
       gdb # GNU debugger
       gnumake # GNU builder
+      wget # File downloader
+      typescript # Js superset with type checks
+      bun # Fast js runtime / bundler
+      gleam # A friendly language for type-safe systems
+      erlang # Scalable real-time language (used by gleam)
+      rebar3 # Erlang build tool
+      typos # Source code spell-checking tool
+      typos-lsp # A LSP for spell-checking
+      inshellisense # IDE-style cli autocomplete
+      devcontainer # CLI to handle dev environments
+      just # Modern make
+      lemminx # XML LSP
 
       # Mesa drivers wrapper for GUI apps on non
       # NixOS hosts
