@@ -116,8 +116,14 @@
     # Media player
     vlc
 
+    # Image viewer
+    loupe
+
     # System monitor
     mission-center
+
+    # Calendar
+    libsForQt5.merkuro
 
     # Theme
     gtk3
@@ -129,6 +135,9 @@
     qt5ct
     qt6ct
     nwg-look
+
+    # Low battery notifications
+    batsignal
   ];
 
   # QT Theme / style
