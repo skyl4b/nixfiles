@@ -2,6 +2,9 @@
   # Enable "tmux", a terminal multiplexer
   enable = true;
 
+  # Theme
+  catppuccin.enable = true;
+
   # Set ctrl + space as prefix
   prefix = "C-Space";
 

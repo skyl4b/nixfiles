@@ -22,18 +22,11 @@
       url = "github:helix-editor/helix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    bottom-theme = {
-      url = "github:catppuccin/bottom";
-      flake = false;
-    };
-    bat-theme = {
-      url = "github:catppuccin/bat";
-      flake = false;
-    };
     nixos-cosmic = {
       url = "github:lilyinstarlight/nixos-cosmic";
       inputs.nixpkgs.follows = "nixpkgsUnstable";
     };
+    catppuccin.url = "github:catppuccin/nix";
   };
 
   outputs = inputs@{ nixpkgs, nixpkgsUnstable, home-manager, ... }:
@@ -71,6 +64,7 @@
         {
           system = "x86_64-linux";
           modules = [
+            inputs.catppuccin.nixosModules.catppuccin
             inputs.nixos-hardware.nixosModules.common-cpu-intel
             # inputs.nixos-hardware.nixosModules.common-gpu-intel
             inputs.nixos-hardware.nixosModules.common-gpu-nvidia

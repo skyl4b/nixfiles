@@ -1,4 +1,4 @@
-{ ... }: {
+_: {
   # Enable "eza" a modern ls replacement
   enable = true;
 

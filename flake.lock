@@ -25,35 +25,18 @@
         "type": "github"
       }
     },
-    "bat-theme": {
-      "flake": false,
+    "catppuccin": {
       "locked": {
-        "lastModified": 1714038927,
-        "narHash": "sha256-Q5B4NDrfCIK3UAMs94vdXnR42k4AXCqZz6sRn8bzmf4=",
+        "lastModified": 1715128602,
+        "narHash": "sha256-KmIgXJ5fZmYsb+QeGZcauZIX7eN7PyTJI+t2LzuSLnU=",
         "owner": "catppuccin",
-        "repo": "bat",
-        "rev": "d714cc1d358ea51bfc02550dabab693f70cccea0",
+        "repo": "nix",
+        "rev": "eaa6e281f144a5ac90510d9a07d74bf5e9a4459f",
         "type": "github"
       },
       "original": {
         "owner": "catppuccin",
-        "repo": "bat",
-        "type": "github"
-      }
-    },
-    "bottom-theme": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1672359880,
-        "narHash": "sha256-VaHX2I/Gn82wJWzybpWNqU3dPi3206xItOlt0iF6VVQ=",
-        "owner": "catppuccin",
-        "repo": "bottom",
-        "rev": "c0efe9025f62f618a407999d89b04a231ba99c92",
-        "type": "github"
-      },
-      "original": {
-        "owner": "catppuccin",
-        "repo": "bottom",
+        "repo": "nix",
         "type": "github"
       }
     },
@@ -284,8 +267,7 @@
     "root": {
       "inputs": {
         "agenix": "agenix",
-        "bat-theme": "bat-theme",
-        "bottom-theme": "bottom-theme",
+        "catppuccin": "catppuccin",
         "helix-git": "helix-git",
         "home-manager": "home-manager",
         "nixgl": "nixgl",

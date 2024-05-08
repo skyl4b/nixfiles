@@ -1,4 +1,7 @@
 { pkgs, pkgsUnstable, username, inputs, home-manager-path, ... }: {
+  imports = [
+    inputs.catppuccin.homeManagerModules.catppuccin
+  ];
   home = {
     # Home-manager user and home path
     inherit username;
@@ -212,6 +215,9 @@
     # Shell aliases in the environment
     shellAliases = [ ];
   };
+
+  # Enable XDG user directories management
+  xdg.enable = true;
 
   # Enable fontconfig for installed nix fonts,
   # so that they're automatically available to applications

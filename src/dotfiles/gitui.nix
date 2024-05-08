@@ -1,6 +1,9 @@
 _: {
-  # Enable "gituit" a blazingly fast TUI for git
+  # Enable "gitui" a blazingly fast TUI for git
   enable = true;
+
+  # Theme
+  catppuccin.enable = true;
 
   # Keybindings
   keyConfig = ''
@@ -36,7 +39,4 @@ _: {
         abort_merge: Some(( code: Char('M'), modifiers: "SHIFT")),
     )
   '';
-  # Theme
-  # theme = ''
-  # '';
 }
