@@ -22,11 +22,6 @@
       url = "github:helix-editor/helix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # copilot-lsp-src = {
-    #   url = "github:github/copilot.vim";
-    #   flake = false;
-    # };
     bottom-theme = {
       url = "github:catppuccin/bottom";
       flake = false;
@@ -35,9 +30,9 @@
       url = "github:catppuccin/bat";
       flake = false;
     };
-    nnn = {
-      url = "github:jarun/nnn";
-      flake = false;
+    nixos-cosmic = {
+      url = "github:lilyinstarlight/nixos-cosmic";
+      inputs.nixpkgs.follows = "nixpkgsUnstable";
     };
   };
 
@@ -72,7 +67,7 @@
         });
     in
     {
-      nixosConfigurations.jupiter = nixpkgs.lib.nixosSystem
+      nixosConfigurations.jupiter = nixpkgsUnstable.lib.nixosSystem
         {
           system = "x86_64-linux";
           modules = [
@@ -81,6 +76,7 @@
             inputs.nixos-hardware.nixosModules.common-gpu-nvidia
             inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
             inputs.nixos-hardware.nixosModules.system76
+            inputs.nixos-cosmic.nixosModules.default
             ./src/systems/jupiter.nix
             home-manager.nixosModules.home-manager
             {

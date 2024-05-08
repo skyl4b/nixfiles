@@ -15,7 +15,10 @@
     # ./desktops/gnome.nix
 
     # Hyprland desktop environment
-    ./desktops/hyprland.nix
+    # ./desktops/hyprland.nix
+
+    # Cosmic desktop environment
+    ./desktops/cosmic.nix
   ];
 
   # Bootloader
@@ -80,7 +83,7 @@
       libinput.enable = true;
 
       # Greeter
-      displayManager.gdm.enable = true;
+      # displayManager.gdm.enable = true;
     };
 
     # greetd = {
