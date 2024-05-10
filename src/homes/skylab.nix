@@ -1,4 +1,4 @@
-{ pkgs, pkgsUnstable, username, inputs, home-manager-path, ... }: {
+{ pkgs, username, inputs, home-manager-path, ... }: {
   imports = [
     inputs.catppuccin.homeManagerModules.catppuccin
   ];
@@ -18,7 +18,7 @@
 
     # The home.packages option allows you to install Nix packages into your
     # environment.
-    packages = with pkgsUnstable; [
+    packages = with pkgs; [
       # Adds custom packages to the environment
       # (aspellWithDicts # Spell checking
       #   (ds: with ds; [ de en en-computers en-science fr pt_BR ]))
@@ -225,7 +225,7 @@
 
   # Program configuration in the environment
   programs = import ../dotfiles {
-    pkgs = pkgsUnstable;
+    inherit pkgs;
     inherit inputs;
   };
 }

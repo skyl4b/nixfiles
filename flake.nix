@@ -2,8 +2,7 @@
   description = "Skylab's nix config files";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
-    nixpkgsUnstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -14,22 +13,18 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
-    nixgl = {
-      url = "github:guibou/nixGL";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     helix-git = {
       url = "github:helix-editor/helix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-cosmic = {
       url = "github:lilyinstarlight/nixos-cosmic";
-      inputs.nixpkgs.follows = "nixpkgsUnstable";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     catppuccin.url = "github:catppuccin/nix";
   };
 
-  outputs = inputs@{ nixpkgs, nixpkgsUnstable, home-manager, ... }:
+  outputs = inputs@{ nixpkgs, home-manager, ... }:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
@@ -38,16 +33,6 @@
         overlays = import ./src/overlays {
           inherit inputs;
           path = ./src/overlays;
-          #}) ++ [ inputs.nixgl.overlay ];
-        };
-      };
-      pkgsUnstable = import nixpkgsUnstable {
-        inherit system;
-        config.allowUnfree = true;
-        overlays = import ./src/overlays {
-          inherit inputs;
-          path = ./src/overlays;
-          #}) ++ [ inputs.nixgl.overlay ];
         };
       };
       home-manager-path = "~/.config/nixfiles";
@@ -60,7 +45,7 @@
         });
     in
     {
-      nixosConfigurations.jupiter = nixpkgsUnstable.lib.nixosSystem
+      nixosConfigurations.jupiter = nixpkgs.lib.nixosSystem
         {
           system = "x86_64-linux";
           modules = [
@@ -79,7 +64,6 @@
                 useUserPackages = true;
                 users."${username}" = import (./src/homes + "/${username}.nix") {
                   inherit pkgs;
-                  inherit pkgsUnstable;
                   inherit username;
                   inherit inputs;
                   inherit home-manager-path;
