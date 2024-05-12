@@ -76,25 +76,14 @@
       enable = true;
 
       # Configure keymap
-      layout = "us";
-      xkbVariant = "intl";
-
-      # Enable touchpad support
-      libinput.enable = true;
-
-      # Greeter
-      # displayManager.gdm.enable = true;
+      xkb = {
+        layout = "us";
+        variant = "intl";
+      };
     };
 
-    # greetd = {
-    #   enable = true;
-    #   settings = {
-    #     default_session = {
-    #       command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd Hyprland";
-    #       user = "greeter";
-    #     };
-    #   };
-    # };
+    # Enable touchpad support
+    libinput.enable = true;
 
     # Enable CUPS to print documents.
     printing.enable = true;
