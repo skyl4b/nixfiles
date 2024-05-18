@@ -151,7 +151,6 @@
       # Copy the standard runtime to $XDG_DATA_HOME/nvim/runtime
       # and alias VIMRUNTIME to it
       (neovim-unwrapped.override {
-        treesitter-parsers = { };
         nodejs = true;
         python3 = true;
       })
