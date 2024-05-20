@@ -60,7 +60,6 @@
         set -g @catppuccin_status_right_separator_inverse "no"
         set -g @catppuccin_status_fill "icon"
         set -g @catppuccin_status_connect_separator "no"
-        set -g @catppuccin_window_default_background "#1e1e2e"
         set -g @catppuccin_window_current_background "#313244"
 
         # Set the statusbar modules
