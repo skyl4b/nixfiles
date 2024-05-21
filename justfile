@@ -1,9 +1,13 @@
 #!/usr/bin/env -S just --justfile
 
+# Choose the recipe to run interactively
+default:
+    @just --choose
+
 # Update nix flake revision for every input
-flake-bump:
+update:
     nix flake update
 
 # Switch to the new NixOS configuration
-nixos-switch:
+switch:
     sudo nixos-rebuild switch
