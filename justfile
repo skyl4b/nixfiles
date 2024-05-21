@@ -1,7 +1,7 @@
 #!/usr/bin/env -S just --justfile
 
 # Choose the recipe to run interactively
-default:
+_default:
     @just --choose
 
 # Update nix flake revision for every input
