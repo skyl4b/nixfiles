@@ -27,11 +27,11 @@
     },
     "catppuccin": {
       "locked": {
-        "lastModified": 1715659881,
-        "narHash": "sha256-emodPGTXLVqlcOkqbJiOUkf5vo8WWujgzKxms1B+iBs=",
+        "lastModified": 1716276506,
+        "narHash": "sha256-OjdP5uPgdRA79vy45V0O2HdK4ztbSZ6aHcvikjjPFKU=",
         "owner": "catppuccin",
         "repo": "nix",
-        "rev": "d6344610c04af0f8e315fef45dd3b854014b119e",
+        "rev": "57e8376fdb3514fb4c4eae432e6dfa4137f1a260",
         "type": "github"
       },
       "original": {
@@ -127,11 +127,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1716241584,
-        "narHash": "sha256-4p2iq0CZ6HUfmH0F9cyzTKjW0TLcDDHJwqYUaLyDXhA=",
+        "lastModified": 1716308526,
+        "narHash": "sha256-VMJmUxR+yK28PXN7ZB98bEyw0pSOdsNxNCrc6SS9i28=",
         "owner": "helix-editor",
         "repo": "helix",
-        "rev": "5b9f5f9fdb7d1729dad6e3ded65ae639878fddd1",
+        "rev": "41dec92b0feb77719b07334b7a7f53152866e4e3",
         "type": "github"
       },
       "original": {
@@ -168,11 +168,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1716182869,
-        "narHash": "sha256-DI+F9TzEQgUhs6NamfRkFlAG6Vw0uEdcSXJOidjnnDU=",
+        "lastModified": 1716309012,
+        "narHash": "sha256-G/yn1ygK8CcCAd/Y4J0uUz9ClkMgVwyFSVHb9DbhqNs=",
         "owner": "lilyinstarlight",
         "repo": "nixos-cosmic",
-        "rev": "ad060778b0547b2fb9800c3698d71f4819472d42",
+        "rev": "9c01a06f81fdc3673c2b96575b835693ca763bad",
         "type": "github"
       },
       "original": {
