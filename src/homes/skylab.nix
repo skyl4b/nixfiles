@@ -80,7 +80,9 @@
       # Python interactive environment
       (hiPrio (jupyter-all.withPackages (ps:
         with ps; [
+          jupyter-all # Jupyter notebook environment
           jupyter-console # Better python REPL
+          jupytext # Jupyter notebook as .py scripts
           debugpy # Python debug adapter protocol
           ruff-lsp # Ruff LSP without plugin
           editorconfig # Editorconfig support
