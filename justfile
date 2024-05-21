@@ -2,7 +2,7 @@
 
 # Choose the recipe to run interactively
 _default:
-    @just --choose
+    -@just --choose
 
 # Update nix flake revision for every input
 update:
