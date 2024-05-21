@@ -142,6 +142,8 @@
       devcontainer # CLI to handle dev environments
       just # Modern make
       lemminx # XML LSP
+      neocmakelsp # CMake LSP
+      cmake-format # CMake linter / formatter
 
       # Mesa drivers wrapper for GUI apps on non
       # NixOS hosts
