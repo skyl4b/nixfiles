@@ -198,8 +198,13 @@
 
   # Nix package manager configuration
   nix = {
-    # Enable nix experimental features
-    settings.experimental-features = [ "nix-command" "flakes" ];
+    settings = {
+      # Flakes and subcommands (modern cli)
+      experimental-features = [ "nix-command" "flakes" ];
+      # Don't warn about dirty working directories.
+      # I almost always use dirty repos on shells / derivations.
+      warn-dirty = false;
+    };
     optimise.automatic = true;
     gc = {
       automatic = true;
