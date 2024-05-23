@@ -88,6 +88,7 @@
           editorconfig # Editorconfig support
           grip # Markdown preview locally
           catppuccin # Pygments catppuccin theme
+          orange3 # Data visualization tool
         ])))
       ruff # Python linter
       taplo # TOML LSP
