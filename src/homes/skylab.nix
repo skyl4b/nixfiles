@@ -152,6 +152,7 @@
       lemminx # XML LSP
       neocmakelsp # CMake LSP
       cmake-format # CMake linter / formatter
+      commitlint # Linter for commit messages
 
       # Mesa drivers wrapper for GUI apps on non
       # NixOS hosts
@@ -225,8 +226,15 @@
     shellAliases = [ ];
   };
 
-  # Enable XDG user directories management
-  xdg.enable = true;
+  # XDG user directories management
+  xdg = {
+    enable = true;
+
+    # Commitlint global configuration
+    configFile."commitlint/commitlint.config.js".text = ''
+      export default { extends: ['@commitlint/config-conventional'] };
+    '';
+  };
 
   # Enable fontconfig for installed nix fonts,
   # so that they're automatically available to applications
