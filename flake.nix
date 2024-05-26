@@ -22,6 +22,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     catppuccin.url = "github:catppuccin/nix";
+    rust-overlay.url = "github:oxalica/rust-overlay";
   };
 
   outputs = inputs@{ nixpkgs, home-manager, ... }:
@@ -30,19 +31,14 @@
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
-        overlays = import ./src/overlays {
-          inherit inputs;
-          path = ./src/overlays;
-        };
+        overlays = import ./src/overlays
+          {
+            inherit inputs;
+            path = ./src/overlays;
+          } ++ [ (import inputs.rust-overlay) ];
       };
       home-manager-path = "~/.config/nixfiles";
       username = "skylab";
-      hc = config:
-        home-manager.lib.homeManagerConfiguration (config // {
-          inherit pkgs;
-          modules = [ inputs.agenix.homeManagerModules.default ]
-            ++ config.modules;
-        });
     in
     {
       nixosConfigurations.jupiter = nixpkgs.lib.nixosSystem

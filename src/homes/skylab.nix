@@ -97,7 +97,6 @@
       })
       ruff # Python linter
       taplo # TOML LSP
-      rustfmt # Rust formatter
       nodePackages.yaml-language-server # YAML LSP
       clang-tools # C tools, includes LSP
       texlab # Latex / Bibtex LSP
@@ -109,10 +108,13 @@
       docker-compose-language-service # Docker compose LSP
       hadolint # Dockerfile linter
       ollama # Run LLMs locally
-      cargo # Rust build tool
-      rustc # Rust compiler
-      rust-analyzer-unwrapped # Rust LSP
-      clippy # Rust improved linter
+      # Rust toolchain
+      (rust-bin.stable.latest.default.override {
+        extensions = [ "rust-src" "rust-analyzer-preview" "llvm-tools-preview" ];
+        targets = [ "x86_64-unknown-linux-gnu" "wasm32-unknown-unknown" ];
+      })
+      dioxus-cli # Rust web framework
+      llvmPackages.bintools # LLVM linker
       monocraft # Minecraft-like font
       rclone # File sync utility
       scanmem # Running process memory editor
