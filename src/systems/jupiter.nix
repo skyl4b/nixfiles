@@ -161,6 +161,7 @@
     # Basic utils for editing
     git
     curl
+    dos2unix
     neovim
 
     # Browsers
