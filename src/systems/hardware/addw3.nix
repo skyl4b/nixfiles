@@ -5,8 +5,6 @@
   ];
 
   boot = {
-    # Minimum 6.6.5 required for keyboard backlight
-    kernelPackages = pkgs.linuxPackages_6_6;
     initrd.availableKernelModules = [ "xhci_pci" "nvme" "thunderbolt" "sdhci_pci" ];
     initrd.kernelModules = [ ];
     kernelModules = [ "kvm-intel" ];
