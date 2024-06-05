@@ -164,6 +164,9 @@
     dos2unix
     neovim
 
+    # File utils
+    unzip
+
     # Browsers
     firefox
     brave
