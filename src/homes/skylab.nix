@@ -67,7 +67,6 @@
       nodePackages.vscode-langservers-extracted # HTML / CSS / JSON / ESLint LSPs
       nodePackages.typescript-language-server # TS / JS language server
       nodePackages.prettier # JS / TS / HTML / JSON / YAML code formatter
-      nodePackages.pyright # Another Python LSP
       nodePackages.markdownlint-cli # Markdown linter
       nodePackages.live-server # A simple http server with auto reload
       efm-langserver # Universal LSP (interacts with linters / formatters)
@@ -84,7 +83,6 @@
           jupytext # Jupyter notebook as .py scripts
           nbclient # A client library for executing notebooks
           debugpy # Python debug adapter protocol
-          ruff-lsp # Ruff LSP without plugin
           editorconfig # Editorconfig support
           grip # Markdown preview locally
           catppuccin # Pygments catppuccin theme
@@ -96,6 +94,7 @@
         rWrapper = null;
       })
       ruff # Python linter
+      basedpyright # Modern python LSP
       taplo # TOML LSP
       nodePackages.yaml-language-server # YAML LSP
       clang-tools # C tools, includes LSP
