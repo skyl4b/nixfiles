@@ -23,6 +23,7 @@
       # (aspellWithDicts # Spell checking
       #   (ds: with ds; [ de en en-computers en-science fr pt_BR ]))
       agenix
+      aichat # A chatbot in the terminal
       hunspell
       hunspellDicts.en_US-large
       hunspellDicts.de_DE
@@ -86,7 +87,8 @@
           editorconfig # Editorconfig support
           grip # Markdown preview locally
           catppuccin # Pygments catppuccin theme
-          orange3 # Data visualization tool
+          # Broken, see: https://github.com/NixOS/nixpkgs/issues/255262
+          # orange3 # Data visualization tool
         ])))
       # Jupyter & markdown publishing
       (quarto.override {
@@ -154,6 +156,7 @@
       neocmakelsp # CMake LSP
       cmake-format # CMake linter / formatter
       commitlint # Linter for commit messages
+      zed-editor # Rust based GUI editor
 
       # Mesa drivers wrapper for GUI apps on non
       # NixOS hosts
