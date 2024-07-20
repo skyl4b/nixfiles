@@ -12,13 +12,13 @@
     ./cachix
 
     # Gnome desktop environment
-    # ./desktops/gnome.nix
+    ./desktops/gnome.nix
 
     # Hyprland desktop environment
     # ./desktops/hyprland.nix
 
     # Cosmic desktop environment
-    ./desktops/cosmic.nix
+    # ./desktops/cosmic.nix
   ];
 
   # Bootloader
@@ -112,7 +112,7 @@
   console.keyMap = "us-acentos";
 
   # Enable sound with pipewire.
-  sound.enable = true;
+  # sound.enable = true;
 
   hardware = {
     pulseaudio.enable = false;
