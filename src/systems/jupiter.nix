@@ -174,12 +174,6 @@
     # XWayland tools
     xorg.xhost
 
-    # Gnome tools
-    gnome.gnome-software
-    gnome.gnome-tweaks
-    gnomeExtensions.appindicator
-    gnomeExtensions.dash-to-dock
-
     # Misc tools
     xwaylandvideobridge # Fix screensharing with xwayland
     psmisc # Extra utilities that use procfs (killall for ex.)

@@ -11,7 +11,7 @@
   environment.systemPackages = with pkgs; [
     # Gnome specific tools
     gnome.gnome-software
-    gnome.gnome-tweaks
+    gnome-tweaks
     gnomeExtensions.appindicator
     gnomeExtensions.dash-to-dock
 
