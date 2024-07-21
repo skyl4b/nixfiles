@@ -7,12 +7,20 @@ _: {
   plugins.smart-enter = ./smart-enter;
 
   # Keymap
-  # Enable smart open on 'l'
-  keymap.manager.prepend_keymap = [{
-    on = [ "l" ];
-    run = "plugin --sync smart-enter";
-    desc = "Enter the child directory, or open the file";
-  }];
+  keymap.manager.prepend_keymap = [
+    # Enable smart open on 'l'
+    {
+      on = [ "l" ];
+      run = "plugin --sync smart-enter";
+      desc = "Enter the child directory, or open the file";
+    }
+    # Edit on "e"
+    {
+      on = [ "e" ];
+      run = "shell '$EDITOR \"$@\"' --confirm --block";
+      desc = "Open with editor";
+    }
+  ];
 
   # Theme
   catppuccin.enable = true;
