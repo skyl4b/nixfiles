@@ -63,6 +63,7 @@
       (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; }) # Fonts with symbols
       #nix-direnv # Direnv integration with nix
 
+      pyright # Python LSP
       nodePackages.bash-language-server # Bash LSP
       nodePackages.dockerfile-language-server-nodejs # Dockerfile LSP
       nodePackages.vscode-langservers-extracted # HTML / CSS / JSON / ESLint LSPs
