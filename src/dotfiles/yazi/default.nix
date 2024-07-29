@@ -20,7 +20,27 @@ _: {
       run = "shell '$EDITOR \"$@\"' --confirm --block";
       desc = "Open with editor";
     }
+    # Toggle hidden files on "H"
+    {
+      on = [ "H" ];
+      run = "hidden toggle";
+      desc = "Toggle the visibility of hidden files";
+    }
+    # Help on "?"
+    {
+      on = [ "?" ];
+      run = "help";
+      desc = "Open help";
+    }
   ];
+
+  # Settings
+  settings.manager = {
+    show_hidden = false;
+    sort_by = "natural";
+    sort_sensitive = false;
+    sort_dir_first = true;
+  };
 
   # Theme
   catppuccin.enable = true;
