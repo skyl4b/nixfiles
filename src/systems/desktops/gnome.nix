@@ -9,14 +9,22 @@
 
   # Gnome useful packages
   environment.systemPackages = with pkgs; [
+    # Terminal
+    ptyxis
+
     # Gnome specific tools
-    gnome.gnome-software
+    gnome-software
     gnome-tweaks
     gnomeExtensions.appindicator
     gnomeExtensions.dash-to-dock
+    gnomeExtensions.caffeine
+    gdm-settings
 
     # Pop shell
     gnomeExtensions.pop-shell
     pop-launcher
   ];
+
+  # Configure kde connect to use gsconnect
+  programs.kdeconnect.package = pkgs.gnomeExtensions.gsconnect;
 }

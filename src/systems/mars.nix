@@ -6,7 +6,7 @@
   # Include modules
   imports = [
     # Hardware specific configuration
-    ./hardware/addw3.nix
+    ./hardware/asus_a15.nix
 
     # Cachix caches
     ./cachix
@@ -30,7 +30,7 @@
   # Networking configuration
   networking = {
     # Hostname
-    hostName = "jupiter";
+    hostName = "mars";
     # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
     # Configure network proxy if necessary
@@ -106,6 +106,23 @@
 
     # Enable firmware updater
     fwupd.enable = true;
+
+    # Enable tailscale (home-like vpn)
+    tailscale.enable = true;
+
+    # mDNS discovery / publish
+    avahi = {
+      # Enable avahi-daemon
+      enable = true;
+      # Allow querying of .local addresses 
+      nssmdns4 = true;
+      nssmdns6 = true;
+      # Publish
+      publish = {
+        enable = true;
+        userServices = true;
+      };
+    };
   };
 
   # Configure console keymap
@@ -189,6 +206,9 @@
 
     # XWayland for legacy apps
     xwayland.enable = true;
+
+    # Kde connect (phone-computer connection)
+    kdeconnect.enable = true;
   };
 
   # Use wayland on enabled chromium apps
@@ -213,6 +233,10 @@
 
   # Enable the NixOS virtualisation module
   virtualisation = {
+    podman = {
+      enable = true;
+      defaultNetwork.settings.dns_enabled = true;
+    };
     docker.enable = true;
     libvirtd.enable = true;
   };
@@ -229,5 +253,5 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "23.11"; # Did you read the comment?
+  system.stateVersion = "24.11"; # Did you read the comment?
 }

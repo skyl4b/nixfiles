@@ -45,7 +45,7 @@
 
   hardware = {
     cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-    intelgpu.loadInInitrd = true;
+    # intelgpu.loadInInitrd = true;
 
     # Enable openGL
     graphics = {
@@ -61,6 +61,7 @@
 
     # Setup nvidia drivers
     nvidia = {
+      open = true;
       modesetting.enable = true;
       nvidiaSettings = true;
       package = config.boot.kernelPackages.nvidiaPackages.stable;
@@ -113,6 +114,7 @@
     # gnome.gnome-remote-desktop.enable = false;
   };
 
-  # Nvidia docker dependencies
+  # Nvidia container dependencies
   virtualisation.docker.enableNvidia = true;
+  virtualisation.podman.enableNvidia = true;
 }

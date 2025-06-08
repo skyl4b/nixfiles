@@ -1,7 +1,14 @@
 # Configuration of a cosmic desktop environment
-_: {
+{ pkgs, ... }: {
   services = {
-    desktopManager.cosmic.enable = true;
+    # Login manager
     displayManager.cosmic-greeter.enable = true;
+
+    desktopManager.cosmic = {
+      # Cosmic DE
+      enable = true;
+      # XWayland
+      xwayland.enable = true;
+    };
   };
 }

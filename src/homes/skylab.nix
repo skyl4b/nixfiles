@@ -40,11 +40,12 @@
       coreutils # Basic GNU utilities
       #direnv # Directory specific environments
       #docker # Container manager
+      distrobox # System integrated containers
       exercism # Programming languages learning
-      (emacs29.override {
-        withPgtk = true;
-        withNativeCompilation = true;
-      }) # Master of the universe editor
+      # (emacs29.override {
+      #   withPgtk = true;
+      #   withNativeCompilation = true;
+      # }) # Master of the universe editor
       fd # Modern find
       fzf # Fuzzy finder
       #git # Version control
@@ -58,9 +59,10 @@
       languagetool # Spell-checking tool
       libcaca # Image-to-text utilities
       libertine # Linux libertine fonts
-      maple-mono # Apple-like font
+      # maple-mono # Apple-like font
       monaspace # Innovative font from githubnext
-      (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; }) # Fonts with symbols
+      # nerdfonts.nerd-fonts-symbols-only # Fonts with symbols
+      # (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; }) 
       #nix-direnv # Direnv integration with nix
 
       pyright # Python LSP
@@ -103,7 +105,7 @@
       clang-tools # C tools, includes LSP
       texlab # Latex / Bibtex LSP
       lldb # C / Rust Debugging
-      typst-lsp # Typst LSP
+      tinymist # Typst LSP
       lua-language-server # Lua LSP
       stylua # Lua formatter
       luajitPackages.luacheck # Lua linter
@@ -127,7 +129,7 @@
       hyperfine # CLI benchmarking tool
       parallel-full # CLI parallelize command tool
       #tealdeer # Tldr man pages
-      thefuck # Corrects the last shell command
+      # thefuck # Corrects the last shell command
       ttyper # Terminal monkeytype
       unicode-paracode # Unicode search tool
       vscode # Editor
@@ -229,6 +231,20 @@
 
     # Shell aliases in the environment
     shellAliases = [ ];
+  };
+
+  # Application theme management
+  gtk = {
+    enable = true;
+    theme = {
+      name = "Adwaita-dark";
+      package = pkgs.gnome-themes-extra;
+    };
+  };
+  qt = {
+    enable = true;
+    platformTheme.name = "gnome";
+    style.name = "adwaita-dark";
   };
 
   # XDG user directories management

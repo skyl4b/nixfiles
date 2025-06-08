@@ -17,10 +17,6 @@
       url = "github:helix-editor/helix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixos-cosmic = {
-      url = "github:lilyinstarlight/nixos-cosmic";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     catppuccin.url = "github:catppuccin/nix";
     rust-overlay.url = "github:oxalica/rust-overlay";
   };
@@ -41,32 +37,61 @@
       username = "skylab";
     in
     {
-      nixosConfigurations.jupiter = nixpkgs.lib.nixosSystem
-        {
-          system = "x86_64-linux";
-          modules = [
-            inputs.catppuccin.nixosModules.catppuccin
-            inputs.nixos-hardware.nixosModules.common-cpu-intel
-            # inputs.nixos-hardware.nixosModules.common-gpu-intel
-            inputs.nixos-hardware.nixosModules.common-gpu-nvidia
-            inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
-            inputs.nixos-hardware.nixosModules.system76
-            inputs.nixos-cosmic.nixosModules.default
-            ./src/systems/jupiter.nix
-            home-manager.nixosModules.home-manager
-            {
-              home-manager = {
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                users."${username}" = import (./src/homes + "/${username}.nix") {
-                  inherit pkgs;
-                  inherit username;
-                  inherit inputs;
-                  inherit home-manager-path;
+      nixosConfigurations = {
+        jupiter = nixpkgs.lib.nixosSystem
+          {
+            system = "x86_64-linux";
+            modules = [
+              inputs.catppuccin.nixosModules.catppuccin
+              inputs.nixos-hardware.nixosModules.common-cpu-intel
+              # inputs.nixos-hardware.nixosModules.common-gpu-intel
+              inputs.nixos-hardware.nixosModules.common-gpu-nvidia
+              inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
+              inputs.nixos-hardware.nixosModules.system76
+              inputs.nixos-cosmic.nixosModules.default
+              ./src/systems/jupiter.nix
+              home-manager.nixosModules.home-manager
+              {
+                home-manager = {
+                  useGlobalPkgs = true;
+                  useUserPackages = true;
+                  users."${username}" = import (./src/homes + "/${username}.nix") {
+                    inherit pkgs;
+                    inherit username;
+                    inherit inputs;
+                    inherit home-manager-path;
+                  };
                 };
-              };
-            }
-          ];
-        };
+              }
+            ];
+          };
+
+          mars = nixpkgs.lib.nixosSystem
+          {
+            system = "x86_64-linux";
+            modules = [
+              inputs.catppuccin.nixosModules.catppuccin
+              inputs.nixos-hardware.nixosModules.common-cpu-amd
+              # inputs.nixos-hardware.nixosModules.common-gpu-intel
+              inputs.nixos-hardware.nixosModules.common-gpu-nvidia
+              inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
+              # inputs.nixos-hardware.nixosModules.system76
+              ./src/systems/mars.nix
+              home-manager.nixosModules.home-manager
+              {
+                home-manager = {
+                  useGlobalPkgs = true;
+                  useUserPackages = true;
+                  users."${username}" = import (./src/homes + "/${username}.nix") {
+                    inherit pkgs;
+                    inherit username;
+                    inherit inputs;
+                    inherit home-manager-path;
+                  };
+                };
+              }
+            ];
+          };
+      };
     };
 }
