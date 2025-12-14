@@ -3,7 +3,11 @@
 { pkgs, ... }: {
   programs = {
     # Install the hyprland window manager
-    hyprland.enable = true;
+    hyprland = {
+      enable = true;
+      xwayland.enable = true;
+    };
+    
 
     # File manager
     thunar = {
@@ -128,11 +132,11 @@
     # Theme
     gtk3
     gtk4
-    gnome.adwaita-icon-theme
+    adwaita-icon-theme
     adwaita-qt
 
     # Appearance settings
-    qt5ct
+    libsForQt5.qt5ct
     qt6ct
     nwg-look
 
@@ -143,6 +147,6 @@
   # QT Theme / style
   qt = {
     enable = true;
-    platformTheme = "qt5ct";
+    platformTheme = "kde6";
   };
 }

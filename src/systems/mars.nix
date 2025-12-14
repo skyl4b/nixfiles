@@ -12,13 +12,13 @@
     ./cachix
 
     # Gnome desktop environment
-    ./desktops/gnome.nix
+    # ./desktops/gnome.nix
 
     # Hyprland desktop environment
     # ./desktops/hyprland.nix
 
     # Cosmic desktop environment
-    # ./desktops/cosmic.nix
+    ./desktops/cosmic.nix
   ];
 
   # Bootloader
@@ -39,6 +39,7 @@
 
     # Enable networking
     networkmanager.enable = true;
+    networkmanager.dns = "systemd-resolved";
   };
 
   # Timezone settings
@@ -71,6 +72,9 @@
 
   # Setup services
   services = {
+    # Systemd dns service
+    resolved.enable = true;
+
     xserver = {
       # Enable the X11 / Wayland windowing systems
       enable = true;
@@ -136,6 +140,10 @@
 
     # Enable bluetooth support
     bluetooth.enable = true;
+
+    # Enable support for game controllers
+    xone.enable = true;
+    steam-hardware.enable = true;
   };
 
   security.rtkit.enable = true;
@@ -166,7 +174,7 @@
     cachix
 
     # Hardware tools
-    glxinfo
+    mesa-demos
     libva-utils
     vulkan-tools
     lshw
@@ -192,11 +200,10 @@
     xorg.xhost
 
     # Misc tools
-    kdePackages.xwaylandvideobridge # Fix screensharing with xwayland
     psmisc # Extra utilities that use procfs (killall for ex.)
 
     # Firmware updater
-    firmware-manager
+    # firmware-manager
   ];
 
   # Program settings

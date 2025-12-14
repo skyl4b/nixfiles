@@ -20,6 +20,9 @@
     gnomeExtensions.caffeine
     gdm-settings
 
+    # Miracast / streaming
+    gnome-network-displays
+
     # Pop shell
     gnomeExtensions.pop-shell
     pop-launcher

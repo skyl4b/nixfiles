@@ -7,30 +7,33 @@
 
   # Config Settings
   settings = {
+    default_mode = "locked";
+    show_startup_tips = false;
+    show_release_notes = false;
     # If you'd like to override the default keybindings completely
     # be sure to change "keybinds" to "keybinds clear-defaults=true"
     keybinds = {
-      normal = {
+      locked = {
+        "bind \"Ctrl Space\"" = { SwitchToMode = "Normal"; };
+      };
+      # normal = {
         # uncomment this and adjust key if using copy_on_select=false
         # bind "Alt c" { Copy; }
-      };
-      locked = {
-        "bind 'Ctrl g'" = { SwitchToMode = "Normal"; };
-      };
+      # };
     };
-    resize = {
-        "bind 'Ctrl n'" = { SwitchToMode = "Normal"; };
-        "bind 'h' 'Left'" = { Resize = "Increase Left"; };
-        "bind 'j' 'Down'" = { Resize = "Increase Down"; };
-        "bind 'k' 'Up'" = { Resize = "Increase Up"; };
-        "bind 'l' 'Right'" = { Resize = "Increase Right"; };
-        "bind 'H'" = { Resize = "Decrease Left"; };
-        "bind 'J'" = { Resize = "Decrease Down"; };
-        "bind 'K'" = { Resize = "Decrease Up"; };
-        "bind 'L'" = { Resize = "Decrease Right"; };
-        "bind '=' '+'" = { Resize = "Increase"; };
-        "bind '-'" = { Resize = "Decrease"; };
-    };
+    # resize = {
+    #     "bind 'Ctrl n'" = { SwitchToMode = "Normal"; };
+    #     "bind 'h' 'Left'" = { Resize = "Increase Left"; };
+    #     "bind 'j' 'Down'" = { Resize = "Increase Down"; };
+    #     "bind 'k' 'Up'" = { Resize = "Increase Up"; };
+    #     "bind 'l' 'Right'" = { Resize = "Increase Right"; };
+    #     "bind 'H'" = { Resize = "Decrease Left"; };
+    #     "bind 'J'" = { Resize = "Decrease Down"; };
+    #     "bind 'K'" = { Resize = "Decrease Up"; };
+    #     "bind 'L'" = { Resize = "Decrease Right"; };
+    #     "bind '=' '+'" = { Resize = "Increase"; };
+    #     "bind '-'" = { Resize = "Decrease"; };
+    # };
   };
   #   pane {
   #       "bind 'Ctrl p'" = { SwitchToMode "Normal"; };

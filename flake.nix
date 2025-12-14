@@ -48,7 +48,6 @@
               inputs.nixos-hardware.nixosModules.common-gpu-nvidia
               inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
               inputs.nixos-hardware.nixosModules.system76
-              inputs.nixos-cosmic.nixosModules.default
               ./src/systems/jupiter.nix
               home-manager.nixosModules.home-manager
               {

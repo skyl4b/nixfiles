@@ -42,10 +42,7 @@
       #docker # Container manager
       distrobox # System integrated containers
       exercism # Programming languages learning
-      # (emacs29.override {
-      #   withPgtk = true;
-      #   withNativeCompilation = true;
-      # }) # Master of the universe editor
+      emacs-pgtk # Master of the universe editor
       fd # Modern find
       fzf # Fuzzy finder
       #git # Version control
@@ -61,18 +58,17 @@
       libertine # Linux libertine fonts
       # maple-mono # Apple-like font
       monaspace # Innovative font from githubnext
-      # nerdfonts.nerd-fonts-symbols-only # Fonts with symbols
+      nerd-fonts.symbols-only # Collection of icons / symbols
       # (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; }) 
       #nix-direnv # Direnv integration with nix
 
       pyright # Python LSP
       nodePackages.bash-language-server # Bash LSP
-      nodePackages.dockerfile-language-server-nodejs # Dockerfile LSP
+      dockerfile-language-server # Dockerfile LSP
       nodePackages.vscode-langservers-extracted # HTML / CSS / JSON / ESLint LSPs
       nodePackages.typescript-language-server # TS / JS language server
       nodePackages.prettier # JS / TS / HTML / JSON / YAML code formatter
       nodePackages.markdownlint-cli # Markdown linter
-      nodePackages.live-server # A simple http server with auto reload
       efm-langserver # Universal LSP (interacts with linters / formatters)
       prettierd # Prettier as a daemon
       marksman # Markdown LSP
@@ -118,13 +114,14 @@
         targets = [ "x86_64-unknown-linux-gnu" "wasm32-unknown-unknown" ];
       })
       dioxus-cli # Rust web framework
+      wasm-bindgen-cli # Wasm bindings
       llvmPackages.bintools # LLVM linker
       monocraft # Minecraft-like font
       rclone # File sync utility
       scanmem # Running process memory editor
       shellcheck # Shell checker
       shfmt # Shell formatter
-      bashdb # Bash debugger
+      # bashdb # Bash debugger
       #starship # Shell-agnostic customizable prompt
       hyperfine # CLI benchmarking tool
       parallel-full # CLI parallelize command tool

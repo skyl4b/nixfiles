@@ -149,7 +149,7 @@
     cachix
 
     # Hardware tools
-    glxinfo
+    mesa-demos
     libva-utils
     vulkan-tools
     lshw
@@ -175,7 +175,6 @@
     xorg.xhost
 
     # Misc tools
-    kdePackages.xwaylandvideobridge # Fix screensharing with xwayland
     psmisc # Extra utilities that use procfs (killall for ex.)
 
     # Firmware updater
