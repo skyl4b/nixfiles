@@ -28,18 +28,39 @@ Use that exact SHA on Moon so later branch updates do not change the revision
 being installed. Bring the matching `nixfiles-secrets` private key separately
 on external storage; it must remain available after the internal drive is erased.
 
-Download the current [NixOS graphical ISO for 64-bit Intel/AMD](https://nixos.org/download/)
-and write it to a bootable USB. The ISO's release does not change this repo's
-pinned nixpkgs or Moon's state version. See the
+Download the current [NixOS minimal ISO for 64-bit Intel/AMD](https://nixos.org/download/)
+and write it to a bootable USB. It is suitable for this manual installation and
+has a smaller live environment. Have the Type Cover or an external keyboard
+available: the minimal ISO has no graphical desktop. The installed system will
+still use GNOME as declared by this repository. The graphical ISO is also valid
+if you need a desktop or touch input during setup; open its terminal and follow
+the same steps without using its graphical partitioning wizard.
+
+The ISO's release does not change this repo's pinned nixpkgs or Moon's state
+version. See the
 [official installation manual](https://nixos.org/manual/nixos/stable/#sec-installation).
 
 ## 2. Boot the live USB and connect to Wi-Fi
 
 Boot Moon from the USB in UEFI mode, with Secure Boot disabled as in the supplied
-inventory. Use the live desktop's network controls to connect to Wi-Fi. Open a
-terminal in the live desktop and use the commands below there, outside a
-distrobox. Use the terminal installation flow rather than the graphical
-installer's automatic partitioning.
+inventory. The minimal ISO logs in at a console as `nixos`, with passwordless
+sudo. Connect to Wi-Fi through NetworkManager's text interface:
+
+```sh
+sudo nmtui
+```
+
+Choose **Activate a connection**, select your Wi-Fi network, and enter its
+password. Exit the interface, then check HTTPS connectivity:
+
+```sh
+curl -I https://cache.nixos.org
+```
+
+On a graphical ISO, its desktop network controls work too. Run all installation
+commands in the live system, outside a distrobox. These are manual install
+steps; do not also run the graphical installer's partitioning wizard. The live
+console initially uses its own keyboard layout, not Skylab's Colemak-DH setting.
 
 Clone the installation branch, then select the recorded commit. Replace
 `PASTE_RECORDED_COMMIT_SHA` with the full SHA from the development checkout:
@@ -121,13 +142,25 @@ nix --extra-experimental-features 'nix-command flakes' eval \
 
 ## 5. Provision and check the private key
 
+On the minimal ISO, external drives are not automatically mounted by a desktop.
+If the key is on a separate USB drive, identify that drive's filesystem UUID and
+mount it read-only. Substitute its actual UUID below, not Moon's internal drive:
+
+```sh
+lsblk -o NAME,PATH,SIZE,FSTYPE,LABEL,UUID,MOUNTPOINTS
+sudo mkdir -p /run/key-usb
+sudo mount -o ro /dev/disk/by-uuid/KEY_USB_FILESYSTEM_UUID /run/key-usb
+```
+
+The following command assumes `nixfiles-secrets` is at the root of that USB
+filesystem. Adjust the absolute source path if you stored it elsewhere.
 Use the existing provisioning recipe with the actual absolute path to your
 private key and the mounted target root:
 
 ```sh
 nix --extra-experimental-features 'nix-command flakes' shell \
   --no-update-lock-file .#nixosConfigurations.moon.pkgs.just \
-  -c just provision-identity /absolute/path/to/nixfiles-secrets /mnt
+  -c just provision-identity /run/key-usb/nixfiles-secrets /mnt
 ```
 
 This puts the root-owned key at `/mnt/var/lib/agenix/identity`. The temporary
@@ -213,13 +246,22 @@ the system's US International default, so check its layout indicator while
 entering the password. Follow the [first-boot checks](moon-testing.md#validate-after-booting-moon),
 including SSH from another machine, thermald, cameras, suspend, and containers.
 
-For repository work on Moon, the pinned Pixi package can bootstrap the existing
-development environment:
+The installed user profile includes `just`. Daily recipes such as keyboard
+registration can run directly from the checkout:
 
 ```sh
 cd ~/Projects/nixfiles || exit
-nix shell .#nixosConfigurations.moon.pkgs.pixi -c pixi shell --locked
+just remap-keyboard "Keyboard Name"
 ```
 
-Inside that shell, use the documented Pixi/just maintenance workflows. Keep the
+Use the keyboard's actual Input Remapper device name. Full development checks
+still use the existing development dependencies. Until Pixi is replaced, the
+pinned Pixi package can supply those tools temporarily:
+
+```sh
+nix shell .#nixosConfigurations.moon.pkgs.pixi -c pixi shell --locked
+just check
+```
+
+Use the `just` recipes inside that development shell. Keep the
 installer and backups until login, boot, networking, and recovery are verified.

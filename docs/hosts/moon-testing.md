@@ -14,12 +14,13 @@ checkout; it is not a required installation path. The earlier scratch store in
 `/tmp` is on tmpfs on the current machine, so prefer disk storage for this build.
 
 ```sh
+pixi shell --locked
 export NIXFILES_TEST_ROOT="$PWD/.pixi/nix-test"
-pixi run --locked check
-pixi run --locked check-host moon
-pixi run --locked plan moon
-moon_system=$(pixi run --locked build moon)
-pixi run --locked just _nix path-info --closure-size --human-readable "$moon_system"
+just check
+just check-host moon
+just plan moon
+moon_system=$(just build moon)
+just _nix path-info --closure-size --human-readable "$moon_system"
 ```
 
 The earlier plan estimated about 5.8 GiB of downloads and 13.7 GiB unpacked for
@@ -116,7 +117,7 @@ default. The shared `nixfiles-secrets` key is not a login key.
 Create the live-dotfile anchor as Skylab, from the persistent checkout:
 
 ```sh
-pixi run --locked just link-checkout "${XDG_DATA_HOME:-$HOME/.local/share}/nixfiles"
+just link-checkout "${XDG_DATA_HOME:-$HOME/.local/share}/nixfiles"
 ```
 
 The checkout must remain available. Test Neovim, Emacs, GNOME Console, Ghostty,
@@ -151,9 +152,11 @@ Test these device behaviors during normal use:
   Docker, Podman, and Waydroid, and after suspend/resume. Actual Android image
   downloads and application setup remain target-machine work.
 
-For subsequent changes, build and review the candidate, then use
-`pixi run --locked test-host moon` on Moon for temporary activation. Once its
-operational checks pass, use `pixi run --locked switch moon`. These recipes
+For subsequent changes, enter the development shell described in the
+[installation walkthrough](moon-install.md#8-reboot-and-validate) to supply
+the maintenance tools. Build and review the candidate, then use
+`just test-host moon` on Moon for temporary activation. Once its
+operational checks pass, use `just switch moon`. These recipes
 require the matching NixOS host and system store. See
 [recovery instructions](../modernization/baseline.md#validation-and-recovery).
 
