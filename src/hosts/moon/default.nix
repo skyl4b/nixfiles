@@ -1,6 +1,7 @@
-{ config, inputs, pkgs, ... }:
+{ config, inputs, lib, pkgs, ... }:
 
 {
+  # Include the device module once `just generate-hardware moon` has created it.
   imports = [
     inputs.agenix.nixosModules.default
     inputs.disko.nixosModules.disko
@@ -10,7 +11,8 @@
     ../../modules/nixos/virtualisation/docker.nix
     ../../modules/nixos/virtualisation/podman.nix
     ../../modules/nixos/virtualisation/waydroid.nix
-  ];
+  ] ++ lib.optional (builtins.pathExists ./hardware-configuration.nix)
+    ./hardware-configuration.nix;
 
   age = {
     identityPaths = [ "/var/lib/agenix/identity" ];

@@ -29,6 +29,10 @@ check:
     just --dry-run _nix --version 2>&1 | shellcheck -s bash -
     just --dry-run update-inputs nixpkgs 2>&1 | shellcheck -s bash -
     just --dry-run provision-identity /tmp/nixfiles-identity /mnt 2>&1 | shellcheck -s bash -
+    just --dry-run disko moon 2>&1 | shellcheck -s bash -
+    just --dry-run generate-hardware moon 2>&1 | shellcheck -s bash -
+    just --dry-run _installer moon 2>&1 | shellcheck -s bash -
+    just --dry-run test-install-workflows 2>&1 | shellcheck -s bash -
     just --dry-run remap-keyboard 'USB Keyboard' 2>&1 | shellcheck -s bash -
     just --dry-run test-input-remapper 2>&1 | shellcheck -s bash -
     for recipe in dotfiles-diff dotfiles-apply; do
@@ -44,6 +48,7 @@ check:
     just test-desktop-tools
     just test-workflows
     just test-input-remapper
+    just test-install-workflows
 
 # Point an explicitly selected user-local anchor at this checkout
 link-checkout anchor:
@@ -1321,6 +1326,45 @@ build host:
     set -euo pipefail
     just _host build "$1"
 
+# ERASE, format, and mount a host's configured disks using its pinned Disko script
+[positional-arguments]
+disko host:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    just _installer "$1"
+    config=".#nixosConfigurations.$1.config"
+    disks=$(just _nix eval --no-update-lock-file --raw "$config.disko.devices.disk" \
+        --apply 'disks: builtins.concatStringsSep "\n" (map (disk: disk.device) (builtins.attrValues disks))')
+    printf 'ERASE, format, and mount the configured disks for %s:\n%s\n' "$1" "$disks" >&2
+    script=$(just _nix build --no-update-lock-file --no-link --print-out-paths \
+        --max-jobs 1 --cores 2 "$config.system.build.diskoScript")
+    sudo "$script"
+
+# Generate a new hardware module from this machine, without duplicating Disko mounts
+[positional-arguments]
+generate-hardware host root="/mnt":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    just _installer "$1"
+    [[ "$2" == /* ]] || { printf 'Supply an absolute mounted target root.\n' >&2; exit 2; }
+    mountpoint -q -- "$2" || { printf 'Target root is not mounted: %s\n' "$2" >&2; exit 2; }
+    relative="src/hosts/$1/hardware-configuration.nix"
+    destination="$NIXFILES_CHECKOUT/$relative"
+    [[ ! -e "$destination" && ! -L "$destination" ]] || {
+        printf 'Hardware configuration already exists; review it instead of overwriting: %s\n' "$destination" >&2
+        exit 2
+    }
+    temporary=$(mktemp "$NIXFILES_CHECKOUT/src/hosts/$1/.hardware-configuration.XXXXXX")
+    trap 'rm -f -- "$temporary"' EXIT
+    # Only the scan needs root; the output belongs to the checkout's owner.
+    # shellcheck disable=SC2024
+    sudo nixos-generate-config --root "$2" --no-filesystems --show-hardware-config > "$temporary"
+    [[ -s "$temporary" ]]
+    nix-instantiate --store dummy:// --parse "$temporary" >/dev/null
+    mv -- "$temporary" "$destination"
+    git -C "$NIXFILES_CHECKOUT" add --intent-to-add -- "$relative"
+    printf 'Generated %s; review it before installation and commit it afterward.\n' "$destination"
+
 # Build the selected host and compare it with an explicit previous closure
 [positional-arguments]
 diff host previous:
@@ -1544,6 +1588,19 @@ _nix +args:
     exec "${nix_cmd[@]}" "$@"
 
 [positional-arguments]
+_installer host:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    [[ "$1" =~ ^[a-zA-Z0-9_-]+$ && -f "$NIXFILES_CHECKOUT/src/hosts/$1/default.nix" ]] || {
+        printf 'Supply an existing host name from src/hosts.\n' >&2; exit 2
+    }
+    [[ -e /etc/NIXOS ]] || { printf 'Run installer recipes on the NixOS live system, outside a distrobox.\n' >&2; exit 2; }
+    case "$NIXFILES_STORE" in
+        auto|daemon) ;;
+        *) printf 'Installer recipes require the system daemon store.\n' >&2; exit 2 ;;
+    esac
+
+[positional-arguments]
 _host action host previous="":
     #!/usr/bin/env bash
     set -euo pipefail
@@ -1610,6 +1667,131 @@ _dotfiles action destination:
         --cache "$state/cache" --persistent-state "$state/state.boltdb" --no-tty)
     "${chez[@]}" init
     "${chez[@]}" "$action"
+
+# Test installer dispatch with simulated NixOS detection and stubbed privileged tools
+test-install-workflows:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    python3 - <<'PY'
+    import json, os, shlex, subprocess, tempfile
+    from pathlib import Path
+
+    with tempfile.TemporaryDirectory(prefix='nixfiles-install-workflows-') as temporary:
+        fixture = Path(temporary)
+        checkout = fixture / 'checkout with spaces'
+        host = checkout / 'src/hosts/probe'
+        host.mkdir(parents=True)
+        (host / 'default.nix').write_text('{ ... }: {}\n')
+        marker = fixture / 'NIXOS'
+        # Only the disposable copy sees a simulated NixOS marker. Production has no bypass.
+        source = Path(os.environ['NIXFILES_CHECKOUT']) / 'justfile'
+        (checkout / 'justfile').write_text(source.read_text().replace('/etc/NIXOS', shlex.quote(str(marker))))
+        environment = dict(os.environ, NIXFILES_STORE='daemon',
+                           GIT_CONFIG_NOSYSTEM='1', GIT_CONFIG_GLOBAL='/dev/null')
+        subprocess.run(['git', 'init', '-q', '--template=', str(checkout)], env=environment, check=True)
+        binaries = fixture / 'bin'
+        binaries.mkdir()
+        stub = binaries / 'stub'
+        stub.write_text('''#!/usr/bin/env python3
+    import json, os, sys
+    from pathlib import Path
+    name, args = Path(sys.argv[0]).name, sys.argv[1:]
+    with open(os.environ['NIXFILES_INSTALL_LOG'], 'a') as log:
+        log.write(json.dumps([name, *args]) + '\\n')
+    failure = os.environ.get('NIXFILES_INSTALL_FAIL')
+    if name == 'nix':
+        if 'build' in args:
+            if failure == 'build': sys.exit(1)
+            print('/nix/store/00000000000000000000000000000000-fixture-disko')
+        elif 'eval' in args:
+            print('/dev/fixture-only')
+        else:
+            sys.exit(1)
+    elif name == 'sudo':
+        if args == ['/nix/store/00000000000000000000000000000000-fixture-disko']:
+            sys.exit(0)  # Never execute a Disko script.
+        if args and args[0] == 'nixos-generate-config':
+            os.execvp(args[0], args)
+        sys.exit(1)
+    elif name == 'mountpoint':
+        sys.exit(1 if failure == 'mount' else 0)
+    elif name == 'nixos-generate-config':
+        if failure == 'scan': sys.exit(1)
+        print('invalid nix {' if failure == 'invalid' else
+              '{ ... }: { boot.initrd.availableKernelModules = [ "nvme" ]; }')
+    else:
+        sys.exit(1)
+    ''')
+        stub.chmod(0o755)
+        for name in ['nix', 'sudo', 'mountpoint', 'nixos-generate-config']:
+            (binaries / name).symlink_to(stub)
+        log = fixture / 'calls.jsonl'
+        environment.update(PATH=str(binaries) + os.pathsep + environment['PATH'], NIXFILES_INSTALL_LOG=str(log))
+
+        def run(*args, success=True, **changes):
+            result = subprocess.run(['just', '--justfile', str(checkout / 'justfile'), *args],
+                                    env=dict(environment, **changes), capture_output=True, text=True)
+            assert (result.returncode == 0) == success, result.stdout + result.stderr
+
+        def calls():
+            return [json.loads(line) for line in log.read_text().splitlines()] if log.exists() else []
+
+        run('disko', 'probe', success=False)
+        run('generate-hardware', 'probe', success=False)
+        assert calls() == []
+        marker.touch()
+        run('disko', 'missing', success=False)
+        run('disko', '../probe', success=False)
+        run('disko', 'probe', success=False, NIXFILES_STORE=str(fixture / 'scratch'))
+        assert calls() == []
+        run('disko', 'probe', success=False, NIXFILES_INSTALL_FAIL='build')
+        assert not any(call[0] == 'sudo' for call in calls())
+        log.unlink()
+        run('disko', 'probe')
+        recorded = calls()
+        build = next(call for call in recorded if call[0] == 'nix' and 'build' in call)
+        assert '--no-update-lock-file' in build and '--no-link' in build
+        assert build[build.index('--max-jobs') + 1] == '1'
+        assert build[build.index('--cores') + 1] == '2'
+        assert build[-1] == '.#nixosConfigurations.probe.config.system.build.diskoScript'
+        assert recorded[-1] == ['sudo', '/nix/store/00000000000000000000000000000000-fixture-disko']
+        root = fixture / 'mounted target with spaces'
+        root.mkdir()
+        destination = host / 'hardware-configuration.nix'
+        run('generate-hardware', 'probe', 'relative', success=False)
+        for failure in ['mount', 'scan', 'invalid']:
+            run('generate-hardware', 'probe', str(root), success=False, NIXFILES_INSTALL_FAIL=failure)
+            assert not destination.exists() and not list(host.glob('.hardware-configuration.*'))
+        run('generate-hardware', 'probe', str(root))
+        assert '"nvme"' in destination.read_text()
+        assert ['nixos-generate-config', '--root', str(root), '--no-filesystems', '--show-hardware-config'] in calls()
+        subprocess.run(['git', '-C', str(checkout), 'ls-files', '--error-unmatch',
+                        'src/hosts/probe/hardware-configuration.nix'], env=environment, check=True, capture_output=True)
+        before = destination.read_bytes()
+        run('generate-hardware', 'probe', str(root), success=False)
+        assert destination.read_bytes() == before
+        module = fixture / 'optional hardware'
+        module.mkdir()
+        (module / 'default.nix').write_text((source.parent / 'src/hosts/moon/default.nix').read_text())
+        expression = '''{ directory }: let host = import (builtins.toPath (directory + "/default.nix")) {
+          lib.optional = condition: value: if condition then [ value ] else [];
+          inputs.agenix.nixosModules.default = /dev/null;
+          inputs.disko.nixosModules.disko = /dev/null;
+          config = {}; pkgs = {};
+        }; in map toString host.imports'''
+
+        def imports():
+            result = subprocess.run(['nix-instantiate', '--store', 'dummy://', '--eval', '--strict', '--json', '--expr', expression,
+                                     '--argstr', 'directory', str(module)], env=environment,
+                                    capture_output=True, text=True)
+            assert result.returncode == 0, result.stdout + result.stderr
+            return json.loads(result.stdout)
+
+        without_hardware = imports()
+        (module / 'hardware-configuration.nix').write_text('{ ... }: {}\n')
+        assert imports() == without_hardware + [str(module / 'hardware-configuration.nix')]
+    print('Installer workflows passed: NixOS/store/host guards, pinned Disko dispatch, scan failures, hardware parsing, Git inclusion, overwrite refusal, and automatic Moon import. No real disks or privileged tools used.')
+    PY
 
 # Test workflow dispatch with stub Nix commands and real temporary chezmoi homes
 test-workflows:

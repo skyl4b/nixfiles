@@ -24,9 +24,11 @@ git push --set-upstream origin codex/modernization-baseline
 git rev-parse HEAD
 ```
 
-Use that exact SHA on Moon so later branch updates do not change the revision
-being installed. Bring the matching `nixfiles-secrets` private key separately
-on external storage; it must remain available after the internal drive is erased.
+Compare that SHA with the one printed after cloning on Moon. The clone stays on
+the normal branch, and its checkout does not change unless you pull or switch
+revisions. Do not pull during installation. Bring the matching `nixfiles-secrets`
+private key separately on external storage; it must remain available after the
+internal drive is erased.
 
 Download the current [NixOS minimal ISO for 64-bit Intel/AMD](https://nixos.org/download/)
 and write it to a bootable USB. It is suitable for this manual installation and
@@ -62,14 +64,13 @@ commands in the live system, outside a distrobox. These are manual install
 steps; do not also run the graphical installer's partitioning wizard. The live
 console initially uses its own keyboard layout, not Skylab's Colemak-DH setting.
 
-Clone the installation branch, then select the recorded commit. Replace
-`PASTE_RECORDED_COMMIT_SHA` with the full SHA from the development checkout:
+Clone the installation branch and record its current revision:
 
 ```sh
 git clone --branch codex/modernization-baseline \
   https://github.com/skyl4b/nixfiles.git /tmp/nixfiles
 cd /tmp/nixfiles || exit
-git checkout --detach PASTE_RECORDED_COMMIT_SHA
+git branch --show-current
 git rev-parse HEAD
 git status --short
 ```
@@ -77,7 +78,8 @@ git status --short
 If the repository is private, authenticate GitHub access before cloning. The
 shared secrets key is for agenix decryption, not GitHub authentication. Keep
 the selected commit and lockfile unchanged throughout the install, apart from
-adding Moon's generated hardware module below.
+adding Moon's generated hardware module below. Staying on the branch makes it
+easy to commit that module afterward.
 
 Confirm UEFI mode and inspect the disk:
 
@@ -91,54 +93,52 @@ Confirm that this identifier still resolves to Moon's internal 119.2 GiB
 KIOXIA KBG40ZPZ128G, not the installer or backup storage. If it does not match,
 stop and reconcile `src/hosts/moon/disk-config.nix` with the actual device.
 
-## 3. Build and execute the pinned Disko script
-
-Build the script from this repo's locked inputs. Building it does not modify disks:
+Enter a Nix shell supplying the pinned `just` command and `jq` (used by host
+checks). Keep using this shell for the remaining installation steps; Pixi is not
+needed in the installer:
 
 ```sh
-disko_script=$(nix --extra-experimental-features 'nix-command flakes' build \
-  --no-update-lock-file --no-link --print-out-paths --max-jobs 1 --cores 2 \
-  .#nixosConfigurations.moon.config.system.build.diskoScript)
+nix --extra-experimental-features 'nix-command flakes' shell \
+  --no-update-lock-file \
+  .#nixosConfigurations.moon.pkgs.just \
+  .#nixosConfigurations.moon.pkgs.jq
 ```
 
-**The next command erases the configured internal drive.** It creates the 1 GiB
-EFI partition and ext4 root, then mounts them at `/mnt/boot` and `/mnt`:
+## 3. Partition and mount with Disko
+
+**The next command erases the configured internal drive.** It prints the disk
+paths, builds the Disko script from this repo's locked input, then executes it
+through sudo. It creates the 1 GiB EFI partition and ext4 root and mounts them
+at `/mnt/boot` and `/mnt`:
 
 ```sh
-sudo "$disko_script"
+just disko moon
 findmnt /mnt
 findmnt /mnt/boot
 ```
 
-The script comes from the pinned Disko module already imported by Moon. No
-separate `latest` Disko input is fetched. This follows the repository's selected
-[Disko layout](moon.md#initial-configuration) and
-[upstream filesystem ownership guidance](https://github.com/nix-community/disko/blob/725ea35e410ad83be4931d1bff7e090eacaf3563/docs/quickstart.md).
+The recipe uses one build job and two cores, refuses a scratch store, and must
+run on the NixOS live system. No separate `latest` Disko input is fetched. This
+follows the repository's selected [Disko layout](moon.md#initial-configuration)
+and [upstream filesystem ownership guidance](https://github.com/nix-community/disko/blob/725ea35e410ad83be4931d1bff7e090eacaf3563/docs/quickstart.md).
 
-## 4. Capture and import Moon's hardware configuration
-
-Generate only the hardware module, leaving filesystem definitions to Disko:
+## 4. Generate Moon's hardware configuration
 
 ```sh
-sudo nixos-generate-config --root /mnt --no-filesystems --show-hardware-config \
-  > src/hosts/moon/hardware-configuration.nix
+just generate-hardware moon
+just check-host moon
 ```
 
-Review that file. In `src/hosts/moon/default.nix`, add this line inside its
-existing `imports` list, keeping its other imports:
+The first command scans the current machine with `/mnt` as the mounted target
+root. It writes `src/hosts/moon/hardware-configuration.nix`, omitting filesystem
+definitions so Disko remains their owner. It parses the generated Nix and
+registers the file with Git's intent-to-add so flake evaluation sees it. Moon
+imports the generated file automatically when present. No manual import edit is
+needed, and the command refuses to overwrite an existing hardware module.
 
-```nix
-./hardware-configuration.nix
-```
-
-Register the new file so the Git-based flake includes it, then evaluate Moon:
-
-```sh
-git add --intent-to-add -- src/hosts/moon/hardware-configuration.nix
-nix --extra-experimental-features 'nix-command flakes' eval \
-  --no-update-lock-file --raw \
-  .#nixosConfigurations.moon.config.system.build.toplevel.drvPath
-```
+Review that module before continuing. An alternative mounted root can be passed
+as a second argument, for example `just generate-hardware moon /mnt/target`.
+Hardware generation must run on Moon, not the development machine.
 
 ## 5. Provision and check the private key
 
@@ -158,14 +158,11 @@ Use the existing provisioning recipe with the actual absolute path to your
 private key and the mounted target root:
 
 ```sh
-nix --extra-experimental-features 'nix-command flakes' shell \
-  --no-update-lock-file .#nixosConfigurations.moon.pkgs.just \
-  -c just provision-identity /run/key-usb/nixfiles-secrets /mnt
+just provision-identity /run/key-usb/nixfiles-secrets /mnt
 ```
 
-This puts the root-owned key at `/mnt/var/lib/agenix/identity`. The temporary
-Nix shell supplies the installer command without installing the full Pixi
-development environment in the live session.
+This puts the root-owned key at `/mnt/var/lib/agenix/identity`. Use the `just`
+command supplied by the Nix shell opened earlier.
 
 Check that the key can be used without a passphrase, and that it decrypts the
 secret. Neither command displays the private key or password hash:
@@ -196,7 +193,7 @@ Skylab's password is initialized from agenix and the account has sudo access.
 Direct root SSH login remains disabled.
 
 If installation fails, keep the filesystems mounted and diagnose the error.
-Do not repeat the destructive Disko step to retry an installation.
+Do not repeat `just disko moon` to retry an installation.
 
 Check the initialized account without displaying its hash:
 
@@ -226,10 +223,10 @@ The symlink uses the path as it will exist on Moon, without `/mnt`. Its location
 matches the current Home Manager anchor default. After relocating the checkout,
 use the existing `just link-checkout` recipe to refresh it.
 
-Copy the generated hardware module and the updated import back to your main
-development checkout, then commit and push them on the installation branch so
-the next rebuild retains the device settings. The installer checkout is detached
-at the selected commit; its local hardware edits are preserved by the copy above.
+The copied checkout remains on `codex/modernization-baseline`, including the
+generated hardware module. Commit and push that module once GitHub authentication
+is available, or copy it back to the development checkout and commit it there.
+The initial revision was recorded before this device-specific addition.
 
 ## 8. Reboot and validate
 

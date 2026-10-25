@@ -74,6 +74,37 @@ branches have not been exercised on NixOS. Before using them, follow the
 [build, live-link setup, target checks, and recovery procedure](baseline.md#validation-and-recovery).
 Moon needs its own hardware and host configuration when deployment resumes.
 
+## Initial installation helpers
+
+On Moon's NixOS live USB, enter the pinned `just`/`jq` shell described in the
+[installation guide](../hosts/moon-install.md), then run:
+
+```sh
+just disko moon
+just generate-hardware moon
+just check-host moon
+```
+
+`disko <host>` **erases, formats, and mounts the configured target disks**. It
+prints their paths, builds the host's pinned `system.build.diskoScript` with one
+job and two cores, and executes it through sudo. It is not a preview command.
+Both installation helpers require NixOS and the system store; run them outside
+any distrobox.
+
+`generate-hardware <host> [root]` defaults to `/mnt`, which must be mounted. It
+scans the current machine without filesystem definitions, parses the generated
+module, and registers it with Git's intent-to-add. It refuses an existing
+hardware module. Moon conditionally imports its generated file, allowing an
+initial build before the scan and automatic inclusion afterward. Review and
+commit the generated module before future rebuilds.
+
+The installer clone stays on its normal branch. Record the initial commit and
+avoid pulling during installation; detached HEAD is unnecessary.
+
+`just test-install-workflows` exercises these recipes in disposable checkouts
+with simulated NixOS detection and stubbed Nix, sudo, mount checks, and hardware
+scanning. It never executes Disko or accesses real target devices.
+
 ## Portable dotfiles
 
 On a home managed by chezmoi, preview and apply separately:
