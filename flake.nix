@@ -7,90 +7,68 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixos-hardware.url = "github:nixos/nixos-hardware";
+    nixos-hardware = {
+      url = "github:nixos/nixos-hardware";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager";
     };
-    helix-git = {
-      url = "github:helix-editor/helix";
+    disko = {
+      url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    catppuccin.url = "github:catppuccin/nix";
-    rust-overlay.url = "github:oxalica/rust-overlay";
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, ... }:
+  outputs = inputs@{ ... }:
     let
-      system = "x86_64-linux";
-      pkgs = import nixpkgs {
-        inherit system;
-        config.allowUnfree = true;
-        overlays = import ./src/overlays
-          {
-            inherit inputs;
-            path = ./src/overlays;
-          } ++ [ (import inputs.rust-overlay) ];
+      mkHost = import ./src/lib/mk-host.nix { inherit inputs; };
+      mkUser = import ./src/lib/mk-user.nix;
+      skylab = { config, lib, ... }: mkUser {
+        name = "skylab";
+        profile = "complete";
+        description = "Eduardo Farinati Leite";
+        homeStateVersion = "23.11";
+        homeModules = [ ./src/modules/home/keyboard.nix ];
+        authorizedKeys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAknKoOCh4U3ZQK839e+i29Ae79hTbhoGlqPrmAjDBwd"
+        ];
+        extraGroups = [ "wheel" "networkmanager" "adm" ]
+          ++ lib.optional config.virtualisation.docker.enable "docker"
+          ++ lib.optionals config.virtualisation.libvirtd.enable [ "kvm" "libvirtd" ]
+          ++ [ "video" ];
       };
-      home-manager-path = "~/.config/nixfiles";
-      username = "skylab";
     in
     {
       nixosConfigurations = {
-        jupiter = nixpkgs.lib.nixosSystem
-          {
-            system = "x86_64-linux";
-            modules = [
-              inputs.catppuccin.nixosModules.catppuccin
-              inputs.nixos-hardware.nixosModules.common-cpu-intel
-              # inputs.nixos-hardware.nixosModules.common-gpu-intel
-              inputs.nixos-hardware.nixosModules.common-gpu-nvidia
-              inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
-              inputs.nixos-hardware.nixosModules.system76
-              ./src/systems/jupiter.nix
-              home-manager.nixosModules.home-manager
-              {
-                home-manager = {
-                  useGlobalPkgs = true;
-                  useUserPackages = true;
-                  users."${username}" = import (./src/homes + "/${username}.nix") {
-                    inherit pkgs;
-                    inherit username;
-                    inherit inputs;
-                    inherit home-manager-path;
-                  };
-                };
-              }
-            ];
-          };
-
-          mars = nixpkgs.lib.nixosSystem
-          {
-            system = "x86_64-linux";
-            modules = [
-              inputs.catppuccin.nixosModules.catppuccin
-              inputs.nixos-hardware.nixosModules.common-cpu-amd
-              # inputs.nixos-hardware.nixosModules.common-gpu-intel
-              inputs.nixos-hardware.nixosModules.common-gpu-nvidia
-              inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
-              # inputs.nixos-hardware.nixosModules.system76
-              ./src/systems/mars.nix
-              home-manager.nixosModules.home-manager
-              {
-                home-manager = {
-                  useGlobalPkgs = true;
-                  useUserPackages = true;
-                  users."${username}" = import (./src/homes + "/${username}.nix") {
-                    inherit pkgs;
-                    inherit username;
-                    inherit inputs;
-                    inherit home-manager-path;
-                  };
-                };
-              }
-            ];
-          };
+        jupiter = mkHost {
+          hostName = "jupiter";
+          users = [ skylab ];
+          hardwareModules = with inputs.nixos-hardware.nixosModules; [
+            common-cpu-intel
+            common-gpu-nvidia
+            common-pc-laptop-ssd
+            system76
+          ];
+        };
+        mars = mkHost {
+          hostName = "mars";
+          users = [ skylab ];
+          hardwareModules = with inputs.nixos-hardware.nixosModules; [
+            common-cpu-amd
+            common-gpu-nvidia
+            common-pc-laptop-ssd
+          ];
+        };
+        moon = mkHost {
+          hostName = "moon";
+          users = [ skylab ];
+          hardwareModules = with inputs.nixos-hardware.nixosModules; [
+            common-cpu-intel-cpu-only
+            common-pc-laptop
+          ];
+        };
       };
     };
 }

@@ -1,0 +1,58 @@
+[
+  {
+    "input_combination": [{ "type": 1, "code": 58 }],
+    "target_uinput": "keyboard",
+    "output_symbol": "mod_tap(KEY_ESC, Control_L)",
+    "name": "caps_esc_ctrl",
+    "mapping_type": "key_macro"
+  },
+  {
+    "input_combination": [{ "type": 1, "code": 1 }],
+    "target_uinput": "keyboard",
+    "output_symbol": "KEY_CAPSLOCK",
+    "name": "esc_caps",
+    "mapping_type": "key_macro"
+  },
+  {
+    "input_combination": [{ "type": 1, "code": 100 }],
+    "target_uinput": "keyboard",
+    "output_symbol": "mod_tap(KEY_COMPOSE, Alt_R)",
+    "name": "altgr_compose_altgr",
+    "mapping_type": "key_macro"
+  },
+  {
+    "input_combination": [{ "type": 1, "code": 58 }, { "type": 1, "code": 35 }],
+    "target_uinput": "keyboard",
+    "output_symbol": "key_up(KEY_LEFTCTRL).hold(KEY_BACKSPACE)",
+    "name": "ctrl_h_backspace",
+    "mapping_type": "key_macro"
+  },
+  {
+    "input_combination": [{ "type": 1, "code": 100 }, { "type": 1, "code": 36 }],
+    "target_uinput": "keyboard",
+    "output_symbol": "KEY_LEFT",
+    "name": "altgr_n_left",
+    "mapping_type": "key_macro"
+  },
+  {
+    "input_combination": [{ "type": 1, "code": 100 }, { "type": 1, "code": 37 }],
+    "target_uinput": "keyboard",
+    "output_symbol": "KEY_DOWN",
+    "name": "altgr_e_down",
+    "mapping_type": "key_macro"
+  },
+  {
+    "input_combination": [{ "type": 1, "code": 100 }, { "type": 1, "code": 38 }],
+    "target_uinput": "keyboard",
+    "output_symbol": "KEY_UP",
+    "name": "altgr_i_up",
+    "mapping_type": "key_macro"
+  },
+  {
+    "input_combination": [{ "type": 1, "code": 100 }, { "type": 1, "code": 39 }],
+    "target_uinput": "keyboard",
+    "output_symbol": "KEY_RIGHT",
+    "name": "altgr_o_right",
+    "mapping_type": "key_macro"
+  }
+]

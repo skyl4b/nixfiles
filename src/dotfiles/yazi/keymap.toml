@@ -1,0 +1,19 @@
+[[mgr.prepend_keymap]]
+on = ["l"]
+run = "plugin smart-enter"
+desc = "Enter the child directory, or open the file"
+
+[[mgr.prepend_keymap]]
+on = ["e"]
+run = 'shell --block -- $EDITOR %h'
+desc = "Open with editor"
+
+[[mgr.prepend_keymap]]
+on = ["H"]
+run = "hidden toggle"
+desc = "Toggle the visibility of hidden files"
+
+[[mgr.prepend_keymap]]
+on = ["?"]
+run = "help"
+desc = "Open help"

@@ -1,0 +1,4 @@
+set highlight-transparency	"0.05"
+set selection-clipboard	"clipboard"
+map <C-d>   navigate next
+map <C-u>   navigate previous

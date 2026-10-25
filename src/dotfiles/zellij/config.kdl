@@ -1,0 +1,10 @@
+default_mode "locked"
+keybinds {
+	locked {
+		bind "Ctrl Space" {
+			SwitchToMode "Normal"
+		}
+	}
+}
+show_release_notes false
+show_startup_tips false

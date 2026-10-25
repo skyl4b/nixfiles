@@ -1,0 +1,22 @@
+{
+  imports = [
+    ./bat.nix
+    ./bottom.nix
+    ./commitlint.nix
+    ./direnv.nix
+    ./eza.nix
+    ./gh.nix
+    ./ghostty.nix
+    ./git.nix
+    ./gitui.nix
+    ./home-manager.nix
+    ./hyfetch.nix
+    ./ripgrep.nix
+    ./starship.nix
+    ./tealdeer.nix
+    ./tmux.nix
+    ./yazi.nix
+    ./zathura.nix
+    ./zellij.nix
+  ];
+}

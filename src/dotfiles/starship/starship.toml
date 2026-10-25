@@ -1,0 +1,324 @@
+format = "$all"
+palette = "catppuccin_mocha"
+scan_timeout = 10
+
+[aws]
+format = '[$symbol($profile )(\($region\) )(\[$duration\] )]($style)'
+symbol = "  "
+
+[battery]
+disabled = true
+
+[buf]
+format = "[$symbol($version )]($style)"
+symbol = " "
+
+[bun]
+format = "[$symbol($version )]($style)"
+
+[c]
+format = "[$symbol($version(-$name) )]($style)"
+symbol = " "
+
+[character]
+error_symbol = "[λ](bold red)"
+success_symbol = "[λ](bold green)"
+
+[cmake]
+format = "[$symbol($version )]($style)"
+
+[cmd_duration]
+disabled = true
+
+[cobol]
+format = "[$symbol($version )]($style)"
+
+[conda]
+format = "[$symbol$environment]($style) "
+symbol = " "
+
+[container]
+format = '[$symbol \[$name\]]($style) '
+
+[crystal]
+format = "[$symbol($version )]($style)"
+
+[daml]
+format = "[$symbol($version )]($style)"
+
+[dart]
+format = "[$symbol($version )]($style)"
+symbol = " "
+
+[deno]
+format = "[$symbol($version )]($style)"
+
+[directory]
+read_only = " 󰌾"
+style = "bold lavender"
+truncation_length = 3
+
+[docker_context]
+format = "[$symbol$context]($style) "
+symbol = " "
+
+[dotnet]
+format = "[$symbol($version )(🎯 $tfm )]($style)"
+
+[elixir]
+format = '[$symbol($version \(OTP $otp_version\) )]($style)'
+symbol = " "
+
+[elm]
+format = "[$symbol($version )]($style)"
+symbol = " "
+
+[erlang]
+format = "[$symbol($version )]($style)"
+
+[fennel]
+format = "[$symbol($version )]($style)"
+
+[fossil_branch]
+format = "[$symbol$branch]($style) "
+symbol = " "
+
+[gcloud]
+format = '[$symbol$account(@$domain)(\($region\))]($style) '
+
+[git_branch]
+format = "[$symbol$branch(:$remote_branch)]($style) "
+only_attached = true
+symbol = " "
+
+[golang]
+format = "[$symbol($version )]($style)"
+symbol = " "
+
+[gradle]
+format = "[$symbol($version )]($style)"
+
+[guix_shell]
+format = "[$symbol]($style) "
+symbol = " "
+
+[haskell]
+format = "[$symbol($version )]($style)"
+symbol = " "
+
+[haxe]
+format = "[$symbol($version )]($style)"
+symbol = " "
+
+[helm]
+format = "[$symbol($version )]($style)"
+
+[hg_branch]
+disabled = false
+format = "[$symbol$branch(:$topic)]($style) "
+symbol = " "
+
+[hostname]
+format = "[$ssh_symbol$hostname]($style):"
+ssh_only = false
+ssh_symbol = " "
+
+[java]
+format = "[$symbol($version )]($style)"
+symbol = " "
+
+[julia]
+format = "[$symbol($version )]($style)"
+symbol = " "
+
+[kotlin]
+format = "[$symbol($version )]($style)"
+
+[kubernetes]
+disabled = false
+format = '[$symbol$context( \($namespace\))]($style) '
+
+[line_break]
+disabled = true
+
+[lua]
+format = "[$symbol($version )]($style)"
+symbol = " "
+
+[memory_usage]
+disabled = true
+format = '$symbol [$ram( \| $swap)]($style) '
+symbol = "󰍛 "
+
+[meson]
+format = "[$symbol$project]($style) "
+symbol = "󰔷 "
+
+[nim]
+format = "[$symbol($version )]($style)"
+symbol = "󰆥 "
+
+[nix_shell]
+format = "[$symbol$state]($style) "
+impure_msg = "i"
+pure_msg = "p"
+symbol = " "
+unknown_msg = "u"
+
+[nodejs]
+format = "[$symbol($version )]($style)"
+symbol = " "
+
+[ocaml]
+format = '[$symbol($version )(\($switch_indicator$switch_name\) )]($style)'
+
+[opa]
+format = "[$symbol($version )]($style)"
+
+[openstack]
+format = '[$symbol$cloud(\($project\))]($style) '
+
+[os]
+disabled = true
+
+[os.symbols]
+Alpaquita = " "
+Alpine = " "
+Amazon = " "
+Android = " "
+Arch = " "
+Artix = " "
+CentOS = " "
+Debian = " "
+DragonFly = " "
+Emscripten = " "
+EndeavourOS = " "
+Fedora = " "
+FreeBSD = " "
+Garuda = "󰛓 "
+Gentoo = " "
+HardenedBSD = "󰞌 "
+Illumos = "󰈸 "
+Linux = " "
+Mabox = " "
+Macos = " "
+Manjaro = " "
+Mariner = " "
+MidnightBSD = " "
+Mint = " "
+NetBSD = " "
+NixOS = " "
+OpenBSD = "󰈺 "
+OracleLinux = "󰌷 "
+Pop = " "
+Raspbian = " "
+RedHatEnterprise = " "
+Redhat = " "
+Redox = "󰀘 "
+SUSE = " "
+Solus = "󰠳 "
+Ubuntu = " "
+Unknown = " "
+Windows = "󰍲 "
+openSUSE = " "
+
+[package]
+format = "[$symbol$version]($style) "
+symbol = "󰏗 "
+
+[palettes.catppuccin_mocha]
+base = "#1e1e2e"
+blue = "#89b4fa"
+crust = "#11111b"
+flamingo = "#f2cdcd"
+green = "#a6e3a1"
+lavender = "#b4befe"
+mantle = "#181825"
+maroon = "#eba0ac"
+mauve = "#cba6f7"
+overlay0 = "#6c7086"
+overlay1 = "#7f849c"
+overlay2 = "#9399b2"
+peach = "#fab387"
+pink = "#f5c2e7"
+red = "#f38ba8"
+rosewater = "#f5e0dc"
+sapphire = "#74c7ec"
+sky = "#89dceb"
+subtext0 = "#a6adc8"
+subtext1 = "#bac2de"
+surface0 = "#313244"
+surface1 = "#45475a"
+surface2 = "#585b70"
+teal = "#94e2d5"
+text = "#cdd6f4"
+yellow = "#f9e2af"
+
+[perl]
+format = "[$symbol($version )]($style)"
+
+[php]
+format = "[$symbol($version )]($style)"
+
+[pijul_channel]
+format = "[$symbol$channel]($style) "
+symbol = " "
+
+[pulumi]
+format = "[$symbol($username@)$stack]($style) "
+
+[purescript]
+format = "[$symbol($version )]($style)"
+
+[python]
+format = '[$symbol$pyenv_prefix($version )(\($virtualenv\) )]($style)'
+symbol = " "
+
+[raku]
+format = "[$symbol($version-$vm_version )]($style)"
+
+[red]
+format = "[$symbol($version )]($style)"
+
+[rlang]
+format = "[$symbol($version )]($style)"
+symbol = "󰟔 "
+
+[ruby]
+format = "[$symbol($version )]($style)"
+symbol = " "
+
+[rust]
+format = "[$symbol($version )]($style)"
+symbol = " "
+
+[scala]
+format = "[$symbol($version )]($style)"
+symbol = " "
+
+[spack]
+format = "[$symbol$environment]($style) "
+symbol = "🅢 "
+
+[swift]
+format = "[$symbol($version )]($style)"
+symbol = " "
+
+[terraform]
+format = "[$symbol$workspace]($style) "
+
+[time]
+format = "[$time]($style) "
+
+[username]
+format = "[$user]($style)@"
+show_always = true
+
+[vagrant]
+format = "[$symbol($version )]($style)"
+
+[vlang]
+format = "[$symbol($version )]($style)"
+
+[zig]
+format = "[$symbol($version )]($style)"

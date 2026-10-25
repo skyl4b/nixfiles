@@ -1,4 +1,5 @@
-args:
+{ inputs }:
 
-let utils = import ../utils.nix args;
-in builtins.attrValues (utils.importDir ./.)
+[
+  (import ./agenix.nix { inherit inputs; })
+]

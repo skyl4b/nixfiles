@@ -1,0 +1,570 @@
+Nixfiles baseline captured 2026-10-18T02:33:40Z
+Commit: dcf4c769c6b4baac198e2741b6fc1b1a02e94ac1
+Branch: codex/modernization-baseline
+Lock SHA-256: 89c8083891b34a338aacd18481fed7ed432b145701323aa5e6b27af4c01d11fc
+Environment: Ubuntu 24.04 container, Pixi development environment
+Test store root: /tmp/nixfiles-nix.OIIJ7t
+Result: exit 1; 7 checks passed, 7 checks failed
+Commands are embedded in justfile; no full system build or activation.
+See baseline.md for interpretation and limits.
+
+=== nix-version ===
+Command: nix --version
+
+nix (Nix) 2.35.3
+
+=== syntax ===
+Command: just _syntax
+
+Parsing flake.nix
+Parsing src/dotfiles/bat.nix
+Parsing src/dotfiles/bottom.nix
+Parsing src/dotfiles/default.nix
+Parsing src/dotfiles/direnv/default.nix
+Parsing src/dotfiles/eza.nix
+Parsing src/dotfiles/gh.nix
+Parsing src/dotfiles/git.nix
+Parsing src/dotfiles/gitui.nix
+Parsing src/dotfiles/helix/default.nix
+Parsing src/dotfiles/helix/languages.nix
+Parsing src/dotfiles/helix/settings.nix
+Parsing src/dotfiles/home-manager.nix
+Parsing src/dotfiles/hyfetch.nix
+Parsing src/dotfiles/ripgrep.nix
+Parsing src/dotfiles/starship.nix
+Parsing src/dotfiles/tealdeer.nix
+Parsing src/dotfiles/tmux/default.nix
+Parsing src/dotfiles/wezterm/default.nix
+Parsing src/dotfiles/yazi/default.nix
+Parsing src/dotfiles/zathura.nix
+Parsing src/dotfiles/zellij.nix
+Parsing src/homes/skylab.nix
+Parsing src/overlays/agenix.nix
+Parsing src/overlays/copilot-lsp.nix
+Parsing src/overlays/default.nix
+Parsing src/packages/copilot-lsp.nix
+Parsing src/systems/cachix/caches/cosmic.nix
+Parsing src/systems/cachix/caches/helix.nix
+Parsing src/systems/cachix/default.nix
+Parsing src/systems/desktops/cosmic.nix
+Parsing src/systems/desktops/gnome.nix
+Parsing src/systems/desktops/hyprland.nix
+Parsing src/systems/hardware/addw3.nix
+Parsing src/systems/hardware/asus_a15.nix
+Parsing src/systems/jupiter.nix
+Parsing src/systems/mars.nix
+Parsing src/utils.nix
+Parsed 38 Nix files.
+
+=== outputs ===
+Command: nix --extra-experimental-features nix-command\ flakes --store /tmp/nixfiles-nix.OIIJ7t --option build-users-group '' flake show --no-update-lock-file --json .
+
+warning: Git tree '/var/home/skylab/Projects/nixfiles' is dirty
+evaluating ''...
+evaluating 'nixosConfigurations'...
+evaluating 'nixosConfigurations.jupiter'...
+evaluating 'nixosConfigurations.mars'...
+{"nixosConfigurations":{"jupiter":{"type":"nixos-configuration"},"mars":{"type":"nixos-configuration"}}}
+
+=== flake-check ===
+Command: nix --extra-experimental-features nix-command\ flakes --store /tmp/nixfiles-nix.OIIJ7t --option build-users-group '' flake check --no-update-lock-file --no-build --keep-going .
+
+warning: Git tree '/var/home/skylab/Projects/nixfiles' is dirty
+evaluating flake...
+checking flake output 'nixosConfigurations'...
+checking NixOS configuration 'nixosConfigurations.jupiter'...
+evaluation warning: Obsolete Flake attribute `catppuccin.homeManagerModules.catppuccin' is used. It was renamed to `catppuccin.homeModules.catppuccin`'.
+evaluation warning: 'system' has been renamed to/replaced by 'stdenv.hostPlatform.system'
+evaluation warning: 'hiPrio' has been removed from pkgs, use `lib.hiPrio` instead
+evaluation warning: 'hiPrio' has been removed from pkgs, use `lib.hiPrio` instead
+unpacking 'github:mi2ebi/tree-sitter-bovex/de7657a9cc3525b9b77c6d268da09dad5b1346b0' into the Git cache...
+error:
+       … while checking the NixOS configuration 'nixosConfigurations.jupiter'
+         at /var/home/skylab/Projects/nixfiles/flake.nix:41:9:
+           40|       nixosConfigurations = {
+           41|         jupiter = nixpkgs.lib.nixosSystem
+             |         ^
+           42|           {
+
+       … while calling the 'head' builtin
+         at «github:nixos/nixpkgs/89c2b2330e733d6cdb5eae7b899326930c2c0648?narHash=sha256-Stk9ZYRkGrnnpyJ4eqt9eQtdFWRRIvMxpNRf4sIegnw%3D»/lib/attrsets.nix:1696:13:
+         1695|           if length values == 1 || pred here (elemAt values 1) (head values) then
+         1696|             head values
+             |             ^
+         1697|           else
+
+       … while evaluating the option `system.build.toplevel':
+
+       … while evaluating definitions from `/nix/store/f640ps0hcp7w5jzg18djf8gdhl6r2rnl-source/nixos/modules/system/activation/top-level.nix':
+
+       … while evaluating the option `warnings':
+
+       … while evaluating definitions from `/nix/store/f640ps0hcp7w5jzg18djf8gdhl6r2rnl-source/nixos/modules/system/boot/systemd.nix':
+
+       … while evaluating the option `systemd.services.home-manager-skylab.serviceConfig':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/nixos':
+
+       … while evaluating the option `home-manager.users.skylab.home.file."/home/skylab/.config/fontconfig/conf.d/10-hm-fonts.conf".source':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/files.nix':
+
+       … while evaluating the option `home-manager.users.skylab.home.file."/home/skylab/.config/fontconfig/conf.d/10-hm-fonts.conf".text':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/misc/xdg.nix':
+
+       … while evaluating the option `home-manager.users.skylab.xdg.configFile."fontconfig/conf.d/10-hm-fonts.conf".text':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/misc/fontconfig.nix':
+
+       … while evaluating the option `home-manager.users.skylab.fonts.fontconfig.configFile.fonts.text':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/misc/fontconfig.nix':
+
+       (stack trace truncated; use '--show-trace' to show the full, detailed trace)
+
+       error: Failed to open archive (Source threw exception: error: unable to download 'https://github.com/mi2ebi/tree-sitter-bovex/archive/de7657a9cc3525b9b77c6d268da09dad5b1346b0.tar.gz': HTTP error 404
+
+              response body:
+
+              Not Found)
+checking NixOS configuration 'nixosConfigurations.mars'...
+evaluation warning: 'hiPrio' has been removed from pkgs, use `lib.hiPrio` instead
+evaluation warning: 'hiPrio' has been removed from pkgs, use `lib.hiPrio` instead
+error:
+       … while checking the NixOS configuration 'nixosConfigurations.mars'
+         at /var/home/skylab/Projects/nixfiles/flake.nix:68:11:
+           67|
+           68|           mars = nixpkgs.lib.nixosSystem
+             |           ^
+           69|           {
+
+       … while calling the 'head' builtin
+         at «github:nixos/nixpkgs/89c2b2330e733d6cdb5eae7b899326930c2c0648?narHash=sha256-Stk9ZYRkGrnnpyJ4eqt9eQtdFWRRIvMxpNRf4sIegnw%3D»/lib/attrsets.nix:1696:13:
+         1695|           if length values == 1 || pred here (elemAt values 1) (head values) then
+         1696|             head values
+             |             ^
+         1697|           else
+
+       … while evaluating the option `system.build.toplevel':
+
+       … while evaluating definitions from `/nix/store/f640ps0hcp7w5jzg18djf8gdhl6r2rnl-source/nixos/modules/system/activation/top-level.nix':
+
+       … while evaluating the option `warnings':
+
+       … while evaluating definitions from `/nix/store/f640ps0hcp7w5jzg18djf8gdhl6r2rnl-source/nixos/modules/system/boot/systemd.nix':
+
+       … while evaluating the option `systemd.services.home-manager-skylab.serviceConfig':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/nixos':
+
+       … while evaluating the option `home-manager.users.skylab.home.file."/home/skylab/.config/fontconfig/conf.d/10-hm-fonts.conf".source':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/files.nix':
+
+       … while evaluating the option `home-manager.users.skylab.home.file."/home/skylab/.config/fontconfig/conf.d/10-hm-fonts.conf".text':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/misc/xdg.nix':
+
+       … while evaluating the option `home-manager.users.skylab.xdg.configFile."fontconfig/conf.d/10-hm-fonts.conf".text':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/misc/fontconfig.nix':
+
+       … while evaluating the option `home-manager.users.skylab.fonts.fontconfig.configFile.fonts.text':
+
+       (15 duplicate frames omitted)
+
+       (stack trace truncated; use '--show-trace' to show the full, detailed trace)
+
+       error: Failed to open archive (Source threw exception: error: unable to download 'https://github.com/mi2ebi/tree-sitter-bovex/archive/de7657a9cc3525b9b77c6d268da09dad5b1346b0.tar.gz': HTTP error 404
+
+              response body:
+
+              Not Found)
+error: some errors were encountered during the evaluation
+
+=== jupiter-metadata ===
+Command: nix --extra-experimental-features nix-command\ flakes --store /tmp/nixfiles-nix.OIIJ7t --option build-users-group '' eval --no-update-lock-file --json .#nixosConfigurations.jupiter.config --apply $'config: {\n            hostName = config.networking.hostName;\n            systemStateVersion = config.system.stateVersion;\n            homeStateVersion = config.home-manager.users.skylab.home.stateVersion;\n            warnings = config.warnings;\n        }'
+
+warning: Git tree '/var/home/skylab/Projects/nixfiles' is dirty
+evaluation warning: Obsolete Flake attribute `catppuccin.homeManagerModules.catppuccin' is used. It was renamed to `catppuccin.homeModules.catppuccin`'.
+evaluation warning: 'system' has been renamed to/replaced by 'stdenv.hostPlatform.system'
+evaluation warning: 'hiPrio' has been removed from pkgs, use `lib.hiPrio` instead
+evaluation warning: 'hiPrio' has been removed from pkgs, use `lib.hiPrio` instead
+unpacking 'github:mi2ebi/tree-sitter-bovex/de7657a9cc3525b9b77c6d268da09dad5b1346b0' into the Git cache...
+error:
+       … while evaluating attribute 'warnings'
+         at «string»:5:13:
+            4|             homeStateVersion = config.home-manager.users.skylab.home.stateVersion;
+            5|             warnings = config.warnings;
+             |             ^
+            6|         }
+
+       … while evaluating the attribute 'value'
+         at «github:nixos/nixpkgs/89c2b2330e733d6cdb5eae7b899326930c2c0648?narHash=sha256-Stk9ZYRkGrnnpyJ4eqt9eQtdFWRRIvMxpNRf4sIegnw%3D»/lib/modules.nix:1118:7:
+         1117|     // {
+         1118|       value = addErrorContext "while evaluating the option `${showOption loc}':" value;
+             |       ^
+         1119|       inherit (res.defsFinal') highestPrio;
+
+       … while evaluating the option `warnings':
+
+       … while evaluating definitions from `/nix/store/f640ps0hcp7w5jzg18djf8gdhl6r2rnl-source/nixos/modules/system/boot/systemd.nix':
+
+       … while evaluating the option `systemd.services.home-manager-skylab.serviceConfig':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/nixos':
+
+       … while evaluating the option `home-manager.users.skylab.home.file."/home/skylab/.config/fontconfig/conf.d/10-hm-fonts.conf".source':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/files.nix':
+
+       … while evaluating the option `home-manager.users.skylab.home.file."/home/skylab/.config/fontconfig/conf.d/10-hm-fonts.conf".text':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/misc/xdg.nix':
+
+       … while evaluating the option `home-manager.users.skylab.xdg.configFile."fontconfig/conf.d/10-hm-fonts.conf".text':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/misc/fontconfig.nix':
+
+       … while evaluating the option `home-manager.users.skylab.fonts.fontconfig.configFile.fonts.text':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/misc/fontconfig.nix':
+
+       (stack trace truncated; use '--show-trace' to show the full, detailed trace)
+
+       error: Failed to open archive (Source threw exception: error: unable to download 'https://github.com/mi2ebi/tree-sitter-bovex/archive/de7657a9cc3525b9b77c6d268da09dad5b1346b0.tar.gz': HTTP error 404
+
+              response body:
+
+              Not Found)
+
+=== jupiter-eval ===
+Command: nix --extra-experimental-features nix-command\ flakes --store /tmp/nixfiles-nix.OIIJ7t --option build-users-group '' eval --no-update-lock-file --raw .#nixosConfigurations.jupiter.config.system.build.toplevel.drvPath
+
+warning: Git tree '/var/home/skylab/Projects/nixfiles' is dirty
+evaluation warning: Obsolete Flake attribute `catppuccin.homeManagerModules.catppuccin' is used. It was renamed to `catppuccin.homeModules.catppuccin`'.
+evaluation warning: 'system' has been renamed to/replaced by 'stdenv.hostPlatform.system'
+evaluation warning: 'hiPrio' has been removed from pkgs, use `lib.hiPrio` instead
+evaluation warning: 'hiPrio' has been removed from pkgs, use `lib.hiPrio` instead
+unpacking 'github:mi2ebi/tree-sitter-bovex/de7657a9cc3525b9b77c6d268da09dad5b1346b0' into the Git cache...
+error:
+       … while calling the 'head' builtin
+         at «github:nixos/nixpkgs/89c2b2330e733d6cdb5eae7b899326930c2c0648?narHash=sha256-Stk9ZYRkGrnnpyJ4eqt9eQtdFWRRIvMxpNRf4sIegnw%3D»/lib/attrsets.nix:1696:13:
+         1695|           if length values == 1 || pred here (elemAt values 1) (head values) then
+         1696|             head values
+             |             ^
+         1697|           else
+
+       … while evaluating the attribute 'value'
+         at «github:nixos/nixpkgs/89c2b2330e733d6cdb5eae7b899326930c2c0648?narHash=sha256-Stk9ZYRkGrnnpyJ4eqt9eQtdFWRRIvMxpNRf4sIegnw%3D»/lib/modules.nix:1118:7:
+         1117|     // {
+         1118|       value = addErrorContext "while evaluating the option `${showOption loc}':" value;
+             |       ^
+         1119|       inherit (res.defsFinal') highestPrio;
+
+       … while evaluating the option `system.build.toplevel':
+
+       … while evaluating definitions from `/nix/store/f640ps0hcp7w5jzg18djf8gdhl6r2rnl-source/nixos/modules/system/activation/top-level.nix':
+
+       … while evaluating the option `warnings':
+
+       … while evaluating definitions from `/nix/store/f640ps0hcp7w5jzg18djf8gdhl6r2rnl-source/nixos/modules/system/boot/systemd.nix':
+
+       … while evaluating the option `systemd.services.home-manager-skylab.serviceConfig':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/nixos':
+
+       … while evaluating the option `home-manager.users.skylab.home.file."/home/skylab/.config/fontconfig/conf.d/10-hm-fonts.conf".source':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/files.nix':
+
+       … while evaluating the option `home-manager.users.skylab.home.file."/home/skylab/.config/fontconfig/conf.d/10-hm-fonts.conf".text':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/misc/xdg.nix':
+
+       … while evaluating the option `home-manager.users.skylab.xdg.configFile."fontconfig/conf.d/10-hm-fonts.conf".text':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/misc/fontconfig.nix':
+
+       … while evaluating the option `home-manager.users.skylab.fonts.fontconfig.configFile.fonts.text':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/misc/fontconfig.nix':
+
+       (stack trace truncated; use '--show-trace' to show the full, detailed trace)
+
+       error: Failed to open archive (Source threw exception: error: unable to download 'https://github.com/mi2ebi/tree-sitter-bovex/archive/de7657a9cc3525b9b77c6d268da09dad5b1346b0.tar.gz': HTTP error 404
+
+              response body:
+
+              Not Found)
+
+=== jupiter-system-packages ===
+Command: nix --extra-experimental-features nix-command\ flakes --store /tmp/nixfiles-nix.OIIJ7t --option build-users-group '' eval --no-update-lock-file --json .#nixosConfigurations.jupiter.config.environment.systemPackages --apply packages:\ map\ \(package:\ package.name\)\ packages
+
+warning: Git tree '/var/home/skylab/Projects/nixfiles' is dirty
+evaluation warning: Obsolete Flake attribute `catppuccin.homeManagerModules.catppuccin' is used. It was renamed to `catppuccin.homeModules.catppuccin`'.
+["ptyxis-49.2","gnome-software-49.1","gnome-tweaks-49.0","gnome-shell-extension-appindicator-support-61","gnome-shell-extension-dash-to-dock-102","gnome-shell-extension-caffeine-58","gdm-settings-5.0","gnome-network-displays-0.97.0","gnome-shell-extension-pop-shell-1.2.0-unstable-2025-10-01","pop-launcher-1.2.7","cachix-1.9.1","mesa-demos-9.0.0","libva-utils-2.22.0","vulkan-tools-1.4.328.0","lshw-02.20","pciutils-3.14.0","lm-sensors-3.6.2","pulseaudio-17.0","git-2.51.2","curl-8.16.0","dos2unix-7.5.2","neovim-0.11.5","unzip-6.0","firefox-145.0","brave-1.84.139","xhost-1.0.10","psmisc-23.7","firmware-manager-0.1.5","gnome-shell-49.1","sound-theme-freedesktop-0.8","gnome-shell-49.1","adwaita-icon-theme-49.0","nixos-background-info","gnome-backgrounds-49.0","gnome-bluetooth-47.1","gnome-color-manager-3.32.0","gnome-control-center-49.1","gnome-tour-49.0","gnome-user-docs-49.1","glib-2.86.1","gnome-menus-3.38.1","gtk+3-3.24.51","xdg-user-dirs-0.18","xdg-user-dirs-gtk-0.14","baobab-49.0","decibels-49.0","epiphany-49.1","gnome-text-editor-49.0","gnome-calculator-49.1.1","gnome-calendar-49.0.1","gnome-characters-49.1","gnome-clocks-49.0","gnome-console-49.1","gnome-contacts-49.0","gnome-font-viewer-49.0","gnome-logs-49.0","gnome-maps-49.2","gnome-music-49.1","gnome-system-monitor-49.1","gnome-weather-49.0","loupe-49.1","nautilus-49.1","papers-49.1","gnome-connections-49.0","showtime-49.0","simple-scan-49.1","snapshot-49.0","yelp-49.0","nixos-version","nixos-rebuild-ng-25.11","nixos-option","nixos-install","nixos-generate-config","nixos-enter","nixos-build-vms","libressl-4.2.0","iptables-1.8.11","libvirt-11.7.0","qemu-10.1.2","docker-28.5.1","lvm2-2.03.35","dosfstools-4.2","mtools-4.0.49","e2fsprogs-1.47.3","dosfstools-4.2","bcache-tools-1.1","systemd-258.1","kmod-31","kexec-tools-2.0.32","xorg-server-21.1.20","xrandr-1.5.3","xrdb-1.2.2","setxkbmap-1.3.4","iceauth-1.0.10","xlsclients-1.1.5","xset-1.2.5","xsetroot-1.1.3","xinput-1.6.4","xprop-1.2.8","xauth-1.1.4","xterm-403","xf86-input-evdev-2.11.0","colord-1.4.6","nix-2.31.2","nix-info","nix-bash-completions-0.6.8","dbus-1.14.10","cups-2.4.14","xdg-utils-1.2.1","cups-pk-helper-0.2.6","networkmanager-1.54.1","wpa_supplicant-2.11","modemmanager-1.24.0","avahi-0.8","nixos-icons-0-unstable-2024-04-10","xdg-utils-1.2.1","upower-1.90.10","udisks-2.10.2","xf86-input-libinput-1.5.0","fwupd-2.0.16","bolt-0.9.8","bluez-5.83","adwaita-icon-theme-49.0","gdm-49.1","system76-scheduler-2.0.2","wireplumber-0.5.12","pipewire-1.4.9","jack-libs","gvfs-1.58.0","tinysparql-3.10.1","sushi-46.0","rygel-45.0","localsearch-3.10.1","gnome-user-share-48.1","gnome-software-49.1","gnome-settings-daemon-49.1","gnome-remote-desktop-49.1","gnome-online-accounts-3.56.1","gnome-keyring-48.0","gnome-initial-setup-49.0","gnome-browser-connector-42.1","evolution-with-plugins","at-spi2-core-2.58.0","geoclue-2.7.2","flatpak-1.16.1","fuse-3.17.4","dleyna-0.8.3","accountsservice-23.13.9","speech-dispatcher-0.12.1","orca-49.4","sudo-1.9.17p2","rtkit-0.13","polkit-126","polkit-126","linux-pam-1.7.1","xwayland-24.1.9","virt-manager-5.1.0","shadow-4.18.0","bash-interactive-5.3p3","seahorse-47.0.1","nano-8.6","less-679","gnome-disk-utility-46.1","geary-46.0","fuse-2.9.9","fuse-3.17.4","dconf-0.40.0","man-db-2.13.1","texinfo-interactive-7.2","nixos-configuration-reference-manpage","nixos-manual-html","nixos-help","switcheroo-control-2.6","nvidia-x11-580.105.08-6.12.58","nvidia-settings-580.105.08","nvidia-offload","system76-firmware-1.0.74","system76-power-1.2.7","sound-theme-freedesktop-0.8","xdg-desktop-portal-1.20.3","xdg-desktop-portal-gnome-49.0","xdg-desktop-portal-gtk-1.15.3","gnome-keyring-48.0","gnome-session-49.1","shared-mime-info-2.4","hicolor-icon-theme-0.18","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","bash-interactive-5.3p3","shadow-4.18.0","bash-interactive-5.3p3","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","bind-9.20.15","hostname-debian-3.25","iproute2-6.17.0","iputils-20250605","openssh-10.2p1","acl-2.3.2","attr-2.5.2","bash-interactive-5.3p3","bzip2-1.0.8","coreutils-full-9.8","cpio-2.15","curl-8.16.0","diffutils-3.12","findutils-4.10.0","gawk-5.3.2","getent-glibc-2.40-66","getconf-glibc-2.40-66","gnugrep-3.12","patch-2.8","gnused-4.9","gnutar-1.35","gzip-1.14","xz-5.8.1","less-679","libcap-2.76","ncurses-6.5","libressl-4.2.0","mkpasswd-5.6.5","procps-4.0.4","shadow-4.18.0","time-1.9","util-linux-2.41.2","which-2.23","zstd-1.5.7","glibc-2.40-66","perl-5.40.0","rsync-3.4.1","strace-6.17","openresolv-3.17.0","glibc-locales-2.40-66","X11-fonts","fontconfig-2.17.1","kbd-2.9.0"]
+
+=== jupiter-home-packages ===
+Command: nix --extra-experimental-features nix-command\ flakes --store /tmp/nixfiles-nix.OIIJ7t --option build-users-group '' eval --no-update-lock-file --json .#nixosConfigurations.jupiter.config.home-manager.users.skylab.home.packages --apply packages:\ map\ \(package:\ package.name\)\ packages
+
+warning: Git tree '/var/home/skylab/Projects/nixfiles' is dirty
+evaluation warning: Obsolete Flake attribute `catppuccin.homeManagerModules.catppuccin' is used. It was renamed to `catppuccin.homeModules.catppuccin`'.
+evaluation warning: 'system' has been renamed to/replaced by 'stdenv.hostPlatform.system'
+evaluation warning: 'hiPrio' has been removed from pkgs, use `lib.hiPrio` instead
+evaluation warning: 'hiPrio' has been removed from pkgs, use `lib.hiPrio` instead
+["zellij-0.43.1","zathura-with-plugins-0.5.13","yazi-25.5.31","wezterm-0-unstable-2025-10-14","tmux-3.5a","tealdeer-1.8.1","starship-1.24.1","ripgrep-15.1.0","man-db-2.13.1","hyfetch-2.0.4","helix-term","gitui-0.27.0","git-2.51.2","gh-2.83.1","eza-0.23.4","direnv-2.37.1","bottom-0.11.3","bat-0.26.0","batdiff-2024.08.24-unstable-2025-02-22","batman-2024.08.24-unstable-2025-02-22","batgrep-2024.08.24-unstable-2025-02-22","batwatch-2024.08.24-unstable-2025-02-22","shared-mime-info-2.4","dummy-xdg-mime-dirs1","dummy-xdg-mime-dirs2","qgnomeplatform-0.8.4","qgnomeplatform-0.8.4","adwaita-qt-1.4.2","adwaita-qt-1.4.2","gnome-themes-extra-3.28","dummy-fc-dir1","dummy-fc-dir2","home-configuration-reference-manpage","hm-session-vars.sh","agenix-0.15.0","aichat-0.30.0","hunspell-1.7.2","hunspell-dict-en-us-large-wordlist-2018.04.16","hunspell-dict-de-de-j3e-20161207","hunspell-dict-fr-moderne-dicollecte-5.3","hunspell-dict-pt-br-libreoffice-6.3.0.4","gcc-wrapper-14.3.0","bakoma-ttf-2.2","cachix-1.9.1","cheat-4.4.2","clang-wrapper-21.1.2","corefonts-1","coreutils-9.8","distrobox-1.8.2.0","exercism-3.5.8","emacs-pgtk-30.2","fd-10.3.0","fzf-0.67.0","git-crypt-0.8.0","git-extras-7.4.0","gnuplot-6.0.3","libqalculate-5.8.1","httpie-3.2.4","inetutils-2.6","lazydocker-0.24.2","LanguageTool-6.6","libcaca-0.99.beta20","linux-libertine-5.3.0","monaspace-1.301","nerd-fonts-symbols-only-3.4.0","pyright-1.1.407","bash-language-server-5.6.0","dockerfile-language-server-0.15.0","vscode-langservers-extracted-4.10.0","typescript-language-server-5.1.1","prettier-3.6.2","markdownlint-cli-0.45.0","efm-langserver-0.0.54","prettierd-0.26.2","marksman-2024-12-18","ltex-ls-16.0.0","nil-2025-06-13","statix-0.5.8","nixpkgs-fmt-1.3.0","python3-3.13.9-env","quarto-1.7.34","ruff-0.14.4","basedpyright-1.33.0","taplo-0.10.0","yaml-language-server-1.19.2","clang-tools-21.1.2","texlab-5.24.0","lldb-21.1.2","tinymist-0.14.0","lua-language-server-3.15.0","stylua-2.3.1","luajit2.1-luacheck-1.2.0-1","docker-compose-language-service-0.2.0","hadolint-2.14.0","ollama-0.12.11","rust-default-1.91.1","dioxus-cli-0.7.1","wasm-bindgen-cli-0.2.104","llvm-binutils-wrapper-21.1.2","monocraft-4.0","rclone-1.71.2","scanmem-0.17","shellcheck-0.11.0","shfmt-3.12.0","hyperfine-1.19.0","parallel-full-20251022","ttyper-1.6.0","unicode-2.9","vscode-1.106.0","w3m-0.5.5","wl-clipboard-2.2.1","x11docker-7.6.0-unstable-2024-04-04","xdg-ninja-0.2.0.2-unstable-2025-11-01","zoxide-0.9.8","trashy-2.0.0","grex-1.4.6","gdb-16.3","gnumake-4.4.1","wget-1.25.0","typescript-5.9.3","bun-1.3.2","gleam-1.13.0","erlang-28.1.1","rebar3-3.25.1","typos-1.39.2","typos-lsp-0.1.45","inshellisense-0.0.1-rc.21","devcontainer-0.80.1","just-1.43.1","lemminx-0.31.0","neocmakelsp-0.8.26","cmake-format-0.6.13","commitlint-20.1.0","zed-editor-0.212.6","neovim-unwrapped-0.11.5","tree-sitter-0.25.10","nodejs-22.21.1","deno-2.5.6","home-manager-update","update"]
+
+=== jupiter-build-plan ===
+Command: nix --extra-experimental-features nix-command\ flakes --store /tmp/nixfiles-nix.OIIJ7t --option build-users-group '' build --no-update-lock-file --dry-run --no-link .#nixosConfigurations.jupiter.config.system.build.toplevel
+
+warning: Git tree '/var/home/skylab/Projects/nixfiles' is dirty
+evaluation warning: Obsolete Flake attribute `catppuccin.homeManagerModules.catppuccin' is used. It was renamed to `catppuccin.homeModules.catppuccin`'.
+evaluation warning: 'system' has been renamed to/replaced by 'stdenv.hostPlatform.system'
+evaluation warning: 'hiPrio' has been removed from pkgs, use `lib.hiPrio` instead
+evaluation warning: 'hiPrio' has been removed from pkgs, use `lib.hiPrio` instead
+unpacking 'github:mi2ebi/tree-sitter-bovex/de7657a9cc3525b9b77c6d268da09dad5b1346b0' into the Git cache...
+error:
+       … while calling the 'head' builtin
+         at «github:nixos/nixpkgs/89c2b2330e733d6cdb5eae7b899326930c2c0648?narHash=sha256-Stk9ZYRkGrnnpyJ4eqt9eQtdFWRRIvMxpNRf4sIegnw%3D»/lib/attrsets.nix:1696:13:
+         1695|           if length values == 1 || pred here (elemAt values 1) (head values) then
+         1696|             head values
+             |             ^
+         1697|           else
+
+       … while evaluating the attribute 'value'
+         at «github:nixos/nixpkgs/89c2b2330e733d6cdb5eae7b899326930c2c0648?narHash=sha256-Stk9ZYRkGrnnpyJ4eqt9eQtdFWRRIvMxpNRf4sIegnw%3D»/lib/modules.nix:1118:7:
+         1117|     // {
+         1118|       value = addErrorContext "while evaluating the option `${showOption loc}':" value;
+             |       ^
+         1119|       inherit (res.defsFinal') highestPrio;
+
+       … while evaluating the option `system.build.toplevel':
+
+       … while evaluating definitions from `/nix/store/f640ps0hcp7w5jzg18djf8gdhl6r2rnl-source/nixos/modules/system/activation/top-level.nix':
+
+       … while evaluating the option `warnings':
+
+       … while evaluating definitions from `/nix/store/f640ps0hcp7w5jzg18djf8gdhl6r2rnl-source/nixos/modules/system/boot/systemd.nix':
+
+       … while evaluating the option `systemd.services.home-manager-skylab.serviceConfig':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/nixos':
+
+       … while evaluating the option `home-manager.users.skylab.home.file."/home/skylab/.config/fontconfig/conf.d/10-hm-fonts.conf".source':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/files.nix':
+
+       … while evaluating the option `home-manager.users.skylab.home.file."/home/skylab/.config/fontconfig/conf.d/10-hm-fonts.conf".text':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/misc/xdg.nix':
+
+       … while evaluating the option `home-manager.users.skylab.xdg.configFile."fontconfig/conf.d/10-hm-fonts.conf".text':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/misc/fontconfig.nix':
+
+       … while evaluating the option `home-manager.users.skylab.fonts.fontconfig.configFile.fonts.text':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/misc/fontconfig.nix':
+
+       (stack trace truncated; use '--show-trace' to show the full, detailed trace)
+
+       error: Failed to open archive (Source threw exception: error: unable to download 'https://github.com/mi2ebi/tree-sitter-bovex/archive/de7657a9cc3525b9b77c6d268da09dad5b1346b0.tar.gz': HTTP error 404
+
+              response body:
+
+              Not Found)
+
+=== mars-metadata ===
+Command: nix --extra-experimental-features nix-command\ flakes --store /tmp/nixfiles-nix.OIIJ7t --option build-users-group '' eval --no-update-lock-file --json .#nixosConfigurations.mars.config --apply $'config: {\n            hostName = config.networking.hostName;\n            systemStateVersion = config.system.stateVersion;\n            homeStateVersion = config.home-manager.users.skylab.home.stateVersion;\n            warnings = config.warnings;\n        }'
+
+warning: Git tree '/var/home/skylab/Projects/nixfiles' is dirty
+evaluation warning: Obsolete Flake attribute `catppuccin.homeManagerModules.catppuccin' is used. It was renamed to `catppuccin.homeModules.catppuccin`'.
+evaluation warning: 'system' has been renamed to/replaced by 'stdenv.hostPlatform.system'
+evaluation warning: 'hiPrio' has been removed from pkgs, use `lib.hiPrio` instead
+evaluation warning: 'hiPrio' has been removed from pkgs, use `lib.hiPrio` instead
+unpacking 'github:mi2ebi/tree-sitter-bovex/de7657a9cc3525b9b77c6d268da09dad5b1346b0' into the Git cache...
+error:
+       … while evaluating attribute 'warnings'
+         at «string»:5:13:
+            4|             homeStateVersion = config.home-manager.users.skylab.home.stateVersion;
+            5|             warnings = config.warnings;
+             |             ^
+            6|         }
+
+       … while evaluating the attribute 'value'
+         at «github:nixos/nixpkgs/89c2b2330e733d6cdb5eae7b899326930c2c0648?narHash=sha256-Stk9ZYRkGrnnpyJ4eqt9eQtdFWRRIvMxpNRf4sIegnw%3D»/lib/modules.nix:1118:7:
+         1117|     // {
+         1118|       value = addErrorContext "while evaluating the option `${showOption loc}':" value;
+             |       ^
+         1119|       inherit (res.defsFinal') highestPrio;
+
+       … while evaluating the option `warnings':
+
+       … while evaluating definitions from `/nix/store/f640ps0hcp7w5jzg18djf8gdhl6r2rnl-source/nixos/modules/system/boot/systemd.nix':
+
+       … while evaluating the option `systemd.services.home-manager-skylab.serviceConfig':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/nixos':
+
+       … while evaluating the option `home-manager.users.skylab.home.file."/home/skylab/.config/fontconfig/conf.d/10-hm-fonts.conf".source':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/files.nix':
+
+       … while evaluating the option `home-manager.users.skylab.home.file."/home/skylab/.config/fontconfig/conf.d/10-hm-fonts.conf".text':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/misc/xdg.nix':
+
+       … while evaluating the option `home-manager.users.skylab.xdg.configFile."fontconfig/conf.d/10-hm-fonts.conf".text':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/misc/fontconfig.nix':
+
+       … while evaluating the option `home-manager.users.skylab.fonts.fontconfig.configFile.fonts.text':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/misc/fontconfig.nix':
+
+       (stack trace truncated; use '--show-trace' to show the full, detailed trace)
+
+       error: Failed to open archive (Source threw exception: error: unable to download 'https://github.com/mi2ebi/tree-sitter-bovex/archive/de7657a9cc3525b9b77c6d268da09dad5b1346b0.tar.gz': HTTP error 404
+
+              response body:
+
+              Not Found)
+
+=== mars-eval ===
+Command: nix --extra-experimental-features nix-command\ flakes --store /tmp/nixfiles-nix.OIIJ7t --option build-users-group '' eval --no-update-lock-file --raw .#nixosConfigurations.mars.config.system.build.toplevel.drvPath
+
+warning: Git tree '/var/home/skylab/Projects/nixfiles' is dirty
+evaluation warning: Obsolete Flake attribute `catppuccin.homeManagerModules.catppuccin' is used. It was renamed to `catppuccin.homeModules.catppuccin`'.
+evaluation warning: 'system' has been renamed to/replaced by 'stdenv.hostPlatform.system'
+evaluation warning: 'hiPrio' has been removed from pkgs, use `lib.hiPrio` instead
+evaluation warning: 'hiPrio' has been removed from pkgs, use `lib.hiPrio` instead
+unpacking 'github:mi2ebi/tree-sitter-bovex/de7657a9cc3525b9b77c6d268da09dad5b1346b0' into the Git cache...
+error:
+       … while calling the 'head' builtin
+         at «github:nixos/nixpkgs/89c2b2330e733d6cdb5eae7b899326930c2c0648?narHash=sha256-Stk9ZYRkGrnnpyJ4eqt9eQtdFWRRIvMxpNRf4sIegnw%3D»/lib/attrsets.nix:1696:13:
+         1695|           if length values == 1 || pred here (elemAt values 1) (head values) then
+         1696|             head values
+             |             ^
+         1697|           else
+
+       … while evaluating the attribute 'value'
+         at «github:nixos/nixpkgs/89c2b2330e733d6cdb5eae7b899326930c2c0648?narHash=sha256-Stk9ZYRkGrnnpyJ4eqt9eQtdFWRRIvMxpNRf4sIegnw%3D»/lib/modules.nix:1118:7:
+         1117|     // {
+         1118|       value = addErrorContext "while evaluating the option `${showOption loc}':" value;
+             |       ^
+         1119|       inherit (res.defsFinal') highestPrio;
+
+       … while evaluating the option `system.build.toplevel':
+
+       … while evaluating definitions from `/nix/store/f640ps0hcp7w5jzg18djf8gdhl6r2rnl-source/nixos/modules/system/activation/top-level.nix':
+
+       … while evaluating the option `warnings':
+
+       … while evaluating definitions from `/nix/store/f640ps0hcp7w5jzg18djf8gdhl6r2rnl-source/nixos/modules/system/boot/systemd.nix':
+
+       … while evaluating the option `systemd.services.home-manager-skylab.serviceConfig':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/nixos':
+
+       … while evaluating the option `home-manager.users.skylab.home.file."/home/skylab/.config/fontconfig/conf.d/10-hm-fonts.conf".source':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/files.nix':
+
+       … while evaluating the option `home-manager.users.skylab.home.file."/home/skylab/.config/fontconfig/conf.d/10-hm-fonts.conf".text':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/misc/xdg.nix':
+
+       … while evaluating the option `home-manager.users.skylab.xdg.configFile."fontconfig/conf.d/10-hm-fonts.conf".text':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/misc/fontconfig.nix':
+
+       … while evaluating the option `home-manager.users.skylab.fonts.fontconfig.configFile.fonts.text':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/misc/fontconfig.nix':
+
+       (stack trace truncated; use '--show-trace' to show the full, detailed trace)
+
+       error: Failed to open archive (Source threw exception: error: unable to download 'https://github.com/mi2ebi/tree-sitter-bovex/archive/de7657a9cc3525b9b77c6d268da09dad5b1346b0.tar.gz': HTTP error 404
+
+              response body:
+
+              Not Found)
+
+=== mars-system-packages ===
+Command: nix --extra-experimental-features nix-command\ flakes --store /tmp/nixfiles-nix.OIIJ7t --option build-users-group '' eval --no-update-lock-file --json .#nixosConfigurations.mars.config.environment.systemPackages --apply packages:\ map\ \(package:\ package.name\)\ packages
+
+warning: Git tree '/var/home/skylab/Projects/nixfiles' is dirty
+evaluation warning: Obsolete Flake attribute `catppuccin.homeManagerModules.catppuccin' is used. It was renamed to `catppuccin.homeModules.catppuccin`'.
+["loupe-49.1","papers-49.1","cachix-1.9.1","mesa-demos-9.0.0","libva-utils-2.22.0","vulkan-tools-1.4.328.0","lshw-02.20","pciutils-3.14.0","lm-sensors-3.6.2","pulseaudio-17.0","git-2.51.2","curl-8.16.0","dos2unix-7.5.2","neovim-0.11.5","unzip-6.0","firefox-145.0","brave-1.84.139","xhost-1.0.10","psmisc-23.7","cosmic-applets-1.0.0-beta.6","cosmic-applibrary-1.0.0-beta.6","cosmic-bg-1.0.0-beta.6","cosmic-comp-1.0.0-beta.6","cosmic-files-1.0.0-beta.6","cosmic-greeter-1.0.0-beta.6","cosmic-idle-1.0.0-beta.6","cosmic-initial-setup-1.0.0-beta.6","cosmic-launcher-1.0.0-beta.6","cosmic-notifications-1.0.0-beta.6","cosmic-osd-1.0.0-beta.6","cosmic-panel-1.0.0-beta.6","cosmic-session-1.0.0-beta.6","cosmic-settings-1.0.0-beta.6","cosmic-settings-daemon-1.0.0-beta.6","cosmic-workspaces-epoch-1.0.0-beta.6","xwayland-24.1.9","adwaita-icon-theme-49.0","alsa-utils-1.2.14","cosmic-edit-1.0.0-beta.6","cosmic-icons-1.0.0-beta.6","cosmic-player-1.0.0-beta.6","cosmic-randr-1.0.0-beta.6","cosmic-screenshot-1.0.0-beta.6","cosmic-term-1.0.0-beta.6","cosmic-wallpapers-1.0.0-beta.6","glib-2.86.1","hicolor-icon-theme-0.18","network-manager-applet-1.36.0","playerctl-2.4.1","pop-icon-theme-3.5.0","pop-launcher-1.2.7","pulseaudio-17.0","xdg-user-dirs-0.18","cosmic-store-1.0.0-beta.6","nixos-version","nixos-rebuild-ng-25.11","nixos-option","nixos-install","nixos-generate-config","nixos-enter","nixos-build-vms","podman-5.7.0","libressl-4.2.0","iptables-1.8.11","libvirt-11.7.0","qemu-10.1.2","docker-28.5.1","lvm2-2.03.35","dosfstools-4.2","mtools-4.0.49","e2fsprogs-1.47.3","dosfstools-4.2","bcache-tools-1.1","systemd-258.1","kmod-31","kexec-tools-2.0.32","xorg-server-21.1.20","xrandr-1.5.3","xrdb-1.2.2","setxkbmap-1.3.4","iceauth-1.0.10","xlsclients-1.1.5","xset-1.2.5","xsetroot-1.1.3","xinput-1.6.4","xprop-1.2.8","xauth-1.1.4","xterm-403","xf86-input-evdev-2.11.0","nix-2.31.2","nix-info","nix-bash-completions-0.6.8","dbus-1.14.10","cups-2.4.14","xdg-utils-1.2.1","cups-pk-helper-0.2.6","tailscale-1.90.6","networkmanager-1.54.1","wpa_supplicant-2.11","modemmanager-1.24.0","avahi-0.8","nixos-icons-0-unstable-2024-04-10","xdg-utils-1.2.1","upower-1.90.10","udisks-2.10.2","power-profiles-daemon-0.30","xf86-input-libinput-1.5.0","fwupd-2.0.16","bluez-5.83","cosmic-comp-1.0.0-beta.6","cosmic-greeter-1.0.0-beta.6","wireplumber-0.5.12","pipewire-1.4.9","jack-libs","gvfs-1.58.0","gnome-keyring-48.0","geoclue-2.7.2","flatpak-1.16.1","fuse-3.17.4","accountsservice-23.13.9","speech-dispatcher-0.12.1","orca-49.4","sudo-1.9.17p2","rtkit-0.13","polkit-126","polkit-126","linux-pam-1.7.1","xwayland-24.1.9","sway-1.11","gammastep-2.0.11","virt-manager-5.1.0","shadow-4.18.0","bash-interactive-5.3p3","nano-8.6","less-679","kdeconnect-kde-25.08.3","fuse-2.9.9","fuse-3.17.4","dconf-0.40.0","man-db-2.13.1","texinfo-interactive-7.2","nixos-configuration-reference-manpage","nixos-manual-html","nixos-help","nvidia-x11-580.105.08-6.12.58","nvidia-settings-580.105.08","nvidia-offload","sound-theme-freedesktop-0.8","xdg-desktop-portal-1.20.3","xdg-desktop-portal-cosmic-1.0.0-beta.6","xdg-desktop-portal-gtk-1.15.3","gnome-keyring-48.0","xdg-desktop-portal-gtk-1.15.3","xdg-desktop-portal-wlr-0.8.0","xdg-desktop-portal-cosmic-1.0.0-beta.6","shared-mime-info-2.4","hicolor-icon-theme-0.18","fallback-cursor-theme","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","bash-interactive-5.3p3","shadow-4.18.0","bash-interactive-5.3p3","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","shadow-4.18.0","bind-9.20.15","hostname-debian-3.25","iproute2-6.17.0","iputils-20250605","openssh-10.2p1","acl-2.3.2","attr-2.5.2","bash-interactive-5.3p3","bzip2-1.0.8","coreutils-full-9.8","cpio-2.15","curl-8.16.0","diffutils-3.12","findutils-4.10.0","gawk-5.3.2","getent-glibc-2.40-66","getconf-glibc-2.40-66","gnugrep-3.12","patch-2.8","gnused-4.9","gnutar-1.35","gzip-1.14","xz-5.8.1","less-679","libcap-2.76","ncurses-6.5","libressl-4.2.0","mkpasswd-5.6.5","procps-4.0.4","shadow-4.18.0","time-1.9","util-linux-2.41.2","which-2.23","zstd-1.5.7","glibc-2.40-66","perl-5.40.0","rsync-3.4.1","strace-6.17","glibc-locales-2.40-66","X11-fonts","fontconfig-2.17.1","kbd-2.9.0"]
+
+=== mars-home-packages ===
+Command: nix --extra-experimental-features nix-command\ flakes --store /tmp/nixfiles-nix.OIIJ7t --option build-users-group '' eval --no-update-lock-file --json .#nixosConfigurations.mars.config.home-manager.users.skylab.home.packages --apply packages:\ map\ \(package:\ package.name\)\ packages
+
+warning: Git tree '/var/home/skylab/Projects/nixfiles' is dirty
+evaluation warning: Obsolete Flake attribute `catppuccin.homeManagerModules.catppuccin' is used. It was renamed to `catppuccin.homeModules.catppuccin`'.
+evaluation warning: 'system' has been renamed to/replaced by 'stdenv.hostPlatform.system'
+evaluation warning: 'hiPrio' has been removed from pkgs, use `lib.hiPrio` instead
+evaluation warning: 'hiPrio' has been removed from pkgs, use `lib.hiPrio` instead
+["zellij-0.43.1","zathura-with-plugins-0.5.13","yazi-25.5.31","wezterm-0-unstable-2025-10-14","tmux-3.5a","tealdeer-1.8.1","starship-1.24.1","ripgrep-15.1.0","man-db-2.13.1","hyfetch-2.0.4","helix-term","gitui-0.27.0","git-2.51.2","gh-2.83.1","eza-0.23.4","direnv-2.37.1","bottom-0.11.3","bat-0.26.0","batdiff-2024.08.24-unstable-2025-02-22","batman-2024.08.24-unstable-2025-02-22","batgrep-2024.08.24-unstable-2025-02-22","batwatch-2024.08.24-unstable-2025-02-22","shared-mime-info-2.4","dummy-xdg-mime-dirs1","dummy-xdg-mime-dirs2","qgnomeplatform-0.8.4","qgnomeplatform-0.8.4","adwaita-qt-1.4.2","adwaita-qt-1.4.2","gnome-themes-extra-3.28","dummy-fc-dir1","dummy-fc-dir2","home-configuration-reference-manpage","hm-session-vars.sh","agenix-0.15.0","aichat-0.30.0","hunspell-1.7.2","hunspell-dict-en-us-large-wordlist-2018.04.16","hunspell-dict-de-de-j3e-20161207","hunspell-dict-fr-moderne-dicollecte-5.3","hunspell-dict-pt-br-libreoffice-6.3.0.4","gcc-wrapper-14.3.0","bakoma-ttf-2.2","cachix-1.9.1","cheat-4.4.2","clang-wrapper-21.1.2","corefonts-1","coreutils-9.8","distrobox-1.8.2.0","exercism-3.5.8","emacs-pgtk-30.2","fd-10.3.0","fzf-0.67.0","git-crypt-0.8.0","git-extras-7.4.0","gnuplot-6.0.3","libqalculate-5.8.1","httpie-3.2.4","inetutils-2.6","lazydocker-0.24.2","LanguageTool-6.6","libcaca-0.99.beta20","linux-libertine-5.3.0","monaspace-1.301","nerd-fonts-symbols-only-3.4.0","pyright-1.1.407","bash-language-server-5.6.0","dockerfile-language-server-0.15.0","vscode-langservers-extracted-4.10.0","typescript-language-server-5.1.1","prettier-3.6.2","markdownlint-cli-0.45.0","efm-langserver-0.0.54","prettierd-0.26.2","marksman-2024-12-18","ltex-ls-16.0.0","nil-2025-06-13","statix-0.5.8","nixpkgs-fmt-1.3.0","python3-3.13.9-env","quarto-1.7.34","ruff-0.14.4","basedpyright-1.33.0","taplo-0.10.0","yaml-language-server-1.19.2","clang-tools-21.1.2","texlab-5.24.0","lldb-21.1.2","tinymist-0.14.0","lua-language-server-3.15.0","stylua-2.3.1","luajit2.1-luacheck-1.2.0-1","docker-compose-language-service-0.2.0","hadolint-2.14.0","ollama-0.12.11","rust-default-1.91.1","dioxus-cli-0.7.1","wasm-bindgen-cli-0.2.104","llvm-binutils-wrapper-21.1.2","monocraft-4.0","rclone-1.71.2","scanmem-0.17","shellcheck-0.11.0","shfmt-3.12.0","hyperfine-1.19.0","parallel-full-20251022","ttyper-1.6.0","unicode-2.9","vscode-1.106.0","w3m-0.5.5","wl-clipboard-2.2.1","x11docker-7.6.0-unstable-2024-04-04","xdg-ninja-0.2.0.2-unstable-2025-11-01","zoxide-0.9.8","trashy-2.0.0","grex-1.4.6","gdb-16.3","gnumake-4.4.1","wget-1.25.0","typescript-5.9.3","bun-1.3.2","gleam-1.13.0","erlang-28.1.1","rebar3-3.25.1","typos-1.39.2","typos-lsp-0.1.45","inshellisense-0.0.1-rc.21","devcontainer-0.80.1","just-1.43.1","lemminx-0.31.0","neocmakelsp-0.8.26","cmake-format-0.6.13","commitlint-20.1.0","zed-editor-0.212.6","neovim-unwrapped-0.11.5","tree-sitter-0.25.10","nodejs-22.21.1","deno-2.5.6","home-manager-update","update"]
+
+=== mars-build-plan ===
+Command: nix --extra-experimental-features nix-command\ flakes --store /tmp/nixfiles-nix.OIIJ7t --option build-users-group '' build --no-update-lock-file --dry-run --no-link .#nixosConfigurations.mars.config.system.build.toplevel
+
+warning: Git tree '/var/home/skylab/Projects/nixfiles' is dirty
+evaluation warning: Obsolete Flake attribute `catppuccin.homeManagerModules.catppuccin' is used. It was renamed to `catppuccin.homeModules.catppuccin`'.
+evaluation warning: 'system' has been renamed to/replaced by 'stdenv.hostPlatform.system'
+evaluation warning: 'hiPrio' has been removed from pkgs, use `lib.hiPrio` instead
+evaluation warning: 'hiPrio' has been removed from pkgs, use `lib.hiPrio` instead
+unpacking 'github:mi2ebi/tree-sitter-bovex/de7657a9cc3525b9b77c6d268da09dad5b1346b0' into the Git cache...
+error:
+       … while calling the 'head' builtin
+         at «github:nixos/nixpkgs/89c2b2330e733d6cdb5eae7b899326930c2c0648?narHash=sha256-Stk9ZYRkGrnnpyJ4eqt9eQtdFWRRIvMxpNRf4sIegnw%3D»/lib/attrsets.nix:1696:13:
+         1695|           if length values == 1 || pred here (elemAt values 1) (head values) then
+         1696|             head values
+             |             ^
+         1697|           else
+
+       … while evaluating the attribute 'value'
+         at «github:nixos/nixpkgs/89c2b2330e733d6cdb5eae7b899326930c2c0648?narHash=sha256-Stk9ZYRkGrnnpyJ4eqt9eQtdFWRRIvMxpNRf4sIegnw%3D»/lib/modules.nix:1118:7:
+         1117|     // {
+         1118|       value = addErrorContext "while evaluating the option `${showOption loc}':" value;
+             |       ^
+         1119|       inherit (res.defsFinal') highestPrio;
+
+       … while evaluating the option `system.build.toplevel':
+
+       … while evaluating definitions from `/nix/store/f640ps0hcp7w5jzg18djf8gdhl6r2rnl-source/nixos/modules/system/activation/top-level.nix':
+
+       … while evaluating the option `warnings':
+
+       … while evaluating definitions from `/nix/store/f640ps0hcp7w5jzg18djf8gdhl6r2rnl-source/nixos/modules/system/boot/systemd.nix':
+
+       … while evaluating the option `systemd.services.home-manager-skylab.serviceConfig':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/nixos':
+
+       … while evaluating the option `home-manager.users.skylab.home.file."/home/skylab/.config/fontconfig/conf.d/10-hm-fonts.conf".source':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/files.nix':
+
+       … while evaluating the option `home-manager.users.skylab.home.file."/home/skylab/.config/fontconfig/conf.d/10-hm-fonts.conf".text':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/misc/xdg.nix':
+
+       … while evaluating the option `home-manager.users.skylab.xdg.configFile."fontconfig/conf.d/10-hm-fonts.conf".text':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/misc/fontconfig.nix':
+
+       … while evaluating the option `home-manager.users.skylab.fonts.fontconfig.configFile.fonts.text':
+
+       … while evaluating definitions from `/nix/store/ial540p163k8ck6r8jb5zc2hlqrlij6w-source/modules/misc/fontconfig.nix':
+
+       (stack trace truncated; use '--show-trace' to show the full, detailed trace)
+
+       error: Failed to open archive (Source threw exception: error: unable to download 'https://github.com/mi2ebi/tree-sitter-bovex/archive/de7657a9cc3525b9b77c6d268da09dad5b1346b0.tar.gz': HTTP error 404
+
+              response body:
+
+              Not Found)
