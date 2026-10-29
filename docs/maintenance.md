@@ -107,6 +107,24 @@ The `nixfiles-secrets` key is used for agenix decryption and is not authorized
 for SSH login. These declarations take effect when the host configuration is
 installed or activated.
 
+### Tailscale
+
+All hosts enable Tailscale by default, including its CLI and boot-time daemon.
+The configured UDP transport port (41641 by default) is opened for direct peer
+connections. After rebuilding a new device, authenticate once:
+
+```sh
+sudo tailscale up
+tailscale status
+```
+
+Follow the sign-in URL printed by `tailscale up`. Existing authenticated devices
+retain their local Tailscale state across rebuilds. No auth key is stored in the
+repository. The shared configuration uses ordinary peer connectivity; subnet
+routing, exit-node settings, and Tailscale SSH can be selected separately when
+needed. Ordinary OpenSSH remains configured as described above. See the
+[Tailscale Linux setup](https://tailscale.com/docs/install/linux).
+
 ### Virtualization services
 
 Each host imports the features it needs from

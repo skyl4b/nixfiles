@@ -18,12 +18,6 @@
   networking.networkmanager.dns = "systemd-resolved";
   services = {
     resolved.enable = true;
-    tailscale = {
-      enable = true;
-      # Permit the configured UDP transport port for direct peer connections.
-      openFirewall = true;
-      useRoutingFeatures = "none";
-    };
     avahi = {
       enable = true;
       nssmdns4 = true;

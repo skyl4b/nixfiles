@@ -63,6 +63,12 @@
         PermitRootLogin = lib.mkDefault "no";
       };
     };
+    tailscale = {
+      enable = lib.mkDefault true;
+      # Permit the configured UDP transport port for direct peer connections.
+      openFirewall = lib.mkDefault true;
+      useRoutingFeatures = lib.mkDefault "none";
+    };
     pulseaudio.enable = false;
     pipewire = {
       enable = true;
