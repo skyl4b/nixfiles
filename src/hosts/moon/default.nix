@@ -40,7 +40,11 @@
 
   # Use Intel's adaptive thermal management during sustained work such as builds.
   services.thermald.enable = true;
-  environment.systemPackages = [ pkgs.libcamera ];
+  environment.systemPackages = with pkgs; [
+    libcamera
+    rnote
+    xournalpp
+  ];
 
   hardware = {
     enableRedistributableFirmware = true;
