@@ -41,6 +41,10 @@ Intel/laptop support, GNOME, and planned ext4/EFI filesystems addressed by label
 No hardware file is copied from the reference hosts. Deployment preparation has
 resumed; the earlier deferral still applies to installation and activation.
 
+Update on 2026-10-29: the user completed installation on Moon and reported
+working camera, pen, rotation, and folio keyboard. The earlier deferral and
+pending-installation statements above describe the preparation stage.
+
 The [user/profile refactor](user-profiles.md) adds `mkUser`, moves Skylab's
 identity out of shared system configuration, and splits home packages into
 minimal and complete profiles. The flake's `let` block constructs Skylab's user

@@ -72,23 +72,26 @@ system activation, so there is no standalone Home Manager switch recipe.
 These entry points are prepared for later target-machine work. Their activation
 branches have not been exercised on NixOS. Before using them, follow the
 [build, live-link setup, target checks, and recovery procedure](baseline.md#validation-and-recovery).
-Moon needs its own hardware and host configuration when deployment resumes.
+Moon has been installed; its actual generated hardware module still needs to
+be synchronized to the repository.
 
 ## Initial installation helpers
 
-On Moon's NixOS live USB, enter the pinned `just`/`jq` shell described in the
-[installation guide](../hosts/moon-install.md), then run:
+On the target device's NixOS live USB, select `host` and `user` and enter the
+pinned `just`/`jq` shell described in the
+[installation guide](../install.md), then run:
 
 ```sh
-just disko moon
-just generate-hardware moon
-just check-host moon
+just disko "$host"
+just generate-hardware "$host"
+just check-host "$host"
 ```
 
 `disko <host>` **erases, formats, and mounts the configured target disks**. It
 prints their paths, builds the host's pinned `system.build.diskoScript` with one
-job and two cores, and executes it through sudo. It is not a preview command.
-Both installation helpers require NixOS and the system store; run them outside
+job and two cores, asks `Do you want to proceed? [y/N]`, and executes it through
+sudo only after an explicit `y` or `yes`. Empty input, other answers, and EOF
+cancel. It is not a preview command. Installation helpers require NixOS and the system store; run them outside
 any distrobox.
 
 `generate-hardware <host> [root]` defaults to `/mnt`, which must be mounted. It
@@ -98,12 +101,22 @@ hardware module. Moon conditionally imports its generated file, allowing an
 initial build before the scan and automatic inclusion afterward. Review and
 commit the generated module before future rebuilds.
 
+After `nixos-install` creates the account, use
+`just install-checkout "$host" "$user" [root] [destination]` to preserve the
+working tree, Git history, and uncommitted hardware module in the new home. It
+uses the evaluated home/anchor and installed UID/GID, excludes Git-ignored build
+data, and refuses to overwrite a checkout or a non-symlink anchor. The default
+root is `/mnt`; the default checkout is `<home>/Projects/nixfiles`.
+
 The installer clone stays on its normal branch. Record the initial commit and
 avoid pulling during installation; detached HEAD is unnecessary.
 
 `just test-install-workflows` exercises these recipes in disposable checkouts
 with simulated NixOS detection and stubbed Nix, sudo, mount checks, and hardware
-scanning. It never executes Disko or accesses real target devices.
+scanning. Checkout copying and link creation run only inside disposable target
+roots with the test user's UID/GID. Tests cover confirmation cancellation, Git
+history/local edits/cache exclusions, ownership, and refusal to replace existing
+paths. They never execute Disko or access real target devices.
 
 ## Portable dotfiles
 

@@ -31,6 +31,7 @@ check:
     just --dry-run provision-identity /tmp/nixfiles-identity /mnt 2>&1 | shellcheck -s bash -
     just --dry-run disko moon 2>&1 | shellcheck -s bash -
     just --dry-run generate-hardware moon 2>&1 | shellcheck -s bash -
+    just --dry-run install-checkout moon skylab 2>&1 | shellcheck -s bash -
     just --dry-run _installer moon 2>&1 | shellcheck -s bash -
     just --dry-run test-install-workflows 2>&1 | shellcheck -s bash -
     just --dry-run remap-keyboard 'USB Keyboard' 2>&1 | shellcheck -s bash -
@@ -1335,9 +1336,15 @@ disko host:
     config=".#nixosConfigurations.$1.config"
     disks=$(just _nix eval --no-update-lock-file --raw "$config.disko.devices.disk" \
         --apply 'disks: builtins.concatStringsSep "\n" (map (disk: disk.device) (builtins.attrValues disks))')
-    printf 'ERASE, format, and mount the configured disks for %s:\n%s\n' "$1" "$disks" >&2
     script=$(just _nix build --no-update-lock-file --no-link --print-out-paths \
         --max-jobs 1 --cores 2 "$config.system.build.diskoScript")
+    printf 'ERASE, format, and mount the configured disks for %s:\n%s\n' "$1" "$disks" >&2
+    reply=""
+    read -r -p 'Do you want to proceed? [y/N] ' reply || reply=""
+    case "$reply" in
+        [yY]|[yY][eE][sS]) ;;
+        *) printf 'Disko cancelled; no disks changed.\n' >&2; exit 1 ;;
+    esac
     sudo "$script"
 
 # Generate a new hardware module from this machine, without duplicating Disko mounts
@@ -1364,6 +1371,75 @@ generate-hardware host root="/mnt":
     mv -- "$temporary" "$destination"
     git -C "$NIXFILES_CHECKOUT" add --intent-to-add -- "$relative"
     printf 'Generated %s; review it before installation and commit it afterward.\n' "$destination"
+
+# Copy this working tree and Git history into an installed user's home and link dotfiles
+[positional-arguments]
+install-checkout host user root="/mnt" destination="":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    just _installer "$1"
+    [[ "$2" =~ ^[a-z_][a-z0-9_-]*$ && "$3" == /* ]] || { printf 'Supply a user name and absolute target root.\n' >&2; exit 2; }
+    root=$(realpath -e -- "$3")
+    mountpoint -q -- "$root" || { printf 'Target root is not mounted: %s\n' "$root" >&2; exit 2; }
+    [[ -d "$NIXFILES_CHECKOUT/.git" && ! -L "$NIXFILES_CHECKOUT/.git" ]] || {
+        printf 'Use a regular Git clone for installation, rather than a linked worktree.\n' >&2; exit 2
+    }
+    metadata=$(just _nix eval --no-update-lock-file --json ".#nixosConfigurations.$1.config" \
+        --apply "config: { home = config.users.users.\"$2\".home; anchor = config.home-manager.users.\"$2\".dotfiles.anchor; }")
+    home=$(jq -er '.home' <<< "$metadata")
+    anchor=$(jq -er '.anchor' <<< "$metadata")
+    account=$(awk -F: -v name="$2" '$1 == name { print $3 ":" $4 ":" $6; found=1; exit } END { if (!found) exit 1 }' "$root/etc/passwd") || {
+        printf 'Install NixOS first; the selected user is missing from the target.\n' >&2; exit 2
+    }
+    IFS=: read -r uid gid installed_home <<< "$account"
+    [[ "$home" == "$installed_home" ]] || { printf 'The installed home does not match the selected configuration.\n' >&2; exit 2; }
+    destination="${4:-$home/Projects/nixfiles}"
+    [[ "$destination" == /* && "$anchor" == /* && "$uid" =~ ^[0-9]+$ && "$gid" =~ ^[0-9]+$ ]] || exit 2
+    destination=$(realpath -ms -- "$destination")
+    anchor=$(realpath -ms -- "$anchor")
+    [[ "$destination" != / && "$anchor" != / ]] || exit 2
+    temporary=$(mktemp -d "${TMPDIR:-/tmp}/nixfiles-install-checkout.XXXXXX")
+    trap 'rm -rf -- "$temporary"' EXIT
+    git -C "$NIXFILES_CHECKOUT" ls-files --cached --others --exclude-standard -z > "$temporary/files"
+    printf '.git\0' > "$temporary/archive-files"
+    while IFS= read -r -d '' file; do
+        [[ -f "$NIXFILES_CHECKOUT/$file" || -L "$NIXFILES_CHECKOUT/$file" ]] || continue
+        printf '%s\0' "$file" >> "$temporary/archive-files"
+    done < "$temporary/files"
+    tar --create --file "$temporary/checkout.tar" --directory "$NIXFILES_CHECKOUT" \
+        --null --verbatim-files-from --files-from "$temporary/archive-files"
+    sudo bash -s -- "$root" "$destination" "$anchor" "$uid" "$gid" "$temporary/checkout.tar" <<'SH'
+    set -euo pipefail
+    root="$1" logical_destination="$2" logical_anchor="$3" uid="$4" gid="$5" archive="$6"
+    destination="${root%/}$logical_destination"
+    anchor="${root%/}$logical_anchor"
+    # Absolute symlinks in a mounted target would otherwise resolve on the live host.
+    for target in "$destination" "$anchor"; do
+        parent=$(dirname -- "$target")
+        while [[ "$parent" != "$root" && "$parent" != / ]]; do
+            [[ ! -L "$parent" ]] || { printf 'Refusing a symlinked target parent: %s\n' "$parent" >&2; exit 2; }
+            parent=$(dirname -- "$parent")
+        done
+    done
+    [[ ! -e "$destination" && ! -L "$destination" ]] || { printf 'Checkout already exists: %s\n' "$destination" >&2; exit 2; }
+    [[ ! -e "$anchor" || -L "$anchor" ]] || { printf 'Refusing to replace a non-symlink anchor: %s\n' "$anchor" >&2; exit 2; }
+    make_parent() {
+        [[ ! -d "$1" ]] || return 0
+        make_parent "$(dirname -- "$1")"
+        install -d -m 0755 -o "$uid" -g "$gid" -- "$1"
+    }
+    make_parent "$(dirname -- "$destination")"
+    make_parent "$(dirname -- "$anchor")"
+    staging=$(mktemp -d "$(dirname -- "$destination")/.nixfiles.XXXXXX")
+    trap 'rm -rf -- "$staging"' EXIT
+    tar --extract --no-same-owner --file "$archive" --directory "$staging"
+    chmod 0755 "$staging"
+    chown -hR -- "$uid:$gid" "$staging"
+    mv -T -- "$staging" "$destination"
+    ln -sfnT -- "$logical_destination" "$anchor"
+    chown -h -- "$uid:$gid" "$anchor"
+    printf 'Checkout: %s\nDotfile anchor: %s -> %s\n' "$logical_destination" "$logical_anchor" "$logical_destination"
+    SH
 
 # Build the selected host and compare it with an explicit previous closure
 [positional-arguments]
@@ -1704,7 +1780,10 @@ test-install-workflows:
             if failure == 'build': sys.exit(1)
             print('/nix/store/00000000000000000000000000000000-fixture-disko')
         elif 'eval' in args:
-            print('/dev/fixture-only')
+            if any('anchor = config.home-manager' in arg for arg in args):
+                print(json.dumps({'home': '/home/probe', 'anchor': '/home/probe/.local/share/nixfiles'}))
+            else:
+                print('/dev/fixture-only')
         else:
             sys.exit(1)
     elif name == 'sudo':
@@ -1712,6 +1791,8 @@ test-install-workflows:
             sys.exit(0)  # Never execute a Disko script.
         if args and args[0] == 'nixos-generate-config':
             os.execvp(args[0], args)
+        if args[:2] == ['bash', '-s']:
+            os.execvp(args[0], args)  # The script only sees disposable paths and this test user's UID/GID.
         sys.exit(1)
     elif name == 'mountpoint':
         sys.exit(1 if failure == 'mount' else 0)
@@ -1728,9 +1809,9 @@ test-install-workflows:
         log = fixture / 'calls.jsonl'
         environment.update(PATH=str(binaries) + os.pathsep + environment['PATH'], NIXFILES_INSTALL_LOG=str(log))
 
-        def run(*args, success=True, **changes):
+        def run(*args, success=True, stdin='', **changes):
             result = subprocess.run(['just', '--justfile', str(checkout / 'justfile'), *args],
-                                    env=dict(environment, **changes), capture_output=True, text=True)
+                                    env=dict(environment, **changes), input=stdin, capture_output=True, text=True)
             assert (result.returncode == 0) == success, result.stdout + result.stderr
 
         def calls():
@@ -1747,7 +1828,11 @@ test-install-workflows:
         run('disko', 'probe', success=False, NIXFILES_INSTALL_FAIL='build')
         assert not any(call[0] == 'sudo' for call in calls())
         log.unlink()
-        run('disko', 'probe')
+        for answer in ['', '\n', 'no\n', 'anything\n']:
+            run('disko', 'probe', stdin=answer, success=False)
+            assert not any(call[0] == 'sudo' for call in calls())
+        log.unlink()
+        run('disko', 'probe', stdin='YES\n')
         recorded = calls()
         build = next(call for call in recorded if call[0] == 'nix' and 'build' in call)
         assert '--no-update-lock-file' in build and '--no-link' in build
@@ -1770,6 +1855,50 @@ test-install-workflows:
         before = destination.read_bytes()
         run('generate-hardware', 'probe', str(root), success=False)
         assert destination.read_bytes() == before
+
+        # Copy a real Git working tree, including an uncommitted hardware module.
+        (checkout / '.gitignore').write_text('.pixi/\n')
+        (checkout / 'README.md').write_text('fixture\n')
+        (checkout / 'deleted.txt').write_text('deleted after commit\n')
+        subprocess.run(['git', '-C', str(checkout), 'add', 'README.md', '.gitignore', 'deleted.txt'],
+                       env=environment, check=True)
+        subprocess.run(['git', '-C', str(checkout), '-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.test',
+                        'commit', '-qm', 'fixture'], env=environment, check=True)
+        (checkout / 'deleted.txt').unlink()
+        (checkout / 'local.txt').write_text('uncommitted local edit\n')
+        (checkout / '.pixi').mkdir()
+        (checkout / '.pixi/cache.bin').write_text('do not copy\n')
+        (root / 'etc').mkdir()
+        (root / 'etc/passwd').write_text(f'probe:x:{os.getuid()}:{os.getgid()}::/home/probe:/bin/sh\n')
+        (root / 'home/probe').mkdir(parents=True)
+        run('install-checkout', 'probe', 'probe', str(root))
+        installed = root / 'home/probe/Projects/nixfiles'
+        anchor = root / 'home/probe/.local/share/nixfiles'
+        assert installed.is_dir() and (installed / '.git').is_dir()
+        assert (installed / 'src/hosts/probe/hardware-configuration.nix').read_bytes() == before
+        assert (installed / 'local.txt').read_text() == 'uncommitted local edit\n'
+        assert not (installed / '.pixi').exists() and not (installed / 'deleted.txt').exists()
+        assert os.readlink(anchor) == '/home/probe/Projects/nixfiles'
+        assert installed.stat().st_uid == os.getuid() and anchor.lstat().st_gid == os.getgid()
+        for argument in [['rev-parse', 'HEAD'], ['symbolic-ref', '--short', 'HEAD']]:
+            original = subprocess.check_output(['git', '-C', str(checkout), *argument], env=environment)
+            copied = subprocess.check_output(['git', '-C', str(installed), *argument], env=environment)
+            assert original == copied
+        run('install-checkout', 'probe', 'probe', str(root), success=False)
+        run('install-checkout', 'probe', 'missing', str(root), success=False)
+        custom = '/srv/checkout with spaces'
+        run('install-checkout', 'probe', 'probe', str(root), custom)
+        assert (root / custom.lstrip('/') / 'local.txt').exists() and os.readlink(anchor) == custom
+        anchor.unlink()
+        anchor.mkdir()
+        run('install-checkout', 'probe', 'probe', str(root), '/srv/another', success=False)
+        assert not (root / 'srv/another').exists()
+        anchor.rmdir()
+        escape = fixture / 'outside target'
+        escape.mkdir()
+        (root / 'symlink-parent').symlink_to(escape)
+        run('install-checkout', 'probe', 'probe', str(root), '/symlink-parent/checkout', success=False)
+        assert not list(escape.iterdir())
         module = fixture / 'optional hardware'
         module.mkdir()
         (module / 'default.nix').write_text((source.parent / 'src/hosts/moon/default.nix').read_text())
@@ -1790,7 +1919,7 @@ test-install-workflows:
         without_hardware = imports()
         (module / 'hardware-configuration.nix').write_text('{ ... }: {}\n')
         assert imports() == without_hardware + [str(module / 'hardware-configuration.nix')]
-    print('Installer workflows passed: NixOS/store/host guards, pinned Disko dispatch, scan failures, hardware parsing, Git inclusion, overwrite refusal, and automatic Moon import. No real disks or privileged tools used.')
+    print('Installer workflows passed: guards, Disko confirmation/cancellation, hardware generation/import, and checkout installation with Git history, local edits, cache exclusion, ownership, and anchor protection. No real disks or privileged tools used.')
     PY
 
 # Test workflow dispatch with stub Nix commands and real temporary chezmoi homes

@@ -26,7 +26,7 @@
       LC_TIME = "en_IE.UTF-8";
     };
   };
-  console.keyMap = "us-acentos";
+  console.keyMap = lib.mkDefault "us-acentos";
 
   xdg.portal = {
     enable = true;

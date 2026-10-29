@@ -8,19 +8,22 @@
 | Memory | 8 GB |
 | CPU | Intel Core i3-10100Y, 2 cores / 4 threads |
 | Storage | KIOXIA KBG40ZPZ128G NVMe, 119.2 GiB reported by Linux |
-| Current OS | Aurora 44.20260922.1, Fedora/Kinoite based |
+| Current OS | NixOS; successful installation reported 2026-10-29 |
+| Previous OS | Aurora 44.20260922.1, Fedora/Kinoite based |
 | Boot | UEFI; Secure Boot disabled, platform in Setup Mode |
 | Connectivity | Wi-Fi only |
 | Installation | Replace the current OS; no dual boot |
 | Disk encryption | None |
 | Applications | Mostly the full current set; review device-specific costs |
 
-The user supplied a read-only inventory from Moon's current Linux installation.
-It identifies the CPU, storage, drivers, and firmware state above. Device-generated
-NixOS hardware configuration and operational tests remain installation work.
-No reference host's hardware file is copied.
+The user supplied a read-only inventory from the previous Aurora installation.
+It identifies the CPU, storage, drivers, and firmware state above. On 2026-10-29,
+the user reported a successful NixOS installation with camera, pen, rotation,
+and folio keyboard working. The hardware module generated on Moon has not yet
+been synchronized to this development checkout; preserve and commit it from the
+device before future rebuilds. No reference host's hardware file is copied.
 
-Use the [installation walkthrough](moon-install.md) for the live-USB procedure,
+Use the [installation walkthrough](../install.md) for the live-USB procedure,
 key provisioning, hardware scan, and persistent checkout setup.
 
 ## Initial configuration
@@ -32,8 +35,9 @@ The host enables redistributable firmware, early i915 loading, Intel VA-API
 media support, and IIO sensors. Thermald adds adaptive Intel thermal management,
 and libcamera supplies the `cam` diagnostic tool. It retains the upstream kernel
 and GNOME power management defaults; it does not import the first-generation
-Surface Go module. Confirm thermal management and camera operation on the device;
-no custom thermal configuration or camera workaround is selected in advance.
+Surface Go module. Camera operation has been reported working; thermal management still needs
+its separate operational check. No camera workaround was required for the
+reported working setup.
 
 The replacement layout is defined in `src/hosts/moon/disk-config.nix`, imported
 with the pinned Disko module. It targets
@@ -79,7 +83,7 @@ generations; a fresh installation needs a second distinct generation before it
 has a fallback. See the [build and testing guide](moon-testing.md).
 
 `mkUser` now accepts an optional runtime password-hash file, including one
-decrypted by agenix. Actual credential provisioning remains pending; see
+decrypted by agenix. For the credential setup used during installation, see
 [declarative password setup](../modernization/user-profiles.md#declarative-passwords).
 
 Repository-side preparation can now use:
@@ -186,33 +190,19 @@ ath10k firmware replacement, or forced sleep-mode settings without evidence
 that this device needs them. Keep linux-surface available as a later option if
 on-device testing demonstrates a specific missing feature or regression.
 
-## Information still needed
+## Follow-up after installation
 
-- Provisioning of the shared decryption private key on the target; the encrypted
-  password hash and both public recipients are recorded and wired into Moon.
-- Any additional workload requirements beyond the selected Docker, Podman, and
-  Waydroid support; general-purpose virtual machines are not currently selected.
-- Device-generated NixOS hardware configuration after the target layout is
-  mounted. Replacement and absence of encryption are already decided.
-- Required tablet, pen, camera, and suspend behavior. LTE is out of scope for
-  this Wi-Fi-only model; hibernation is not part of the initial plan.
+- Commit and push the actual `hardware-configuration.nix` generated on Moon.
+- Complete any checks not covered by the user's working-camera/pen/rotation/folio
+  report, especially suspend/resume battery drain, thermal management, and
+  Docker/Podman/Waydroid coexistence.
+- Confirm any additional workload requirements. General-purpose virtual machines
+  are not currently selected; LTE is out of scope and hibernation is not configured.
 
-Repeat the relevant read-only inventory checks in the installation medium
-before applying the prepared disk layout:
-
-```sh
-lscpu
-lsblk -o NAME,SIZE,TYPE,MODEL,FSTYPE,MOUNTPOINTS
-lspci -nnk
-```
-
-These commands do not partition or format anything. The inventory identifies
-the real target device and CPU; it does not replace the hardware configuration
-generated against the final mounted installation filesystems.
-
-Use the supplied inventory to review the generated hardware configuration in
-the installer, complete a full build, then perform the agreed target-machine
-tests. Disk operations and activation remain separate deployment steps.
+For reinstalling, use the [device installation guide](../install.md) and recheck
+Moon's disk identifier against the actual device before confirming Disko. Existing
+installation success is not a reason to run partitioning recipes on the live
+system during ordinary updates.
 
 ## Repository validation
 
@@ -232,9 +222,9 @@ Validation on 2026-10-20 passed:
   and Intel media support are enabled; TLP and NVIDIA container integration are
   disabled (`/tmp/nixfiles-moon-hardware-policy.json`).
 
-These checks do not build a complete system or establish device compatibility.
-Target storage verification, a full build, installation credentials, boot,
-touch/pen, rotation, camera, and suspend tests remain deployment work.
+These historical repository checks did not build a complete system or establish
+device compatibility. The later user-reported installation and hardware results
+are recorded at the top of this page; they are separate from these test logs.
 
 After the virtualization split, repository checks and all 26 baseline checks
 pass again (`/tmp/nixfiles-baseline.huSWaD/summary.md`). Focused comparison

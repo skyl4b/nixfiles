@@ -4,16 +4,18 @@ This is the current operating guide. The [modernization plan](modernization/plan
 and its linked reports record how the repository reached this state.
 
 Jupiter and Mars are reference NixOS configurations with integrated Home Manager.
-[Moon, a Surface Go 3](hosts/moon.md), now has its own configuration and is the
-first intended deployment. It uses GNOME and the complete user profile on an
-8 GB RAM, 119.2 GiB NVMe, Wi-Fi-only device. The installation replaces Aurora
+[Moon, a Surface Go 3](hosts/moon.md), is the first installed device. It uses
+GNOME and the complete user profile on an
+8 GB RAM, 119.2 GiB NVMe, Wi-Fi-only device. The installation replaced Aurora
 without disk encryption. Disko defines a 1 GiB EFI partition and ext4 root on
 the drive's observed stable device identifier, using `nixos` and `efi`
 labels for the new layout. Recheck the disk from the installer before applying
 that layout. The supplied inventory confirms UEFI and Secure Boot disabled.
-Deployment preparation is underway; installation and activation have not run.
-The [Moon installation walkthrough](hosts/moon-install.md) gives the ordered
-live-USB commands, including cloning the installation branch at a recorded commit.
+The user reported a successful installation on 2026-10-29, including working
+camera, pen, rotation, and folio keyboard. The generated hardware module still
+needs to be committed from Moon. The [device installation guide](install.md)
+covers local TTY setup, optional SSH, confirmed Disko execution, and copying the
+checkout into the installed user's home.
 
 ## Work on the repository
 
@@ -75,6 +77,10 @@ setting is writable, while COSMIC's keyboard file is managed by Home Manager.
 System keyboard defaults remain US International for the graphical login screen
 and `us-acentos` for the text console. Check the login layout when typing the
 password; this change does not configure the installer keyboard either.
+
+For local TTY layout and font changes, including persistent per-host console
+settings, see [console setup](install.md#2-make-the-local-tty-comfortable).
+These system-wide console settings are separate from the user's desktop layout.
 
 Input Remapper is enabled on every host. Register each keyboard once with
 `just remap-keyboard "Keyboard Name"` to copy the shared preset and

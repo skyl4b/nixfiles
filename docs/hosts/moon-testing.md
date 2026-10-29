@@ -1,10 +1,11 @@
 # Building and testing Moon
 
-The repository checks and build plans pass; a complete system build and physical
-device testing are separate steps. This guide does not partition disks or
-activate Moon's configuration on the current Ubuntu machine.
+The user reported a successful installation on 2026-10-29, with camera, pen,
+rotation, and folio keyboard working. The checklist below remains useful for
+other features and future revisions. Repository tests run from Ubuntu separately
+and do not activate Moon or prove all hardware behavior.
 
-For the ordered live-USB procedure, use the [Moon installation walkthrough](moon-install.md).
+For the ordered live-USB procedure, use the [device installation guide](../install.md).
 
 ## Build before installation
 
@@ -153,7 +154,7 @@ Test these device behaviors during normal use:
   downloads and application setup remain target-machine work.
 
 For subsequent changes, enter the development shell described in the
-[installation walkthrough](moon-install.md#8-reboot-and-validate) to supply
+[installation walkthrough](../install.md#after-the-first-boot) to supply
 the maintenance tools. Build and review the candidate, then use
 `just test-host moon` on Moon for temporary activation. Once its
 operational checks pass, use `just switch moon`. These recipes
@@ -174,4 +175,5 @@ collection and gcroot cleanup disabled. It retained the newest two generations
 when all were older than a week, retained additional recent generations, and
 kept the sole generation of a first installation
 (`/tmp/nixfiles-retention-test.log`). Real profiles and user credentials were
-not modified. A complete Moon build has not yet run.
+not modified. At that preparation stage, no complete Moon build had run; the
+later successful installation is recorded above.

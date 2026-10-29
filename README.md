@@ -2,13 +2,12 @@
 
 Personal NixOS configurations for `jupiter`, `mars`, and
 [`moon` (Surface Go 3)](docs/hosts/moon.md), with Home Manager integrated into each
-system. The repository is being prepared on Ubuntu for a future NixOS migration.
-Moon is the first intended deployment. Disko defines its replacement layout using
-the drive identifier observed on the device; installation and hardware tests
-remain pending.
+system. Moon was installed successfully, reported on 2026-10-29, with camera,
+pen, rotation, and folio keyboard working. Development and repository checks
+continue from Ubuntu; device-specific follow-up checks are tracked separately.
 
 Start with the [setup and maintenance guide](docs/maintenance.md).
-For Moon's initial deployment, follow the [installation walkthrough](docs/hosts/moon-install.md).
+For a device installation, follow the [installation walkthrough](docs/install.md).
 
 ## Development
 
