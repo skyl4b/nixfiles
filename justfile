@@ -16,7 +16,7 @@ check:
     #!/usr/bin/env bash
     set -euo pipefail
     just --fmt --check
-    for recipe in baseline _syntax check test-workflows test-workflows-nix test-portable-nix _test-portable hosts update-flatpak test-git test-git-nix test-terminals test-terminals-nix _test-tmux test-yazi-direnv test-yazi-direnv-nix _test-yazi-direnv test-starship-gitui test-starship-gitui-nix _test-starship-gitui test-cli-tools test-cli-tools-nix _test-cli-tools test-desktop-tools test-desktop-tools-nix _test-desktop-tools; do
+    for recipe in baseline _syntax check test-workflows test-workflows-nix test-portable-nix _test-portable hosts update-flatpak tailscale-up test-git test-git-nix test-terminals test-terminals-nix _test-tmux test-yazi-direnv test-yazi-direnv-nix _test-yazi-direnv test-starship-gitui test-starship-gitui-nix _test-starship-gitui test-cli-tools test-cli-tools-nix _test-cli-tools test-desktop-tools test-desktop-tools-nix _test-desktop-tools; do
         just --dry-run "$recipe" 2>&1 | shellcheck -s bash -
     done
     just --dry-run link-checkout /tmp/nixfiles-lint-anchor 2>&1 | shellcheck -s bash -
@@ -1482,6 +1482,12 @@ update-flatpak:
     #!/usr/bin/env bash
     set -euo pipefail
     flatpak update
+
+# Connect this machine to Tailscale and display the sign-in URL
+tailscale-up:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    sudo tailscale up
 
 # Install an existing private key on this host or inside a mounted target root
 [positional-arguments]

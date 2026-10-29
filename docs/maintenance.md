@@ -114,11 +114,11 @@ The configured UDP transport port (41641 by default) is opened for direct peer
 connections. After rebuilding a new device, authenticate once:
 
 ```sh
-sudo tailscale up
+just tailscale-up
 tailscale status
 ```
 
-Follow the sign-in URL printed by `tailscale up`. Existing authenticated devices
+The recipe runs `sudo tailscale up`; follow its sign-in URL. Existing authenticated devices
 retain their local Tailscale state across rebuilds. No auth key is stored in the
 repository. The shared configuration uses ordinary peer connectivity; subnet
 routing, exit-node settings, and Tailscale SSH can be selected separately when
