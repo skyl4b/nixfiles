@@ -1455,9 +1455,9 @@ test-host host:
     set -euo pipefail
     just _activate test "$1"
 
-# Activate and set the boot default on the matching NixOS machine
+# Activate and set the boot default (defaults to this machine's hostname)
 [positional-arguments]
-switch host:
+switch host=`hostname`:
     #!/usr/bin/env bash
     set -euo pipefail
     just _activate switch "$1"
@@ -1993,6 +1993,7 @@ test-workflows:
     reject test-host "$other_host"
     # On other operating systems, even the current hostname cannot activate.
     if [[ ! -e /etc/NIXOS ]]; then
+        reject switch
         reject switch "$(hostname)"
         reject test-host "$(hostname)"
     fi

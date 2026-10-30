@@ -228,8 +228,9 @@ or directory. Moving the checkout requires refreshing this one anchor.
 
 Use an explicit host for `check-host`, `plan`, `build`, and `diff`. Once a complete
 build and its changes have been reviewed, the matching NixOS machine can use
-`test-host <host>` for temporary activation, followed by `switch <host>` when
-its operational checks succeed. These actions are not part of repository tests.
+`just test-host <host>` for temporary activation, followed by `just switch` when
+its operational checks succeed. `just switch` defaults to the current hostname;
+an explicit `just switch <host>` is also supported. These actions are not part of repository tests.
 The recipes reject activation here and require the matching local hostname and
 system store. Follow the [target validation and recovery procedure](modernization/baseline.md#validation-and-recovery)
 for hardware checks, keeping a known-good generation, boot recovery, and rollback.
