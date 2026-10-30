@@ -19,7 +19,6 @@ with pkgs; [
   zoxide # Cd with directory caching
   trashy # CLI trash handler
   wget # File downloader
-  just # Modern make
   # Provider runtimes belong to the editor wrapper, not the global PATH.
   (neovim.override {
     withNodeJs = true;

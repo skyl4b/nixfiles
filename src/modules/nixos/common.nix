@@ -93,6 +93,9 @@
   zramSwap.enable = lib.mkDefault true;
 
   environment.systemPackages = with pkgs; [
+    # Required to manage this configuration from any account.
+    just
+    jq
     cachix
     mesa-demos
     libva-utils

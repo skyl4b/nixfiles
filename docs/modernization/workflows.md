@@ -54,16 +54,19 @@ NIXFILES_TEST_ROOT=/absolute/writable/scratch pixi run --locked check-host mars
 The physical store lives below that root; reported paths retain `/nix/store/`
 for cache compatibility. `NIXFILES_STORE` can explicitly select `daemon` or an
 absolute writable store root. Other values are rejected. Scratch stores use a
-private cache under their root and an empty build-users group; daemon calls
-retain the daemon's configured build-user policy. Build namespaces must be
+private cache under their root and an empty build-users group. Daemon calls use
+Nix's configured default store without an explicit `--store` override, retaining
+the daemon's configured build-user policy and avoiding restricted-setting warnings
+for ordinary users on NixOS. Build namespaces must be
 available in the container. See the [store notes](baseline.md#testing-from-a-non-nixos-system).
 The baseline collector continues to use its scratch store explicitly on every
 platform.
 
 ## Activation when deployment resumes
 
-`test-host <host>` and `switch <host>` require an explicit configured host, a
-matching local hostname, NixOS, and `NIXFILES_STORE=auto` or `daemon`. They invoke
+`test-host <host>` requires an explicit configured host; `switch [host]` defaults
+to the current hostname. Both require a matching local hostname, NixOS, and
+`NIXFILES_STORE=auto` or `daemon`. They invoke
 `nixos-rebuild` through sudo with the selected flake host and lock updates
 forbidden. `test-host` activates temporarily without setting the boot default;
 `switch` also changes the boot default. Home Manager is integrated into the

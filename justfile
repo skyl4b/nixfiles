@@ -1657,13 +1657,15 @@ _nix +args:
             store="$NIXFILES_TEST_ROOT"
         fi
     fi
-    nix_cmd=(nix --extra-experimental-features 'nix-command flakes' --store "$store")
+    nix_cmd=(nix --extra-experimental-features 'nix-command flakes')
     case "$store" in
+        # NixOS already defaults to the system daemon. An explicit store setting
+        # is forwarded to the daemon and warns for ordinary, untrusted users.
         daemon) ;;
         /*)
             mkdir -p -- "$store/cache"
             export XDG_CACHE_HOME="$store/cache"
-            nix_cmd+=(--option build-users-group '')
+            nix_cmd+=(--store "$store" --option build-users-group '')
             ;;
         *) printf 'NIXFILES_STORE must be auto, daemon, or an absolute writable store root.\n' >&2; exit 2 ;;
     esac
@@ -1692,6 +1694,7 @@ _host action host previous="":
     case "$action" in check|plan|build|diff) ;; *) exit 2 ;; esac
     # Host names become Nix attribute selectors, so validate both syntax and membership.
     [[ "$host" =~ ^[a-zA-Z0-9_-]+$ ]] || { printf 'Invalid host name: %s\n' "$host" >&2; exit 2; }
+    command -v jq >/dev/null || { printf 'jq is required for host selection. Enter a Nix shell with just and jq before rebuilding.\n' >&2; exit 127; }
     declared=$(just _nix eval --no-update-lock-file --json .#nixosConfigurations --apply builtins.attrNames)
     jq -e --arg host "$host" 'index($host) != null' <<<"$declared" >/dev/null || {
         printf 'Unknown host: %s. Use hosts to list configured machines.\n' "$host" >&2
@@ -2013,10 +2016,12 @@ test-workflows:
     assert len(diffs) == 1 and diffs[0][-2:] == [
         "/nix/store/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb-probe-1",
         "/nix/store/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-probe-2"]
-    assert calls[-1][calls[-1].index("--store") + 1] == "daemon"
+    assert "--store" not in calls[-1]
     assert "build-users-group" not in calls[-1]
-    auto_store = calls[-2][calls[-2].index("--store") + 1]
-    assert auto_store == ("daemon" if os.path.exists("/etc/NIXOS") else os.environ["NIXFILES_TEST_ROOT"])
+    if os.path.exists("/etc/NIXOS"):
+        assert "--store" not in calls[-2]
+    else:
+        assert calls[-2][calls[-2].index("--store") + 1] == os.environ["NIXFILES_TEST_ROOT"]
     assert all("store with spaces" in args[args.index("--store") + 1] for args in calls[:-2])
     PY
     export PATH="$original_path"

@@ -17,6 +17,20 @@ needs to be committed from Moon. The [device installation guide](install.md)
 covers local TTY setup, optional SSH, confirmed Disko execution, and copying the
 checkout into the installed user's home.
 
+All hosts install `just` and `jq` system-wide for managing the configuration.
+On an older installation missing either tool, pull the latest changes and use
+this one-time bootstrap from the checkout on Moon:
+
+```sh
+git pull
+nix shell --no-update-lock-file \
+  .#nixosConfigurations.moon.pkgs.just \
+  .#nixosConfigurations.moon.pkgs.jq -c just switch
+```
+
+After rebuilding, `just switch` works directly. For another host, replace
+`moon` in both package references with its configured hostname.
+
 ## Work on the repository
 
 With Pixi available, run from inside the checkout:
