@@ -14,6 +14,12 @@ in
     desktopManager.gnome.enable = true;
   };
 
+  # Use GNOME's KDE Connect implementation and the upstream firewall rules.
+  programs.kdeconnect = {
+    enable = true;
+    package = pkgs.gnomeExtensions.gsconnect;
+  };
+
   environment.systemPackages = (with pkgs; [
     gnome-tweaks
     gnome-network-displays
@@ -23,7 +29,8 @@ in
   programs.dconf.profiles.user.databases = [
     {
       settings."org/gnome/shell".enabled-extensions =
-        map (extension: extension.extensionUuid) extensions;
+        map (extension: extension.extensionUuid)
+          (extensions ++ [ pkgs.gnomeExtensions.gsconnect ]);
     }
   ];
 }

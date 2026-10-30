@@ -36,11 +36,13 @@ model, described in the [System76 statement](https://github.com/pop-os/shell/dis
 rather than a reproduced crash.
 
 The GNOME module supplies unlocked system dconf defaults that enable
-AppIndicator, Dash to Dock, Caffeine, and O-Tiling on fresh accounts. The user
+AppIndicator, Dash to Dock, Caffeine, O-Tiling, and GSConnect on fresh accounts. The user
 database takes precedence, so users can change the enabled list and retain those
 choices across rebuilds. Home Manager no longer writes this key on activation.
 The selected AppIndicator 66, Dash to Dock 109, Caffeine 60, and O-Tiling 30
 metadata all list GNOME 50. Mars does not inherit these GNOME extension settings.
+The pinned GSConnect 72 also supports GNOME 50, as confirmed by its
+[release notes](https://github.com/GSConnect/gnome-shell-extension-gsconnect/releases/tag/v72).
 
 O-Tiling uses its upstream settings without repository overrides. Automatic
 tiling is already enabled by the pinned schema's default. Its default Vim-style
@@ -74,8 +76,11 @@ Useful default O-Tiling controls from the pinned schema:
   once through the GNOME module's Flatpak integration.
 - Ptyxis is removed and GNOME Console is retained as the standard desktop
   terminal. WezTerm is also supplied by the shared home modules.
-- The unused GSConnect package selection is removed. Phone integration remains
-  disabled on the GNOME hosts, with firewall policy unchanged.
+- GSConnect supplies phone integration on every host importing the shared GNOME
+  module. `programs.kdeconnect` selects the GNOME extension and opens its upstream
+  TCP/UDP port range, 1714–1764. It joins the unlocked enabled-extension defaults;
+  existing user preferences still take precedence. See the
+  [pairing instructions](../maintenance.md#gnome-desktop-defaults).
 - GNOME Network Displays remains available for Miracast. Device support needs
   separate testing.
 - GNOME portals, keyring, Flatpak, and existing sharing-support modules are

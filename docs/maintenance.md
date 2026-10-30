@@ -77,7 +77,7 @@ packages; desktop and system services are configured separately. See
 ### GNOME desktop defaults
 
 Jupiter and Moon use O-Tiling for automatic window tiling, with AppIndicator,
-Dash to Dock, and Caffeine enabled through unlocked system defaults. Users can
+Dash to Dock, Caffeine, and GSConnect enabled through unlocked system defaults. Users can
 change their enabled extensions, and those choices survive rebuilds. The
 declarations live in `src/modules/nixos/desktops/gnome.nix`; they apply only to
 GNOME hosts.
@@ -87,6 +87,16 @@ is supplied by the home modules with Cascadia Code NF and the shared
 [terminal configuration](modernization/terminals.md). See the
 [GNOME audit and cleanup](modernization/gnome-audit.md) for
 the pinned extension version, package choices, and validation limits.
+
+Every configuration importing the shared GNOME module gets
+[GSConnect](https://github.com/GSConnect/gnome-shell-extension-gsconnect), GNOME's
+implementation of KDE Connect. The NixOS KDE Connect module installs GSConnect
+and opens TCP/UDP ports 1714–1764. After `just switch`, log out and back in.
+If you have customized your enabled extensions, enable GSConnect in Extensions;
+your existing choices take precedence over system defaults. Install KDE Connect
+on the phone, connect both devices to the same local network, then request and
+accept pairing in GSConnect's settings and the phone app. Pairing remains a
+per-user action; see the [upstream connection guide](https://github.com/GSConnect/gnome-shell-extension-gsconnect/wiki/Help#connecting-an-android-device).
 
 ### Keyboard layout
 
