@@ -6,6 +6,7 @@
     inputs.agenix.nixosModules.default
     inputs.disko.nixosModules.disko
     ./disk-config.nix
+    ./touchpad.nix
     ../../modules/nixos/common.nix
     ../../modules/nixos/desktops/gnome.nix
     ../../modules/nixos/virtualisation/docker.nix

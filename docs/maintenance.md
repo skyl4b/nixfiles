@@ -35,6 +35,15 @@ shared modules under `src/modules/`, shared home settings/package profiles under
 `src/home/`, and native configuration under `src/dotfiles/`. `src/chezmoi/`
 contains adapters pointing to those native files.
 
+### Custom machine commands
+
+Use the `nixfiles-` prefix for custom executables installed by this repository,
+so they are easy to discover with shell completion. Install device-specific
+utilities only on the relevant hosts. For example, Moon provides
+`sudo nixfiles-reset-surface-touchpad` for
+[Type Cover touchpad recovery](hosts/moon.md#type-cover-touchpad-recovery).
+Repository development and installation automation remains in the justfile.
+
 ### Select a user package profile
 
 Each host passes user modules to `mkHost`. `mkUser` defines both the account and

@@ -39,6 +39,33 @@ Surface Go module. Camera operation has been reported working; thermal managemen
 its separate operational check. No camera workaround was required for the
 reported working setup.
 
+### Type Cover touchpad recovery
+
+Moon includes a workaround for the reported Type Cover touchpad problems in
+`src/hosts/moon/touchpad.nix`. It resets HID devices matching `045E:09B5` bound
+to `hid-multitouch` once after the display manager starts and after every wake-up.
+Each reset waits three seconds for initialization, unbinds the matching device,
+then binds it again after half a second. Input from that device pauses briefly.
+The same service handles all reset requests, preventing overlapping resets.
+
+After pulling and applying the configuration with `just switch moon`, Moon's
+PATH includes a command for manually starting the same service:
+
+```sh
+sudo nixfiles-reset-surface-touchpad
+journalctl -b -u surface-touchpad-reset.service
+```
+
+A successful oneshot normally returns to `inactive (dead)`, ready for another
+request. The journal records the device ID or a skipped reset if no matching
+device is bound. If it skips while the cover is attached, check
+`ls -l /sys/bus/hid/drivers/hid-multitouch/` on Moon before changing the match.
+The match comes from the supplied workaround and still needs device testing.
+Verify manual recovery, a fresh boot, and several suspend/resume cycles with
+the cover attached; also check boot and wake-up without it. A cover attached
+later can be reset manually. Driver binding follows the
+[kernel driver model](https://docs.kernel.org/driver-api/driver-model/binding.html).
+
 The replacement layout is defined in `src/hosts/moon/disk-config.nix`, imported
 with the pinned Disko module. It targets
 `/dev/disk/by-id/nvme-eui.01000000000000008ce38e0403d48bea`, observed as
