@@ -27,7 +27,7 @@ let
 in
 {
   environment.systemPackages = [
-    (pkgs.writeShellScriptBin "nixfiles-reset-surface-touchpad" ''
+    (pkgs.writeShellScriptBin "my-reset-touchpad" ''
       exec ${config.systemd.package}/bin/systemctl start surface-touchpad-reset.service
     '')
   ];

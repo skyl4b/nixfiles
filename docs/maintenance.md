@@ -37,10 +37,10 @@ contains adapters pointing to those native files.
 
 ### Custom machine commands
 
-Use the `nixfiles-` prefix for custom executables installed by this repository,
+Use the `my-` prefix for custom executables installed by this repository,
 so they are easy to discover with shell completion. Install device-specific
 utilities only on the relevant hosts. For example, Moon provides
-`sudo nixfiles-reset-surface-touchpad` for
+`sudo my-reset-touchpad` for
 [Type Cover touchpad recovery](hosts/moon.md#type-cover-touchpad-recovery).
 Repository development and installation automation remains in the justfile.
 

@@ -52,7 +52,7 @@ After pulling and applying the configuration with `just switch moon`, Moon's
 PATH includes a command for manually starting the same service:
 
 ```sh
-sudo nixfiles-reset-surface-touchpad
+sudo my-reset-touchpad
 journalctl -b -u surface-touchpad-reset.service
 ```
 
