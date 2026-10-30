@@ -45,6 +45,7 @@
     libcamera
     rnote
     xournalpp
+    zapzap
   ];
 
   hardware = {

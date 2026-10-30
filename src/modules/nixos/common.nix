@@ -96,6 +96,7 @@
     # Required to manage this configuration from any account.
     just
     jq
+    chatgpt
     cachix
     mesa-demos
     libva-utils

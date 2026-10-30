@@ -74,6 +74,25 @@ list. All three hosts currently share complete. Profiles select home
 packages; desktop and system services are configured separately. See
 [profile contents and constructor arguments](modernization/user-profiles.md).
 
+### Desktop applications
+
+Every host installs `pkgs.chatgpt`, the nixpkgs package for OpenAI's official
+ChatGPT desktop app. Open it from the application menu or run `chatgpt`, then
+sign in locally. The pinned package fetches OpenAI's Linux binary; updates follow
+the repository's nixpkgs pin. OpenAI's [Linux documentation](https://learn.chatgpt.com/docs/linux/linux-app)
+describes the app as a preview and does not list NixOS as a supported distribution.
+The shared `NIXOS_OZONE_WL=1` preference makes nixpkgs launch it with native Wayland
+in a Wayland session. OpenAI describes native Wayland support as experimental;
+run `NIXOS_OZONE_WL= chatgpt` to use the app's upstream XWayland behavior instead.
+Runtime behavior still needs testing on the target desktop.
+
+Moon additionally installs [ZapZap](https://github.com/rafatosta/zapzap), an
+unofficial WhatsApp Web client with its own window, desktop notifications, tray
+integration, and spell-checking. Open ZapZap and link it from WhatsApp's
+**Linked devices** screen on the phone. Its features follow WhatsApp Web; it
+does not provide the native Windows/macOS WhatsApp application. Account sessions
+stay local and are not managed by the repository.
+
 ### GNOME desktop defaults
 
 Jupiter and Moon use O-Tiling for automatic window tiling, with AppIndicator,
