@@ -71,6 +71,19 @@ declaratively, remove the `graphical-session.target.wants` entry from the Home
 Manager module; rebuild and stop the service. Home Manager manages the enablement
 link and refreshes it when the unit changes.
 
+The client runs `systemctl --user reenable` after sign-in and when enabling
+startup in its settings. This can replace Home Manager's enablement link; an
+earlier manual installation can also leave a conflicting unit file. Home Manager
+reclaims only these two generated service paths during activation. Conflicting
+files or foreign links are moved to sibling `*.before-home-manager` backups;
+repeated conflicts retain older backups with numbered suffixes. Existing Home
+Manager links are left alone. Other file collisions still stop activation, and
+Proton credentials, settings, and cached files are not part of this migration.
+
+If `just switch` reports that these two paths would be clobbered, pull the
+updated configuration and run `just switch` again. The backup and replacement
+happen automatically; there is no need to delete either file manually.
+
 The packaged tray's automatic startup remains suppressed independently.
 Run `pdfs-tray` manually for the tray icon; GNOME hosts already include
 AppIndicator. To make its tray autostart declaratively, remove the `Hidden=true`
