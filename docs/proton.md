@@ -100,12 +100,27 @@ pass-cli login
 pass-cli vault list
 ```
 
-The repository leaves Proton's default keyring storage enabled. Session files
-remain local under `~/.local/share/proton-pass-cli/`; no credentials or tokens
-are supplied through Nix, the justfile, or Git. The default Linux kernel keyring
-is cleared on reboot. Proton documents an optional persistent desktop-keyring
-backend using `PROTON_PASS_LINUX_KEYRING=dbus`; unlock the desktop keyring before
-using it. See the official [configuration documentation](https://protonpass.github.io/pass-cli/get-started/configuration/).
+Skylab's Home Manager configuration sets `PROTON_PASS_LINUX_KEYRING=dbus` so
+Pass uses the desktop Secret Service (GNOME Keyring) rather than the default
+kernel keyring. This keeps its encryption key across reboots and avoids the
+kernel-backend `NoStorageAccess(AccessDenied)` error reported on NixOS. Session
+files remain local under `~/.local/share/proton-pass-cli/`; no credentials or
+tokens are supplied through Nix, the justfile, or Git.
+
+After rebuilding, log out and back in to load the new session variable. To fix
+an already-open terminal immediately, run these commands as Skylab in the
+unlocked graphical session:
+
+```sh
+export PROTON_PASS_LINUX_KEYRING=dbus
+pass-cli login
+```
+
+If the desktop keyring is locked, unlock the Login keyring in **Passwords and
+Keys** and retry. An SSH session may not have access to that graphical session's
+bus or unlocked keyring. See the official
+[configuration documentation](https://protonpass.github.io/pass-cli/get-started/configuration/)
+and the [matching NixOS report](https://github.com/NixOS/nixpkgs/issues/519229).
 
 Runtime authentication and cloud sync must be tested on the target machine.
 Repository validation does not log into either account or modify cloud files.

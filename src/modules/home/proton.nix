@@ -6,6 +6,10 @@ in
 {
   home.packages = [ drive pkgs.proton-pass-cli ];
 
+  # Use the desktop Secret Service; the kernel backend can deny session access
+  # on NixOS and loses its encryption key at reboot.
+  home.sessionVariables.PROTON_PASS_LINUX_KEYRING = "dbus";
+
   # Keep the tray optional; the mount starts independently with the session.
   xdg.configFile."autostart/io.narl.proton-drive-linux-tray.desktop".text = ''
     [Desktop Entry]
