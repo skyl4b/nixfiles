@@ -42,21 +42,23 @@ reported working setup.
 ### Type Cover touchpad recovery
 
 Moon includes a workaround for the reported Type Cover touchpad problems in
-`src/hosts/moon/touchpad.nix`. Rebinding `hid-multitouch` alone proved unreliable
-after suspend: the service completed successfully, but input sometimes needed
-multiple manual resets or a physical cover reconnection. The reset now rebinds
-the touchpad's parent USB interface through `usbhid`. A
-[Surface Go report with the same cover ID](https://community.fydeos.io/t/topic/37340/8)
-describes recovery at this layer; Moon still needs repeated wake-up testing.
+`src/hosts/moon/touchpad.nix`. Both `hid-multitouch` and parent USB-interface
+rebinds completed successfully but proved unreliable after suspend. On
+2026-10-31, Moon's journal showed `usb_submit_urb(ctrl) failed: -1` and
+`usbhid 1-7:1.3: suspend error -5`; the touchpad remained enumerated but produced
+no raw events in `evtest`. Running `usbreset 045e:09b5` restored it. The service
+now uses that full USB device reset. This is a recovery workaround; repeated
+sleep/wake testing is still needed to establish its reliability.
 
-The script discovers the USB interface above `045E:09B5` HID devices bound to
-`hid-multitouch`, so USB port and interface numbers are not hardcoded. It leaves
-the cover's separate keyboard interfaces and other USB devices alone. It waits
-three seconds, allows another four seconds for device discovery, unbinds the
-interface, then binds it again after one second. Failed binds are retried, with
-a final restoration attempt if interrupted or unsuccessful. Input from that
-interface pauses briefly. The same service runs after the display manager starts,
-after wake-up, and on manual requests, preventing overlapping resets.
+The script discovers USB devices matching `045e:09b5`, reads their current bus
+and device numbers, and invokes `usbreset` for each matching cover. No port or
+bus/device number is hardcoded, and discovery does not depend on the HID driver
+remaining bound. It waits three seconds, then allows another four seconds for
+device discovery. The whole cover resets, so both its keyboard and touchpad
+pause briefly. The same service runs after the display manager starts, after
+wake-up, and on manual requests, preventing overlapping resets. The pinned
+usbutils 019 can return zero even when a reset fails, so the script checks its
+success message as well as the exit status.
 
 After pulling and applying the configuration with `just switch moon`, Moon's
 PATH includes a command for manually starting the same service:
@@ -67,15 +69,16 @@ journalctl -b -u surface-touchpad-reset.service
 ```
 
 A successful oneshot normally returns to `inactive (dead)`, ready for another
-request. The journal records the discovered USB interface or a skipped reset if
-none is found. If it skips while the cover is attached, check
-`ls -l /sys/bus/hid/devices/0003:045E:09B5.*/driver` on Moon before changing the
-match. A successful bind means the kernel accepted it; it does not establish
-that physical touchpad events have resumed.
+request. The journal records the USB bus/device address and reset result, or a
+skipped reset if no matching cover is found. If it skips while the cover is
+attached, check `lsusb` using `sudo nix shell --inputs-from . nixpkgs#usbutils
+--command lsusb` from the checkout. An `ok` result means the kernel accepted the
+USB reset; physical touchpad operation still needs checking.
 Verify manual recovery, a fresh boot, and several suspend/resume cycles with
 the cover attached; also check boot and wake-up without it. A cover attached
-later can be reset manually. Driver binding follows the
-[kernel driver model](https://docs.kernel.org/driver-api/driver-model/binding.html).
+later can be reset manually. The operation uses the upstream
+[usbreset implementation](https://github.com/gregkh/usbutils/blob/v019/usbreset.c)
+to issue `USBDEVFS_RESET`; it does not power-cycle the port.
 
 ### Rotation with the cover attached
 

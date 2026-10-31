@@ -3,69 +3,50 @@
 let
   resetTouchpad = pkgs.writeShellScript "surface-touchpad-reset" ''
     set -euo pipefail
-    driver="/sys/bus/usb/drivers/usbhid"
-    declare -A interfaces=()
-
     # Give the Type Cover time to initialize after boot or resume.
     ${pkgs.coreutils}/bin/sleep 3
     shopt -s nullglob
-    # Find the USB interface above the touchpad, not the cover's keyboard interfaces.
-    # Rebinding hid-multitouch alone does not reliably recover after system suspend.
-    # https://community.fydeos.io/t/topic/37340/8
+    devices=()
+
+    # A full USB device reset recovered Moon when HID and USB-interface rebinds
+    # completed successfully but still produced no touchpad input after resume.
+    # Discover the cover by USB ID; port paths and bus/device numbers can change.
     for attempt in {1..5}; do
-      for device in /sys/bus/hid/devices/0003:045E:09B5.*; do
-        [[ -L "$device/driver" ]] || continue
-        hid_driver="$(${pkgs.coreutils}/bin/readlink -f "$device/driver")"
-        [[ "''${hid_driver##*/}" == hid-multitouch ]] || continue
-        interface="$(${pkgs.coreutils}/bin/readlink -f "$device")"
-        while [[ "$interface" != / && ! -f "$interface/bInterfaceNumber" ]]; do
-          interface="$(${pkgs.coreutils}/bin/dirname "$interface")"
-        done
-        [[ -f "$interface/bInterfaceNumber" && -L "$interface/driver" ]] || continue
-        [[ "$(${pkgs.coreutils}/bin/readlink -f "$interface/driver")" == "$driver" ]] || continue
-        interfaces["''${interface##*/}"]="$interface"
+      for device in /sys/bus/usb/devices/*; do
+        [[ -f "$device/idVendor" && -f "$device/idProduct" ]] || continue
+        [[ "$(<"$device/idVendor")" == 045e && "$(<"$device/idProduct")" == 09b5 ]] || continue
+        devices+=("$device")
       done
-      if (( ''${#interfaces[@]} > 0 )); then break; fi
+      if (( ''${#devices[@]} > 0 )); then break; fi
       if (( attempt < 5 )); then ${pkgs.coreutils}/bin/sleep 1; fi
     done
 
-    if (( ''${#interfaces[@]} == 0 )); then
-      printf 'No Surface touchpad USB interface found for 045E:09B5; skipping.\n'
+    if (( ''${#devices[@]} == 0 )); then
+      printf 'No Surface Type Cover USB device matching 045e:09b5; skipping.\n'
       exit 0
     fi
 
-    # Retain the USB interface ID across removal/recreation of its HID children.
-    # Retry failed binds and attempt restoration if interrupted while unbound.
-    pending=""
-    bind_interface() {
-      local attempt
-      for attempt in {1..3}; do
-        if printf '%s' "$pending" > "$driver/bind"; then return 0; fi
-        if (( attempt < 3 )); then ${pkgs.coreutils}/bin/sleep 1; fi
-      done
-      return 1
-    }
-    restore_interface() {
-      if [[ -n "$pending" ]]; then
-        printf 'Restoring Surface touchpad USB interface: %s\n' "$pending" >&2
-        bind_interface || true
-      fi
-    }
-    trap restore_interface EXIT
-    trap 'exit 143' TERM
-    trap 'exit 130' INT
-
-    for id in "''${!interfaces[@]}"; do
-      printf 'Resetting Surface touchpad USB interface: %s\n' "$id"
-      pending="$id"
-      if ! printf '%s' "$id" > "$driver/unbind"; then
-        pending=""
+    for device in "''${devices[@]}"; do
+      bus="$(<"$device/busnum")"
+      number="$(<"$device/devnum")"
+      [[ "$bus" =~ ^[0-9]+$ && "$number" =~ ^[0-9]+$ ]] || {
+        printf 'Invalid USB bus/device numbers for %s.\n' "$device" >&2
+        exit 1
+      }
+      printf -v address '%03d/%03d' "$((10#$bus))" "$((10#$number))"
+      printf 'Resetting Surface Type Cover USB device: %s (045e:09b5)\n' "$address"
+      if output="$(${pkgs.usbutils}/bin/usbreset "$address" 2>&1)"; then
+        printf '%s\n' "$output"
+        # usbutils 019 returns zero even if the reset ioctl fails. Check its
+        # success message too, so systemd reports a failed reset accurately.
+        [[ "$output" == *' ... ok' ]] || {
+          printf 'USB reset did not report success for %s.\n' "$address" >&2
+          exit 1
+        }
+      else
+        printf '%s\n' "$output" >&2
         exit 1
       fi
-      ${pkgs.coreutils}/bin/sleep 1
-      bind_interface
-      pending=""
-      printf 'Rebound Surface touchpad USB interface: %s\n' "$id"
     done
   '';
 in
