@@ -1,7 +1,7 @@
 { lib, pkgs, ... }:
 
 {
-  imports = [ ./nix.nix ];
+  imports = [ ./nix.nix ./caches/proton-drive.nix ];
 
   networking = {
     networkmanager.enable = true;

@@ -96,13 +96,49 @@
         "type": "github"
       }
     },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1791456040,
+        "narHash": "sha256-H83yz/do+hjOO0uujHyH8RgtIQP2v7Mw+cLwcZK/xKc=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "e7439b6b14ad3cc35d05608ebca9bce01a25f5f8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "proton-drive-linux": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_2"
+      },
+      "locked": {
+        "lastModified": 1793099150,
+        "narHash": "sha256-ynvaCPVRHaKPUuBbJP8uQZ8xK+VHZetd0M2HyY3PtGY=",
+        "owner": "narrrl",
+        "repo": "proton-drive-linux",
+        "rev": "27201914ee17ce7e0cd51e5cc8f7b788fd62e196",
+        "type": "github"
+      },
+      "original": {
+        "owner": "narrrl",
+        "ref": "v3.6.0",
+        "repo": "proton-drive-linux",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "agenix": "agenix",
         "disko": "disko",
         "home-manager": "home-manager",
         "nixos-hardware": "nixos-hardware",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "proton-drive-linux": "proton-drive-linux"
       }
     }
   },

@@ -19,6 +19,8 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Keep upstream's nixpkgs pin so its release binary cache can be used.
+    proton-drive-linux.url = "github:narrrl/proton-drive-linux/v3.6.0";
   };
 
   outputs = inputs@{ ... }:
@@ -30,7 +32,10 @@
         profile = "complete";
         description = "Eduardo Farinati Leite";
         homeStateVersion = "23.11";
-        homeModules = [ ./src/modules/home/keyboard.nix ];
+        homeModules = [
+          ./src/modules/home/keyboard.nix
+          ./src/modules/home/proton.nix
+        ];
         authorizedKeys = [
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAknKoOCh4U3ZQK839e+i29Ae79hTbhoGlqPrmAjDBwd"
         ];

@@ -76,6 +76,12 @@ packages; desktop and system services are configured separately. See
 
 ### Desktop applications
 
+Skylab's Home Manager configuration also installs the unofficial Proton Drive
+mount/desktop client and official Proton Pass CLI on every host. The Drive
+service is installed only for Skylab and starts on request. Follow the
+[Proton setup guide](proton.md) for the first cached build, sign-in, mounting,
+optional login startup, and storage considerations.
+
 Every host installs `pkgs.chatgpt`, the nixpkgs package for OpenAI's official
 ChatGPT desktop app. Open it from the application menu or run `chatgpt`, then
 sign in locally. The pinned package fetches OpenAI's Linux binary; updates follow
