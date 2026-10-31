@@ -22,6 +22,10 @@
   users.users.skylab.hashedPasswordFile = config.age.secrets.skylab-password.path;
 
   boot = {
+    # Trial the Surface Go 3 Type Cover initialization delay (USB_QUIRK_DELAY_INIT).
+    # Moon reports quirks=0x0 on 6.18.56, so this enables the missing flag.
+    # https://github.com/linux-surface/linux-surface/issues/1059
+    kernelParams = [ "usbcore.quirks=045e:09b5:g" ];
     loader = {
       systemd-boot = {
         enable = true;

@@ -47,16 +47,45 @@ rebinds completed successfully but proved unreliable after suspend. On
 2026-10-31, Moon's journal showed `usb_submit_urb(ctrl) failed: -1` and
 `usbhid 1-7:1.3: suspend error -5`; the touchpad remained enumerated but produced
 no raw events in `evtest`. Running `usbreset 045e:09b5` restored it. The service
-now uses that full USB device reset. This is a recovery workaround; repeated
-sleep/wake testing is still needed to establish its reliability.
+uses that full USB device reset for manual recovery.
+
+Moon's later inventory reported kernel `6.18.56`, device quirks `0x0`,
+`power/control=on`, and no configured `usbcore.quirks` parameter. Runtime USB
+autosuspend was therefore already disabled for the cover at the time checked.
+The configuration now trials `usbcore.quirks=045e:09b5:g`, enabling
+`USB_QUIRK_DELAY_INIT` for this cover. The
+[Surface Go 3 initialization report](https://github.com/linux-surface/linux-surface/issues/1059)
+and [linux-surface patch](https://github.com/linux-surface/linux-surface/blob/master/patches/6.18/0010-surface-typecover.patch)
+describe a touchpad-mode initialization problem addressed by this delay. They
+do not establish that it fixes Moon's suspend failure. No kernel replacement
+or global USB power-management change is included in this trial.
+
+Automatic boot and wake-up resets are disabled so they cannot hide the result.
+Apply with `just switch` and **reboot**: changing the kernel command line does
+not affect the running kernel. With the cover attached, check:
+
+```sh
+cat /sys/module/usbcore/parameters/quirks
+cat /sys/bus/usb/devices/1-7/quirks
+journalctl -b -u surface-touchpad-reset.service --no-pager
+```
+
+The expected parameter is `045e:09b5:g` and the device flag is `0x40`. The port
+`1-7` is the one observed on Moon; use the current cover's USB path if it changes.
+There should be no reset-service invocations before manual recovery is requested.
+Test cold boot, several suspend/resume cycles, and cover reconnection without
+running the recovery command. If it fails, capture the kernel journal and use
+`sudo my-reset-touchpad` to recover. To revert the trial, remove the `usbcore.quirks`
+entry from Moon's `boot.kernelParams`, rebuild, and reboot. Kernel quirk parameters
+toggle built-in flags, so recheck the device flags when changing kernels.
 
 The script discovers USB devices matching `045e:09b5`, reads their current bus
 and device numbers, and invokes `usbreset` for each matching cover. No port or
 bus/device number is hardcoded, and discovery does not depend on the HID driver
 remaining bound. It waits three seconds, then allows another four seconds for
 device discovery. The whole cover resets, so both its keyboard and touchpad
-pause briefly. The same service runs after the display manager starts, after
-wake-up, and on manual requests, preventing overlapping resets. The pinned
+pause briefly. The service runs only on manual requests during the quirk trial,
+preventing overlapping resets. The pinned
 usbutils 019 can return zero even when a reset fails, so the script checks its
 success message as well as the exit status.
 
@@ -74,9 +103,7 @@ skipped reset if no matching cover is found. If it skips while the cover is
 attached, check `lsusb` using `sudo nix shell --inputs-from . nixpkgs#usbutils
 --command lsusb` from the checkout. An `ok` result means the kernel accepted the
 USB reset; physical touchpad operation still needs checking.
-Verify manual recovery, a fresh boot, and several suspend/resume cycles with
-the cover attached; also check boot and wake-up without it. A cover attached
-later can be reset manually. The operation uses the upstream
+The operation uses the upstream
 [usbreset implementation](https://github.com/gregkh/usbutils/blob/v019/usbreset.c)
 to issue `USBDEVFS_RESET`; it does not power-cycle the port.
 

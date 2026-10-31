@@ -57,20 +57,15 @@ in
     '')
   ];
 
-  # A repeatable oneshot also serializes manual and automatic reset requests.
+  # Keep recovery manual while testing the initialization quirk. Automatic
+  # resets would conceal whether boot and suspend/resume work without recovery.
+  # A repeatable oneshot serializes manual reset requests.
   systemd.services.surface-touchpad-reset = {
     description = "Reset Surface Type Cover touchpad";
-    wantedBy = [ "graphical.target" ];
-    after = [ "display-manager.service" ];
     serviceConfig = {
       Type = "oneshot";
       ExecStart = resetTouchpad;
       TimeoutStartSec = 30;
     };
   };
-
-  # Queue the same service without holding up the resume hook for its delay.
-  powerManagement.resumeCommands = ''
-    ${config.systemd.package}/bin/systemctl --no-block start surface-touchpad-reset.service
-  '';
 }
