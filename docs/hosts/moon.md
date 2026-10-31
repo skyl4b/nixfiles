@@ -42,11 +42,21 @@ reported working setup.
 ### Type Cover touchpad recovery
 
 Moon includes a workaround for the reported Type Cover touchpad problems in
-`src/hosts/moon/touchpad.nix`. It resets HID devices matching `045E:09B5` bound
-to `hid-multitouch` once after the display manager starts and after every wake-up.
-Each reset waits three seconds for initialization, unbinds the matching device,
-then binds it again after half a second. Input from that device pauses briefly.
-The same service handles all reset requests, preventing overlapping resets.
+`src/hosts/moon/touchpad.nix`. Rebinding `hid-multitouch` alone proved unreliable
+after suspend: the service completed successfully, but input sometimes needed
+multiple manual resets or a physical cover reconnection. The reset now rebinds
+the touchpad's parent USB interface through `usbhid`. A
+[Surface Go report with the same cover ID](https://community.fydeos.io/t/topic/37340/8)
+describes recovery at this layer; Moon still needs repeated wake-up testing.
+
+The script discovers the USB interface above `045E:09B5` HID devices bound to
+`hid-multitouch`, so USB port and interface numbers are not hardcoded. It leaves
+the cover's separate keyboard interfaces and other USB devices alone. It waits
+three seconds, allows another four seconds for device discovery, unbinds the
+interface, then binds it again after one second. Failed binds are retried, with
+a final restoration attempt if interrupted or unsuccessful. Input from that
+interface pauses briefly. The same service runs after the display manager starts,
+after wake-up, and on manual requests, preventing overlapping resets.
 
 After pulling and applying the configuration with `just switch moon`, Moon's
 PATH includes a command for manually starting the same service:
@@ -57,14 +67,42 @@ journalctl -b -u surface-touchpad-reset.service
 ```
 
 A successful oneshot normally returns to `inactive (dead)`, ready for another
-request. The journal records the device ID or a skipped reset if no matching
-device is bound. If it skips while the cover is attached, check
-`ls -l /sys/bus/hid/drivers/hid-multitouch/` on Moon before changing the match.
-The match comes from the supplied workaround and still needs device testing.
+request. The journal records the discovered USB interface or a skipped reset if
+none is found. If it skips while the cover is attached, check
+`ls -l /sys/bus/hid/devices/0003:045E:09B5.*/driver` on Moon before changing the
+match. A successful bind means the kernel accepted it; it does not establish
+that physical touchpad events have resumed.
 Verify manual recovery, a fresh boot, and several suspend/resume cycles with
 the cover attached; also check boot and wake-up without it. A cover attached
 later can be reset manually. Driver binding follows the
 [kernel driver model](https://docs.kernel.org/driver-api/driver-model/binding.html).
+
+### Rotation with the cover attached
+
+Moon installs and enables [Screen Rotate](https://github.com/shyzus/gnome-shell-extension-screen-autorotate)
+(version 29, supporting GNOME 50), allowing automatic rotation independently of
+GNOME's tablet-mode detection. Rotation is unlocked by default, and the Auto
+Rotate toggle remains available for temporarily locking it. These are unlocked
+defaults; personal settings take precedence. Other hosts retain their existing
+extension set.
+
+After `just switch`, log out and back in to load the new system extension. If
+your existing personal extension list overrides the system default, enable it
+once in your GNOME session:
+
+```sh
+gnome-extensions enable screen-rotate@shyzus.github.io
+gsettings set org.gnome.settings-daemon.peripherals.touchscreen orientation-lock false
+```
+
+This changes GNOME's rotation policy; it still needs live accelerometer readings.
+If rotation stops after wake-up, run `monitor-sensor` and physically rotate Moon.
+Stop it with Ctrl+C, then test `sudo systemctl restart iio-sensor-proxy.service`
+and repeat. Readings that change while the screen stays fixed point toward the
+desktop; missing readings that recover after restarting the service point toward
+the sensor service or its driver. Preserve the journal before restarting it.
+
+### Storage layout
 
 The replacement layout is defined in `src/hosts/moon/disk-config.nix`, imported
 with the pinned Disko module. It targets
