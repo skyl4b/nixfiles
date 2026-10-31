@@ -18,6 +18,14 @@ inputs.nixpkgs.lib.nixosSystem {
         useUserPackages = true;
         extraSpecialArgs = { inherit inputs; };
       };
+
+      # useUserPackages puts Home Manager's environment helper in this profile.
+      # Load it without requiring Home Manager to own the user's shell files.
+      environment.extraInit = ''
+        if [ -r "/etc/profiles/per-user/''${USER:-}/etc/profile.d/hm-session-vars.sh" ]; then
+          . "/etc/profiles/per-user/''${USER:-}/etc/profile.d/hm-session-vars.sh"
+        fi
+      '';
     }
   ] ++ users;
 }

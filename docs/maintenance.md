@@ -106,6 +106,9 @@ Dash to Dock, Caffeine, and GSConnect enabled through unlocked system defaults. 
 change their enabled extensions, and those choices survive rebuilds. The
 declarations live in `src/modules/nixos/desktops/gnome.nix`; they apply only to
 GNOME hosts.
+The shared GNOME defaults also set `org.gnome.shell always-show-log-out` to
+`true`, keeping Log Out visible. This is unlocked, so a user's explicit setting
+still takes precedence.
 O-Tiling uses its upstream settings and shortcuts; adjust them in its preferences
 if needed. GNOME Console is retained as the standard desktop terminal; Ghostty
 is supplied by the home modules with Cascadia Code NF and the shared

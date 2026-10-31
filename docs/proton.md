@@ -107,8 +107,16 @@ kernel-backend `NoStorageAccess(AccessDenied)` error reported on NixOS. Session
 files remain local under `~/.local/share/proton-pass-cli/`; no credentials or
 tokens are supplied through Nix, the justfile, or Git.
 
-After rebuilding, log out and back in to load the new session variable. To fix
-an already-open terminal immediately, run these commands as Skylab in the
+The host constructor sources Home Manager's generated environment helper from
+the per-user system profile during shell initialization. Home Manager does not
+manage the shell startup files themselves. Pass's backend is also registered in
+the systemd user environment (`environment.d/10-home-manager.conf`) for graphical
+applications and user services. Declaring only `home.sessionVariables` without
+a loading hook previously left it unset even after a reboot.
+
+After rebuilding, log out and back in to load the new session variable. Confirm
+it in a new terminal with `printenv PROTON_PASS_LINUX_KEYRING` (expected: `dbus`).
+To fix an already-open terminal immediately, run these commands as Skylab in the
 unlocked graphical session:
 
 ```sh

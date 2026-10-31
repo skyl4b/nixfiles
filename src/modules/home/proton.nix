@@ -8,7 +8,10 @@ in
 
   # Use the desktop Secret Service; the kernel backend can deny session access
   # on NixOS and loses its encryption key at reboot.
+  # https://github.com/NixOS/nixpkgs/issues/519229
   home.sessionVariables.PROTON_PASS_LINUX_KEYRING = "dbus";
+  systemd.user.sessionVariables.PROTON_PASS_LINUX_KEYRING =
+    config.home.sessionVariables.PROTON_PASS_LINUX_KEYRING;
 
   # Keep the tray optional; the mount starts independently with the session.
   xdg.configFile."autostart/io.narl.proton-drive-linux-tray.desktop".text = ''

@@ -28,9 +28,11 @@ in
   # User preferences take precedence over these unlocked system defaults.
   programs.dconf.profiles.user.databases = [
     {
-      settings."org/gnome/shell".enabled-extensions =
-        map (extension: extension.extensionUuid)
+      settings."org/gnome/shell" = {
+        always-show-log-out = true;
+        enabled-extensions = map (extension: extension.extensionUuid)
           (extensions ++ [ pkgs.gnomeExtensions.gsconnect ]);
+      };
     }
   ];
 }
