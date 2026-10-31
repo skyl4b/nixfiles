@@ -36,9 +36,11 @@ Proton Pass CLI currently comes from the repository's main nixpkgs pin at
 ## Mount Proton Drive
 
 All three hosts already provide GNOME Keyring and the privileged `fusermount3`
-wrapper. The user unit puts `/run/wrappers/bin` first on PATH so FUSE can mount
-without running the daemon as root. It inherits the upstream watchdog, memory
-limits, session ordering, and clean-unmount behavior.
+wrapper. Home Manager exposes the package's existing user unit through
+`~/.local/share/systemd/user/proton-drive.service`. A small configuration drop-in
+puts `/run/wrappers/bin` first on PATH so FUSE can mount without running the
+daemon as root. The watchdog, memory limits, session ordering, and clean-unmount
+behavior come directly from the packaged unit.
 
 From Skylab's unlocked graphical session, sign in interactively and start the
 mount for this session:
@@ -67,22 +69,24 @@ systemctl --user stop proton-drive.service
 ```
 
 The next graphical login starts it again. To turn automatic startup off
-declaratively, remove the `graphical-session.target.wants` entry from the Home
-Manager module; rebuild and stop the service. Home Manager manages the enablement
-link and refreshes it when the unit changes.
+declaratively, remove the `xdg.dataFile` entry for
+`systemd/user/graphical-session.target.wants/proton-drive.service` from the Home
+Manager module, rebuild, and stop the service. Also disable the client's own
+startup link with `systemctl --user disable proton-drive.service` if present.
 
 The client runs `systemctl --user reenable` after sign-in and when enabling
-startup in its settings. This can replace Home Manager's enablement link; an
-earlier manual installation can also leave a conflicting unit file. Home Manager
-reclaims only these two generated service paths during activation. Conflicting
-files or foreign links are moved to sibling `*.before-home-manager` backups;
-repeated conflicts retain older backups with numbered suffixes. Existing Home
-Manager links are left alone. Other file collisions still stop activation, and
-Proton credentials, settings, and cached files are not part of this migration.
+startup in its settings. This creates unit and enablement links under
+`~/.config/systemd/user`. Home Manager leaves that layer to the client and manages
+the packaged unit and default session dependency in the user data layer instead.
+On activation it clears the two generated config-layer service paths, including
+the previously copied unit, so old links cannot pin an outdated package. No
+backup or forced file ownership is needed. The client can recreate its links on
+the next sign-in without colliding with Home Manager. Credentials, settings, and
+cached files are outside these service paths.
 
 If `just switch` reports that these two paths would be clobbered, pull the
-updated configuration and run `just switch` again. The backup and replacement
-happen automatically; there is no need to delete either file manually.
+updated configuration and run `just switch` again. The old generated service
+paths are removed automatically, and the packaged service becomes authoritative.
 
 The packaged tray's automatic startup remains suppressed independently.
 Run `pdfs-tray` manually for the tray icon; GNOME hosts already include

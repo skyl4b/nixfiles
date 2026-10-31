@@ -25,43 +25,27 @@ in
     Hidden=true
   '';
 
-  # Install the upstream unit only for this user, with NixOS's FUSE helper path.
-  xdg.configFile."systemd/user/proton-drive.service" = {
-    force = true;
-    text = builtins.replaceStrings
-      [ "ExecStart=/usr/bin/pdfs" "[Service]" ]
-      [
-        "ExecStart=${drive}/bin/pdfs"
-        # FUSE needs NixOS's privileged wrapper, rather than the unwrapped binary.
-        "[Service]\nEnvironment=PATH=/run/wrappers/bin:/run/current-system/sw/bin"
-      ]
-      (builtins.readFile (inputs.proton-drive-linux + "/packaging/proton-drive.service"));
-  };
+  # Reuse the package's unit in the user vendor-data layer. The client owns the
+  # config-layer links it creates with `systemctl --user reenable` after login.
+  xdg.dataFile."systemd/user/proton-drive.service".source =
+    "${drive}/lib/systemd/user/proton-drive.service";
 
-  # Manage the enablement link too, so it follows unit changes on every rebuild.
-  xdg.configFile."systemd/user/graphical-session.target.wants/proton-drive.service" = {
-    force = true;
-    source = config.xdg.configFile."systemd/user/proton-drive.service".source;
-  };
+  # This dependency starts the packaged unit with the session without managing
+  # the config-layer enablement link that the client rewrites.
+  xdg.dataFile."systemd/user/graphical-session.target.wants/proton-drive.service".source =
+    "${drive}/lib/systemd/user/proton-drive.service";
 
-  # Login calls `systemctl --user reenable`, which can replace our managed links.
-  # Allow only these generated files to be reclaimed, preserving foreign copies
-  # after collision checks but before Home Manager installs its replacement links.
-  home.activation.backupProtonDriveUnits = lib.hm.dag.entryBetween
+  # FUSE needs NixOS's privileged wrapper, rather than the unwrapped binary.
+  xdg.configFile."systemd/user/proton-drive.service.d/nixos.conf".text = ''
+    [Service]
+    Environment=PATH=/run/wrappers/bin:/run/current-system/sw/bin
+  '';
+
+  # Remove the former generated unit and any links recreated by the client.
+  # Otherwise a config-layer link could pin an older package ahead of the new
+  # vendor unit. These generated service links contain no application state.
+  home.activation.clearProtonDriveUnitLinks = lib.hm.dag.entryBetween
     [ "linkGeneration" ] [ "writeBoundary" ] ''
-      for target in ${lib.escapeShellArgs (map (file: "${config.xdg.configHome}/${file}") unitFiles)}; do
-        if [[ -L "$target" ]]; then
-          link="$(${pkgs.coreutils}/bin/readlink "$target")"
-          if [[ "$link" == ${builtins.storeDir}/*-home-manager-files/* ]]; then
-            continue
-          fi
-        elif [[ ! -e "$target" ]]; then
-          continue
-        elif [[ ! -f "$target" ]]; then
-          printf 'Expected a service file at %s; refusing to replace it.\n' "$target" >&2
-          exit 1
-        fi
-        run ${pkgs.coreutils}/bin/mv -T --backup=numbered -- "$target" "$target.before-home-manager"
-      done
+      run ${pkgs.coreutils}/bin/rm -f -- ${lib.escapeShellArgs (map (file: "${config.xdg.configHome}/${file}") unitFiles)}
     '';
 }
