@@ -1,4 +1,4 @@
-{ inputs, pkgs, ... }:
+{ config, inputs, pkgs, ... }:
 
 let
   drive = inputs.proton-drive-linux.packages.${pkgs.stdenv.hostPlatform.system}.default;
@@ -6,7 +6,7 @@ in
 {
   home.packages = [ drive pkgs.proton-pass-cli ];
 
-  # The package ships a tray autostart entry; keep the initial trial opt-in.
+  # Keep the tray optional; the mount starts independently with the session.
   xdg.configFile."autostart/io.narl.proton-drive-linux-tray.desktop".text = ''
     [Desktop Entry]
     Type=Application
@@ -14,8 +14,7 @@ in
     Hidden=true
   '';
 
-  # Install the upstream unit only for this user. Unlike systemd.user.services,
-  # this does not create a wantedBy link: enabling the mount is a local choice.
+  # Install the upstream unit only for this user, with NixOS's FUSE helper path.
   xdg.configFile."systemd/user/proton-drive.service".text = builtins.replaceStrings
     [ "ExecStart=/usr/bin/pdfs" "[Service]" ]
     [
@@ -24,4 +23,8 @@ in
       "[Service]\nEnvironment=PATH=/run/wrappers/bin:/run/current-system/sw/bin"
     ]
     (builtins.readFile (inputs.proton-drive-linux + "/packaging/proton-drive.service"));
+
+  # Manage the enablement link too, so it follows unit changes on every rebuild.
+  xdg.configFile."systemd/user/graphical-session.target.wants/proton-drive.service".source =
+    config.xdg.configFile."systemd/user/proton-drive.service".source;
 }

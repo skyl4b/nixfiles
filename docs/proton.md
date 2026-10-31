@@ -55,20 +55,23 @@ can start the service itself. The default on-demand mount is `~/ProtonDrive`.
 Opening, modifying, or deleting files there operates on the remote Drive through
 the upload queue; keep another copy of trial data while testing.
 
-The repository installs the unit without enabling it and suppresses the packaged
-tray's automatic startup. To explicitly enable the mount on future graphical
-logins:
+The repository enables the mount for Skylab's graphical session on all three
+hosts. After rebuilding, it starts at the next graphical login; the explicit
+`start` command above also starts it in the current session. Before sign-in,
+the daemon waits for a saved session rather than mounting the account.
+
+To stop the mount for the current session:
 
 ```sh
-systemctl --user enable --now proton-drive.service
+systemctl --user stop proton-drive.service
 ```
 
-To stop it and undo that local startup choice:
+The next graphical login starts it again. To turn automatic startup off
+declaratively, remove the `graphical-session.target.wants` entry from the Home
+Manager module; rebuild and stop the service. Home Manager manages the enablement
+link and refreshes it when the unit changes.
 
-```sh
-systemctl --user disable --now proton-drive.service
-```
-
+The packaged tray's automatic startup remains suppressed independently.
 Run `pdfs-tray` manually for the tray icon; GNOME hosts already include
 AppIndicator. To make its tray autostart declaratively, remove the `Hidden=true`
 override from the Home Manager module. Folder selection, sync rules, credentials,
@@ -76,9 +79,6 @@ and the GUI configuration remain local and writable.
 
 Use `journalctl --user -b -u proton-drive.service` and `pdfs diagnose` for
 diagnostics. After changing the unit, reload the user manager and restart it.
-If you enabled login startup, also run
-`systemctl --user reenable proton-drive.service` after an upgrade to refresh its
-local enablement link to the new unit in the Nix store.
 Test a small folder, offline edits, reconnection, conflicts, and suspend/resume
 before broadening sync. Settings include a default 5 GiB content-cache budget;
 available-offline files are additional, so review storage use on Moon.
