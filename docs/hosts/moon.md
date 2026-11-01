@@ -68,14 +68,18 @@ Moon offers only `[s2idle]`; its ACPI inventory reports S0/S4/S5, without S3.
 Forcing `mem_sleep_default=deep` is not an available alternative on this device.
 Runtime autosuspend being disabled does not prevent system suspend.
 
-#### Compare upstream kernels
+#### Kernel selection and follow-up
 
-The default boot entry retains the pinned upstream **6.18.56** kernel. An optional
-`kernel-latest` NixOS specialisation selects `pkgs.linuxPackages_latest`, currently
-**7.2.10** at the same nixpkgs pin. This changes the kernel and its associated
-modules, leaving the desktop configuration and manual recovery available in both.
-It is a diagnostic comparison, not a verified fix; no linux-surface profile,
-additional USB quirk, or global power-management change is added.
+After testing the optional newer-kernel entry, the user reported **three sleep/wake
+cycles without a touchpad failure**, compared with a first-wake failure on 6.18.56.
+This supports improved reliability; it does not yet establish a permanent fix or
+identify the particular kernel change responsible.
+
+Moon now selects `pkgs.linuxPackages_latest`, currently upstream **7.2.10**, for
+its normal boot entry. The `kernel-lts` NixOS specialisation retains upstream
+**6.18.56** through `pkgs.linuxPackages_6_18` as a fallback. Both choices use the
+same desktop configuration, initialization quirk, and manual recovery. No
+linux-surface profile or additional power-management workaround is enabled.
 
 On Moon, pull the branch and run:
 
@@ -85,10 +89,11 @@ just switch
 sudo reboot
 ```
 
-Hold Space during startup to display systemd-boot's menu, then select the newest
-generation's **kernel-latest** entry. Its ordinary entry still uses 6.18.56;
-the two-generation limit remains, with the specialisation listed as an additional
-choice within a generation. Confirm the selected kernel after login:
+Boot the newest generation's ordinary entry to use 7.2.10; selecting a
+specialisation is no longer needed. To use the fallback, hold Space during
+startup to display systemd-boot's menu and select that generation's **kernel-lts**
+entry. The two-generation limit remains, with the specialisation listed as an
+additional choice within a generation. Confirm the selected kernel after login:
 
 ```sh
 uname -r
@@ -111,15 +116,14 @@ journalctl -b -u surface-touchpad-reset.service --no-pager
 
 Record whether the keyboard still works when the touchpad fails. Recover with
 `sudo my-reset-touchpad` as needed. To return to 6.18.56, reboot and select the
-ordinary entry for this generation. A runtime switch cannot replace the running
-kernel. Remove the `specialisation.kernel-latest` declaration and rebuild when
-the comparison is complete; a successful test can instead justify adopting the
-newer kernel as the normal choice.
+**kernel-lts** entry for this generation. A runtime switch cannot replace the running
+kernel.
 
 Repository evaluation passes for both boot choices with no warnings; Jupiter
-and Mars retain their previous system derivations. The alternative kernel's
-output is available from `cache.nixos.org`. This checks configuration and cache
-availability, not a full system build or successful boot/resume on Moon.
+and Mars retain their previous system derivations. The 7.2.10 kernel's
+output is available from `cache.nixos.org`. Repository evaluation is separate
+from the user's three successful sleep/wake cycles; longer sleeps and suspend
+battery drain still need checking on Moon.
 
 Automatic boot and wake-up resets are disabled so they cannot hide the result.
 The port `1-7` is the one observed on Moon; use the cover's current path if it changes.
@@ -133,7 +137,7 @@ and device numbers, and invokes `usbreset` for each matching cover. No port or
 bus/device number is hardcoded, and discovery does not depend on the HID driver
 remaining bound. It waits three seconds, then allows another four seconds for
 device discovery. The whole cover resets, so both its keyboard and touchpad
-pause briefly. The service runs only on manual requests during the kernel comparison,
+pause briefly. The service runs only on manual requests,
 preventing overlapping resets. The pinned
 usbutils 019 can return zero even when a reset fails, so the script checks its
 success message as well as the exit status.
@@ -307,10 +311,11 @@ and battery reporting requires 5.17+. The camera entry now points to libcamera
 and the 6.14 kernel series or newer. Hibernation is listed as unsupported.
 
 The repository's pinned nixpkgs default kernel evaluates to **6.18.56**, above
-those documented version floors. That makes upstream a reasonable initial
-candidate. Test touch/pen, Type Cover, rotation, sound, connectivity, battery
-reporting, and repeated suspend/resume before accepting it. Check idle/suspend
-battery drain on the actual device as well.
+those documented version floors. Moon now overrides that default with upstream
+**7.2.10**, after three successful wake cycles in the newer-kernel trial following
+repeatable Type Cover failures on 6.18.56. Continue checking touch/pen, cameras,
+rotation, sound, connectivity, battery reporting, and repeated suspend/resume.
+Check idle/suspend battery drain on the actual device as well.
 
 The [camera support page](https://github.com/linux-surface/linux-surface/wiki/Camera-Support)
 identifies Go 3 as IPU3, lists front/rear sensor support, and marks the IR sensor

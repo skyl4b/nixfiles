@@ -22,6 +22,9 @@
   users.users.skylab.hashedPasswordFile = config.age.secrets.skylab-password.path;
 
   boot = {
+    # The newer upstream kernel passed three wake cycles after 6.18.56 failed
+    # on the first cycle. Continue checking longer sleeps and suspend drain.
+    kernelPackages = pkgs.linuxPackages_latest;
     # Surface Go 3 Type Cover initialization delay (USB_QUIRK_DELAY_INIT).
     # Active on Moon, but confirmed insufficient to fix suspend/resume on 6.18.56.
     # https://github.com/linux-surface/linux-surface/issues/1059
@@ -36,10 +39,9 @@
     initrd.kernelModules = [ "i915" ];
   };
 
-  # Compare suspend/resume on a newer upstream kernel without replacing the
-  # normal boot entry. Keep the same USB quirk and manual recovery in both.
-  specialisation.kernel-latest.configuration.boot.kernelPackages =
-    lib.mkForce pkgs.linuxPackages_latest;
+  # Keep the previous kernel available if another device feature regresses.
+  specialisation.kernel-lts.configuration.boot.kernelPackages =
+    lib.mkForce pkgs.linuxPackages_6_18;
 
   # Limit local build parallelism for the Surface Go 3's CPU and 8 GB RAM.
   # These hardware constraints are specific to Moon, not shared host defaults.
