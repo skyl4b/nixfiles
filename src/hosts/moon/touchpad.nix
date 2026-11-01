@@ -57,7 +57,7 @@ in
     '')
   ];
 
-  # Keep recovery manual while testing the initialization quirk. Automatic
+  # Keep recovery manual while comparing kernels. Automatic
   # resets would conceal whether boot and suspend/resume work without recovery.
   # A repeatable oneshot serializes manual reset requests.
   systemd.services.surface-touchpad-reset = {

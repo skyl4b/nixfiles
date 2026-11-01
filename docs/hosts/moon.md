@@ -52,30 +52,79 @@ uses that full USB device reset for manual recovery.
 Moon's later inventory reported kernel `6.18.56`, device quirks `0x0`,
 `power/control=on`, and no configured `usbcore.quirks` parameter. Runtime USB
 autosuspend was therefore already disabled for the cover at the time checked.
-The configuration now trials `usbcore.quirks=045e:09b5:g`, enabling
+The configuration includes `usbcore.quirks=045e:09b5:g`, enabling
 `USB_QUIRK_DELAY_INIT` for this cover. The
 [Surface Go 3 initialization report](https://github.com/linux-surface/linux-surface/issues/1059)
 and [linux-surface patch](https://github.com/linux-surface/linux-surface/blob/master/patches/6.18/0010-surface-typecover.patch)
 describe a touchpad-mode initialization problem addressed by this delay. They
-do not establish that it fixes Moon's suspend failure. No kernel replacement
-or global USB power-management change is included in this trial.
+do not establish that it fixes Moon's suspend failure. Moon subsequently confirmed
+the parameter was active (`quirks=0x40`, `power/control=on`), but the touchpad
+failed on the first wake after reboot with the same control-transfer and suspend
+errors. The reset service had no invocations. The delay therefore does **not**
+resolve the reported resume failure. It remains for the documented initialization
+issue, identically configured in both kernel choices below.
 
-Automatic boot and wake-up resets are disabled so they cannot hide the result.
-Apply with `just switch` and **reboot**: changing the kernel command line does
-not affect the running kernel. With the cover attached, check:
+Moon offers only `[s2idle]`; its ACPI inventory reports S0/S4/S5, without S3.
+Forcing `mem_sleep_default=deep` is not an available alternative on this device.
+Runtime autosuspend being disabled does not prevent system suspend.
+
+#### Compare upstream kernels
+
+The default boot entry retains the pinned upstream **6.18.56** kernel. An optional
+`kernel-latest` NixOS specialisation selects `pkgs.linuxPackages_latest`, currently
+**7.2.10** at the same nixpkgs pin. This changes the kernel and its associated
+modules, leaving the desktop configuration and manual recovery available in both.
+It is a diagnostic comparison, not a verified fix; no linux-surface profile,
+additional USB quirk, or global power-management change is added.
+
+On Moon, pull the branch and run:
 
 ```sh
+git pull --ff-only
+just switch
+sudo reboot
+```
+
+Hold Space during startup to display systemd-boot's menu, then select the newest
+generation's **kernel-latest** entry. Its ordinary entry still uses 6.18.56;
+the two-generation limit remains, with the specialisation listed as an additional
+choice within a generation. Confirm the selected kernel after login:
+
+```sh
+uname -r
 cat /sys/module/usbcore/parameters/quirks
 cat /sys/bus/usb/devices/1-7/quirks
+cat /sys/power/mem_sleep
+```
+
+Expect `7.2.10`, `045e:09b5:g`, `0x40`, and `[s2idle]` for this pin. Check camera,
+pen, touch, keyboard, and rotation, then repeat several suspend/wake cycles using
+the same cover position and wake method as the failing 6.18.56 test. Test both a
+short sleep and a longer sleep. Do not run manual recovery until a failure has
+been observed and its journal captured:
+
+```sh
+sudo journalctl -k -b --since "30 minutes ago" --no-pager \
+  --grep='PM:|1-7|09[Bb]5|hid-multitouch|usbhid|xhci'
 journalctl -b -u surface-touchpad-reset.service --no-pager
 ```
 
-The expected parameter is `045e:09b5:g` and the device flag is `0x40`. The port
-`1-7` is the one observed on Moon; use the current cover's USB path if it changes.
+Record whether the keyboard still works when the touchpad fails. Recover with
+`sudo my-reset-touchpad` as needed. To return to 6.18.56, reboot and select the
+ordinary entry for this generation. A runtime switch cannot replace the running
+kernel. Remove the `specialisation.kernel-latest` declaration and rebuild when
+the comparison is complete; a successful test can instead justify adopting the
+newer kernel as the normal choice.
+
+Repository evaluation passes for both boot choices with no warnings; Jupiter
+and Mars retain their previous system derivations. The alternative kernel's
+output is available from `cache.nixos.org`. This checks configuration and cache
+availability, not a full system build or successful boot/resume on Moon.
+
+Automatic boot and wake-up resets are disabled so they cannot hide the result.
+The port `1-7` is the one observed on Moon; use the cover's current path if it changes.
 There should be no reset-service invocations before manual recovery is requested.
-Test cold boot, several suspend/resume cycles, and cover reconnection without
-running the recovery command. If it fails, capture the kernel journal and use
-`sudo my-reset-touchpad` to recover. To revert the trial, remove the `usbcore.quirks`
+To remove the initialization delay, remove the `usbcore.quirks`
 entry from Moon's `boot.kernelParams`, rebuild, and reboot. Kernel quirk parameters
 toggle built-in flags, so recheck the device flags when changing kernels.
 
@@ -84,7 +133,7 @@ and device numbers, and invokes `usbreset` for each matching cover. No port or
 bus/device number is hardcoded, and discovery does not depend on the HID driver
 remaining bound. It waits three seconds, then allows another four seconds for
 device discovery. The whole cover resets, so both its keyboard and touchpad
-pause briefly. The service runs only on manual requests during the quirk trial,
+pause briefly. The service runs only on manual requests during the kernel comparison,
 preventing overlapping resets. The pinned
 usbutils 019 can return zero even when a reset fails, so the script checks its
 success message as well as the exit status.
