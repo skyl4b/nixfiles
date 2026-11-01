@@ -51,7 +51,7 @@
     # Both desktops use mDNS discovery; Mars also publishes user services.
     avahi = {
       openFirewall = true;
-      reflector = false;
+      settings.reflector.enable-reflector = false;
     };
     openssh = {
       enable = lib.mkDefault true;

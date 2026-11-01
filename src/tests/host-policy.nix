@@ -56,10 +56,7 @@ in {
     avahi = {
       inherit (config.services.avahi)
         enable nssmdns4 nssmdns6 openFirewall allowInterfaces denyInterfaces
-        allowPointToPoint wideArea reflector;
-      publish = {
-        inherit (config.services.avahi.publish) enable userServices addresses hinfo workstation domain;
-      };
+        allowPointToPoint wideArea settings;
     };
   };
   access = {

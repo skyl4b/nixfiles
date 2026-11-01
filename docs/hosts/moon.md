@@ -70,12 +70,12 @@ Runtime autosuspend being disabled does not prevent system suspend.
 
 #### Kernel selection and follow-up
 
-After testing the optional newer-kernel entry, the user reported **three sleep/wake
+After testing the optional 7.2.10 kernel entry, the user reported **three sleep/wake
 cycles without a touchpad failure**, compared with a first-wake failure on 6.18.56.
 This supports improved reliability; it does not yet establish a permanent fix or
 identify the particular kernel change responsible.
 
-Moon selects `pkgs.linuxPackages_latest`, currently upstream **7.2.10**, for its
+Moon selects `pkgs.linuxPackages_latest`, currently upstream **7.3**, for its
 normal boot entry, without a separate kernel specialisation. The initialization
 quirk and manual recovery remain available. No linux-surface profile or additional
 power-management workaround is enabled.
@@ -88,7 +88,7 @@ just switch
 sudo reboot
 ```
 
-Boot the newest generation's ordinary entry to use 7.2.10. The boot menu retains
+Boot the newest generation's ordinary entry to use 7.3. The boot menu retains
 the existing two-generation limit. Confirm the selected kernel after login:
 
 ```sh
@@ -98,7 +98,7 @@ cat /sys/bus/usb/devices/1-7/quirks
 cat /sys/power/mem_sleep
 ```
 
-Expect `7.2.10`, `045e:09b5:g`, `0x40`, and `[s2idle]` for this pin. Check camera,
+Expect a 7.3 kernel, `045e:09b5:g`, `0x40`, and `[s2idle]` for this pin. Check camera,
 pen, touch, keyboard, and rotation, then repeat several suspend/wake cycles using
 the same cover position and wake method as the failing 6.18.56 test. Test both a
 short sleep and a longer sleep. Do not run manual recovery until a failure has
@@ -115,11 +115,10 @@ Record whether the keyboard still works when the touchpad fails. Recover with
 change Moon's `boot.kernelPackages` to the desired kernel package set, rebuild,
 and reboot. A runtime switch cannot replace the running kernel.
 
-Repository evaluation passes with no warnings; Jupiter
-and Mars retain their previous system derivations. The 7.2.10 kernel's
-output is available from `cache.nixos.org`. Repository evaluation is separate
-from the user's three successful sleep/wake cycles; longer sleeps and suspend
-battery drain still need checking on Moon.
+All three hosts evaluate without warnings. Repository evaluation is separate from the
+user's three successful sleep/wake cycles on 7.2.10. The nixpkgs refresh for Readest
+advances Moon to 7.3; repeated wake cycles, longer sleeps, and suspend battery drain
+need checking on that kernel.
 
 Automatic boot and wake-up resets are disabled so they cannot hide the result.
 The port `1-7` is the one observed on Moon; use the cover's current path if it changes.
@@ -306,10 +305,10 @@ those features as requiring the patched kernel. Buttons require upstream 5.15+
 and battery reporting requires 5.17+. The camera entry now points to libcamera
 and the 6.14 kernel series or newer. Hibernation is listed as unsupported.
 
-The repository's pinned nixpkgs default kernel evaluates to **6.18.56**, above
-those documented version floors. Moon now overrides that default with upstream
-**7.2.10**, after three successful wake cycles in the newer-kernel trial following
-repeatable Type Cover failures on 6.18.56. Continue checking touch/pen, cameras,
+The initial pinned nixpkgs default kernel was **6.18.56**, above those documented
+version floors. Following repeatable Type Cover failures, the user reported three
+successful wake cycles on **7.2.10**. Moon follows the latest upstream kernel,
+currently **7.3** after the Readest pin refresh. Continue checking touch/pen, cameras,
 rotation, sound, connectivity, battery reporting, and repeated suspend/resume.
 Check idle/suspend battery drain on the actual device as well.
 

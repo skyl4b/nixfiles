@@ -1,5 +1,35 @@
 # Controlled input refresh
 
+## Readest refresh
+
+The root nixpkgs pin advances from `fe13242281a67641c0102cdb1087f0ebe586c7df`
+to `1c89083e451e891152365b799595cf7790a43325` (nixos-unstable, 2026-10-30).
+Readest moves from **0.12.12** to **0.12.16**, matching the
+[latest upstream release](https://github.com/readest/readest/releases/tag/v0.12.16)
+checked during this refresh. Its output is available from the NixOS binary cache.
+Moon's `linuxPackages_latest` also advances from **7.2.10** to **7.3**; its earlier
+three successful wake cycles were on 7.2.10, so repeat that check after rebooting.
+GNOME remains **50.4**.
+
+Nixpkgs removed the archived `ltex-ls` package. The global editor-helper profile
+now uses its suggested replacement, `ltex-ls-plus`. Avahi reflector and publishing
+settings use the new `services.avahi.settings` names, preserving discovery and
+Mars's publishing behavior. The policy report reads the canonical settings.
+Other flake inputs, including
+Proton Drive's independent nixpkgs pin, remain unchanged. System and Home Manager
+state versions are unchanged.
+
+Validation on 2026-11-01: portable checks and all 26 baseline checks pass, including
+all three host evaluations/build plans, Hyprland evaluation, and the flake check.
+Reports: `/tmp/nixfiles-readest-update-check.log` and
+`/tmp/nixfiles-baseline.Ahy5uq/summary.md`. All host warning lists are empty.
+No full system build or activation ran;
+Readest and kernel behavior still need checking on Moon after applying the update.
+
+The following sections record the earlier modernization refresh.
+
+## Initial modernization refresh
+
 All four retained inputs are refreshed through the host-explicit workflow.
 Nixpkgs and Home Manager were updated together first, followed by nixos-hardware
 and agenix. The platform now evaluates as NixOS 26.11 pre-release. The original

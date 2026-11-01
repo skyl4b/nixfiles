@@ -18,7 +18,7 @@ with pkgs; [
   efm-langserver # Universal LSP (interacts with linters / formatters)
   prettierd # Prettier as a daemon
   marksman # Markdown LSP
-  ltex-ls # Spell-checking LSP
+  ltex-ls-plus # Spell-checking LSP
   nil # Nix LSP
   statix # Nix linter
   nixpkgs-fmt # Nix formatter

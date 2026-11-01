@@ -22,7 +22,7 @@
   users.users.skylab.hashedPasswordFile = config.age.secrets.skylab-password.path;
 
   boot = {
-    # The newer upstream kernel passed three wake cycles after 6.18.56 failed
+    # Upstream 7.2.10 passed three wake cycles after 6.18.56 failed
     # on the first cycle. Continue checking longer sleeps and suspend drain.
     kernelPackages = pkgs.linuxPackages_latest;
     # Surface Go 3 Type Cover initialization delay (USB_QUIRK_DELAY_INIT).
