@@ -49,6 +49,15 @@ shared modules under `src/modules/`, shared home settings/package profiles under
 `src/home/`, and native configuration under `src/dotfiles/`. `src/chezmoi/`
 contains adapters pointing to those native files.
 
+### Doom Emacs
+
+The personal Doom files are under `src/dotfiles/doom/`, linked for `skylab` by
+Home Manager and available through portable chezmoi deployment. Nix provides
+Emacs; `just doom-install` bootstraps the normal Doom checkout. Use
+`just doom sync`, `just doom doctor`, and `just doom upgrade` for maintenance.
+See the [Doom setup guide](doom-emacs.md) for deployment, existing-file handling,
+and the separation between personal configuration and Doom's local state.
+
 ### Custom machine commands
 
 Use the `my-` prefix for custom executables installed by this repository,

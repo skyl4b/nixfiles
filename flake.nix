@@ -33,6 +33,7 @@
         description = "Eduardo Farinati Leite";
         homeStateVersion = "23.11";
         homeModules = [
+          ./src/modules/home/doom.nix
           ./src/modules/home/keyboard.nix
           ./src/modules/home/proton.nix
         ];

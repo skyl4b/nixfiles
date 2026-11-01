@@ -7,6 +7,7 @@ let
     inherit pkgs;
     modules = [
       ../modules/home
+      ../modules/home/doom.nix
       {
         home.username = "portable-test";
         home.homeDirectory = testHome;
