@@ -39,10 +39,6 @@
     initrd.kernelModules = [ "i915" ];
   };
 
-  # Keep the previous kernel available if another device feature regresses.
-  specialisation.kernel-lts.configuration.boot.kernelPackages =
-    lib.mkForce pkgs.linuxPackages_6_18;
-
   # Limit local build parallelism for the Surface Go 3's CPU and 8 GB RAM.
   # These hardware constraints are specific to Moon, not shared host defaults.
   nix.settings = {

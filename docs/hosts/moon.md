@@ -62,7 +62,7 @@ the parameter was active (`quirks=0x40`, `power/control=on`), but the touchpad
 failed on the first wake after reboot with the same control-transfer and suspend
 errors. The reset service had no invocations. The delay therefore does **not**
 resolve the reported resume failure. It remains for the documented initialization
-issue, identically configured in both kernel choices below.
+issue.
 
 Moon offers only `[s2idle]`; its ACPI inventory reports S0/S4/S5, without S3.
 Forcing `mem_sleep_default=deep` is not an available alternative on this device.
@@ -75,11 +75,10 @@ cycles without a touchpad failure**, compared with a first-wake failure on 6.18.
 This supports improved reliability; it does not yet establish a permanent fix or
 identify the particular kernel change responsible.
 
-Moon now selects `pkgs.linuxPackages_latest`, currently upstream **7.2.10**, for
-its normal boot entry. The `kernel-lts` NixOS specialisation retains upstream
-**6.18.56** through `pkgs.linuxPackages_6_18` as a fallback. Both choices use the
-same desktop configuration, initialization quirk, and manual recovery. No
-linux-surface profile or additional power-management workaround is enabled.
+Moon selects `pkgs.linuxPackages_latest`, currently upstream **7.2.10**, for its
+normal boot entry, without a separate kernel specialisation. The initialization
+quirk and manual recovery remain available. No linux-surface profile or additional
+power-management workaround is enabled.
 
 On Moon, pull the branch and run:
 
@@ -89,11 +88,8 @@ just switch
 sudo reboot
 ```
 
-Boot the newest generation's ordinary entry to use 7.2.10; selecting a
-specialisation is no longer needed. To use the fallback, hold Space during
-startup to display systemd-boot's menu and select that generation's **kernel-lts**
-entry. The two-generation limit remains, with the specialisation listed as an
-additional choice within a generation. Confirm the selected kernel after login:
+Boot the newest generation's ordinary entry to use 7.2.10. The boot menu retains
+the existing two-generation limit. Confirm the selected kernel after login:
 
 ```sh
 uname -r
@@ -115,11 +111,11 @@ journalctl -b -u surface-touchpad-reset.service --no-pager
 ```
 
 Record whether the keyboard still works when the touchpad fails. Recover with
-`sudo my-reset-touchpad` as needed. To return to 6.18.56, reboot and select the
-**kernel-lts** entry for this generation. A runtime switch cannot replace the running
-kernel.
+`sudo my-reset-touchpad` as needed. If a kernel regression requires reverting,
+change Moon's `boot.kernelPackages` to the desired kernel package set, rebuild,
+and reboot. A runtime switch cannot replace the running kernel.
 
-Repository evaluation passes for both boot choices with no warnings; Jupiter
+Repository evaluation passes with no warnings; Jupiter
 and Mars retain their previous system derivations. The 7.2.10 kernel's
 output is available from `cache.nixos.org`. Repository evaluation is separate
 from the user's three successful sleep/wake cycles; longer sleeps and suspend
