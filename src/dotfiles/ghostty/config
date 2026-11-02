@@ -1,3 +1,5 @@
+command = zsh
+
 font-family = Cascadia Code NF
 
 background-opacity = 0.9

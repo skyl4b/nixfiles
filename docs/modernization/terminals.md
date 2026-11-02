@@ -31,11 +31,17 @@ copy-mode binding. Clipboard access still needs a working X display.
 The native config contains exactly:
 
 ```ini
+command = zsh
+
 font-family = Cascadia Code NF
 
 background-opacity = 0.9
 background-blur = true
 ```
+
+Ghostty resolves `zsh` from PATH, using the Zsh installed for Skylab by Home
+Manager. This selects the terminal's shell without changing the account's login
+shell. On other systems, install Zsh before using the portable configuration.
 
 The module installs `cascadia-code`, including the `Cascadia Code NF` family.
 Home Manager's Ghostty settings remain empty so its generator does not compete

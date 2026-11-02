@@ -87,9 +87,9 @@ and the separation between personal configuration and Doom's local state.
 ### Zsh
 
 Skylab's personal Home Manager modules install and configure Zsh on every host.
-The account's login shell and Ghostty's selected shell stay unchanged. After
-`just switch`, run `zsh` to try it; `exit` returns to the previous shell. Terminal
-selection can be configured separately later.
+Ghostty launches Zsh through `command = zsh` in its native configuration; the
+account's login shell stays unchanged. After pulling the config change, reload
+Ghostty's configuration or restart it, then open a new terminal session.
 
 Home Manager owns the startup files: a small `~/.zshenv` loader points to
 `~/.config/zsh/`, where the generated `.zshrc` loads the live personal preferences
