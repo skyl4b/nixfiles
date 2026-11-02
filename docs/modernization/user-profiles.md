@@ -29,7 +29,7 @@ or libvirtd in the current shared system module.
 | Profile | Explicit package entries | Scope |
 | --- | --- | --- |
 | Minimal | 52 | Daily CLI tools, Neovim, Emacs, and all shared editor helpers |
-| Complete | 77 | Minimal plus 25 specialized tools, including containers, local AI, plotting, publishing, and extra fonts |
+| Complete | 81 | Minimal plus 29 specialized tools, including Anki, PDF Arranger, GitButler app/CLI, containers, local AI, plotting, publishing, and extra fonts |
 
 The lists live under `src/home/profiles/`. `complete.nix` extends `minimal.nix`;
 `editor-helpers.nix` holds the 40 shared spell-checking, language-server, linter,

@@ -143,6 +143,12 @@ packages; desktop and system services are configured separately. See
 
 ### Desktop applications
 
+The complete user profile supplies Anki (`anki`), PDF Arranger (`pdfarranger`),
+and GitButler's desktop app (`gitbutler-tauri`) and CLI (`but`). Skylab uses this
+profile on every host. Nix installs the CLI directly; the desktop app's
+**Install CLI** action is unnecessary. Anki collections, application preferences,
+and GitButler repository setup are managed locally in the applications.
+
 Skylab's Home Manager configuration also installs the unofficial Proton Drive
 mount/desktop client and official Proton Pass CLI on every host. The Drive
 service starts automatically with Skylab's graphical session. Follow the

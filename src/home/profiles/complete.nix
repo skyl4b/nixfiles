@@ -3,12 +3,15 @@
 # Add specialized tools to the minimal profile.
 (import ./minimal.nix { inherit pkgs; }) ++ (with pkgs; [
   aichat # A chatbot in the terminal
+  anki # Spaced-repetition flashcards
   bakoma_ttf # Latex fonts
   cheat # Interactive CLI cheatsheets
   corefonts # Microsoft corefonts
+  but # GitButler CLI
   distrobox # System integrated containers
   exercism # Programming languages learning
   git-extras # Useful extra commands for git
+  gitbutler # GitButler desktop app
   gnuplot # CLI plotting tool
   lazydocker # Docker TUI
   libcaca # Image-to-text utilities
@@ -20,6 +23,7 @@
   })
   ollama # Run LLMs locally
   monocraft # Minecraft-like font
+  pdfarranger # Merge, split, crop, and reorder PDF pages
   scanmem # Running process memory editor
   hyperfine # CLI benchmarking tool
   parallel-full # CLI parallelize command tool
