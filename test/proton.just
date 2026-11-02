@@ -50,7 +50,8 @@ test-proton-ssh-agent-nix:
     unit.read(units / 'proton-pass-agent.service')
     assert unit['Install']['WantedBy'] == 'default.target'
     assert unit['Unit']['StartLimitIntervalSec'] == '0'
-    assert unit['Service']['Environment'] == 'PROTON_PASS_LINUX_KEYRING=dbus'
+    environment_file = home / '.config/environment.d/10-home-manager.conf'
+    assert 'PROTON_PASS_LINUX_KEYRING=dbus' in environment_file.read_text().splitlines()
     assert unit['Service']['Restart'] == 'on-failure'
     assert 'ssh-agent start --socket-path %t/proton-pass-agent' in unit['Service']['ExecStart']
     assert '--create-new-identities' not in unit['Service']['ExecStart']

@@ -158,7 +158,8 @@ every host. It enables Home Manager's built-in
 `proton-pass-agent.service` user service, socket selection, and environment hooks.
 The service starts with the user manager and retries failures every 10 seconds
 without hitting a startup rate limit, so it can recover after sign-in or keyring
-unlock. A small override selects the existing desktop Secret Service backend.
+unlock. It inherits the desktop Secret Service backend from the existing
+systemd user environment setting in the parent Proton module.
 
 The socket is `$XDG_RUNTIME_DIR/proton-pass-agent`, inside the user's private
 runtime directory. Home Manager publishes
@@ -167,6 +168,11 @@ existing session-variable helper also covers login Bash. Incoming SSH sessions
 with a forwarded agent retain their forwarded socket. GNOME's GCR agent service
 and socket are masked only for Skylab; GNOME Keyring remains enabled, and other
 users keep their existing agent setup.
+
+The Bash helper covers the unmanaged login shell; Home Manager already supplies
+Zsh's hooks. The GCR masks prevent its socket unit from replacing
+`SSH_AUTH_SOCK` in the user manager when started, as shown in the
+[upstream GCR unit](https://raw.githubusercontent.com/GNOME/gcr/4.4.0.1/gcr/gcr-ssh-agent.socket.in).
 
 After pulling and running `just switch`, log out and back in. From the unlocked
 graphical session, sign into Pass if needed and restart the agent:

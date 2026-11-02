@@ -12,6 +12,8 @@ let
         home.homeDirectory = testHome;
         home.stateVersion = "23.11";
         xdg.enable = true;
+        # The parent Proton module supplies this to the user manager in NixOS.
+        systemd.user.sessionVariables.PROTON_PASS_LINUX_KEYRING = "dbus";
         programs.zsh = {
           enable = true;
           dotDir = "${testHome}/.config/zsh";
