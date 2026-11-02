@@ -84,6 +84,38 @@ Emacs; `just doom-install` bootstraps the normal Doom checkout. Use
 See the [Doom setup guide](doom-emacs.md) for deployment, existing-file handling,
 and the separation between personal configuration and Doom's local state.
 
+### Zsh
+
+Skylab's personal Home Manager modules install and configure Zsh on every host.
+The account's login shell and Ghostty's selected shell stay unchanged. After
+`just switch`, run `zsh` to try it; `exit` returns to the previous shell. Terminal
+selection can be configured separately later.
+
+Home Manager owns the startup files: a small `~/.zshenv` loader points to
+`~/.config/zsh/`, where the generated `.zshrc` loads the live personal preferences
+from `src/dotfiles/zsh/config.zsh`. Edit that native file for interactive shell
+preferences; a new Zsh session sees the edits without rebuilding.
+
+The initial setup uses the existing Starship prompt, direnv, fzf's history/file/
+directory widgets, and zoxide's `z`/`zi` commands. Nix supplies extra completions,
+autosuggestions, and syntax highlighting. There is no separate plugin manager
+or custom editing keymap. Zellij does not start automatically in Zsh.
+
+History is shared across sessions, suppresses duplicates, and retains up to
+50,000 entries in `~/.local/state/zsh/history`. Commands prefixed with a space
+are omitted from saved history. Completion caches live in `~/.cache/zsh/`.
+Home Manager's XDG settings determine these paths if customized.
+
+Portable chezmoi deployment links only the native `zsh/config.zsh` preferences;
+it leaves shell startup and plugin management to that system. Source
+`"${XDG_CONFIG_HOME:-$HOME/.config}/zsh/config.zsh"` from an existing interactive
+Zsh configuration to use those preferences there. Home Manager provides the
+full setup on NixOS.
+
+Run `just test-zsh-nix` for an isolated interactive startup check with the pinned
+Zsh, plugins, and tool hooks. It also checks history/cache placement, live edits,
+and quiet noninteractive startup without changing the real home configuration.
+
 ### Custom machine commands
 
 Use the `my-` prefix for custom executables installed by this repository,

@@ -36,6 +36,7 @@
           ./src/modules/home/doom.nix
           ./src/modules/home/keyboard.nix
           ./src/modules/home/proton.nix
+          ./src/modules/home/zsh.nix
         ];
         authorizedKeys = [
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAknKoOCh4U3ZQK839e+i29Ae79hTbhoGlqPrmAjDBwd"

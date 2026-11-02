@@ -28,8 +28,8 @@ or libvirtd in the current shared system module.
 
 | Profile | Explicit package entries | Scope |
 | --- | --- | --- |
-| Minimal | 54 | Daily CLI tools, Neovim, Emacs, and all shared editor helpers |
-| Complete | 79 | Minimal plus 25 specialized tools, including containers, local AI, plotting, publishing, and extra fonts |
+| Minimal | 52 | Daily CLI tools, Neovim, Emacs, and all shared editor helpers |
+| Complete | 77 | Minimal plus 25 specialized tools, including containers, local AI, plotting, publishing, and extra fonts |
 
 The lists live under `src/home/profiles/`. `complete.nix` extends `minimal.nix`;
 `editor-helpers.nix` holds the 40 shared spell-checking, language-server, linter,
@@ -42,6 +42,8 @@ user profiles. This includes `just`, `jq`, `agenix`, `cachix`, `inetutils`,
 `curl`, `wget`, and `wl-clipboard`, making them available to every account.
 
 Application modules also install packages beyond the explicit profile lists.
+For example, the shared `fzf` and `zoxide` modules provide their packages and
+shell integrations independently of profile.
 These are entry counts, not download or disk-size estimates. Keeping the full
 editor-helper set means minimal still includes substantial dependencies.
 

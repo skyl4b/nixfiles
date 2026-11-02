@@ -5,6 +5,7 @@
     ./commitlint.nix
     ./direnv.nix
     ./eza.nix
+    ./fzf.nix
     ./gh.nix
     ./ghostty.nix
     ./git.nix
@@ -18,5 +19,6 @@
     ./yazi.nix
     ./zathura.nix
     ./zellij.nix
+    ./zoxide.nix
   ];
 }

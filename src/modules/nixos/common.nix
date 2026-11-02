@@ -122,5 +122,7 @@
   ];
 
   programs.xwayland.enable = true;
+  # Expose system-tool completions to user-managed Zsh sessions.
+  environment.pathsToLink = [ "/share/zsh" ];
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
 }

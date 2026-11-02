@@ -8,6 +8,7 @@ let
     modules = [
       ../modules/home
       ../modules/home/doom.nix
+      ../modules/home/zsh.nix
       {
         home.username = "portable-test";
         home.homeDirectory = testHome;

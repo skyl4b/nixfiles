@@ -27,6 +27,7 @@ check:
     just --dry-run remap-keyboard 'USB Keyboard' 2>&1 | shellcheck -s bash -
     just --dry-run doom sync 2>&1 | shellcheck -s bash -
     just --dry-run _doom run sync 2>&1 | shellcheck -s bash -
+    just --dry-run test-zsh-nix 2>&1 | shellcheck -s bash -
     just --dry-run test-input-remapper 2>&1 | shellcheck -s bash -
     for recipe in dotfiles-diff dotfiles-apply; do
         just --dry-run "$recipe" /tmp/nixfiles-lint-home 2>&1 | shellcheck -s bash -
