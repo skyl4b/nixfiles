@@ -43,11 +43,37 @@ pixi run --locked plan jupiter
 ```
 
 Pixi supplies repository development tools. The manifest and lockfile are the
-dependency source; no Nix devShell is needed. Automation lives in the justfile.
+dependency source; no Nix devShell is needed. The root justfile is the automation
+entry point.
 Host definitions and user declarations are under `src/hosts/` and `flake.nix`,
 shared modules under `src/modules/`, shared home settings/package profiles under
 `src/home/`, and native configuration under `src/dotfiles/`. `src/chezmoi/`
 contains adapters pointing to those native files.
+
+### Recipe organization
+
+The root `justfile` defines shared settings, checkout/store variables, the chooser,
+and explicit imports. Recipes live in two folders:
+
+| Folder | Contents |
+| --- | --- |
+| `src/scripts/` | `nix.just`, `install.just`, `dotfiles.just`, `doom.just`, and `machine.just` for operational commands |
+| `test/` | Feature-specific `.just` files, plus shared checks, baseline, portable rehearsal, and fixture support |
+
+Imports preserve the flat command names: `just switch`, `just doom sync`,
+`just check`, and `just test-doom` work as before. Recipe working directories
+and `NIXFILES_CHECKOUT` resolve to the root checkout. Portable and Nix-backed tests
+for the same feature share a file; Nix fixture modules remain under `src/tests/`.
+
+Keep new automation in the relevant recipe file. Use `just check` to lint the
+recipes and check formatting in **every** imported file; `just --fmt --check`
+alone only checks the root file. Format an individual file with
+`just --justfile <path>.just --fmt`.
+
+Tests that make disposable checkouts use `just _copy-justfiles <destination>`.
+This copies the root entry point and its imported recipe tree, so fixture commands
+remain independent of the original checkout. Add only the native files and other
+data needed by that test afterward.
 
 ### Doom Emacs
 
@@ -65,7 +91,7 @@ so they are easy to discover with shell completion. Install device-specific
 utilities only on the relevant hosts. For example, Moon provides
 `sudo my-reset-touchpad` for
 [Type Cover touchpad recovery](hosts/moon.md#type-cover-touchpad-recovery).
-Repository development and installation automation remains in the justfile.
+Repository development and installation automation remains in Just recipes.
 
 ### Select a user package profile
 
