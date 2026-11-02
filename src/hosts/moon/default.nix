@@ -48,8 +48,12 @@
   # Use Intel's adaptive thermal management during sustained work such as builds.
   services.thermald.enable = true;
 
-  # Allow rotation with the Type Cover attached, regardless of tablet-mode detection.
-  nixfiles.gnome.extraExtensions = [ pkgs.gnomeExtensions.screen-rotate ];
+  nixfiles.gnome.extraExtensions = with pkgs.gnomeExtensions; [
+    # Allow rotation with the Type Cover attached, regardless of tablet-mode detection.
+    screen-rotate
+    # Touch navigation and on-screen keyboard improvements for tablet use.
+    touchup
+  ];
   programs.dconf.profiles.user.databases = [
     {
       settings."org/gnome/settings-daemon/peripherals/touchscreen".orientation-lock = false;

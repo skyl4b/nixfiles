@@ -39,6 +39,31 @@ Surface Go module. Camera operation has been reported working; thermal managemen
 its separate operational check. No camera workaround was required for the
 reported working setup.
 
+### Tablet touch interface
+
+Moon adds [TouchUp](https://extensions.gnome.org/extension/8102/touchup/) alongside
+the shared GNOME extensions. The pinned package is 1.7.1 and declares GNOME 50
+support. It adds a navigation bar, touch gestures for notifications and menus,
+and on-screen keyboard improvements, including manually opening the keyboard.
+Upstream explicitly supports Dash to Dock integration.
+
+Use the extension's defaults initially and adjust its individual features in
+Extension Settings. Some navigation features activate only in touch mode;
+compare behavior with the Type Cover attached and detached. Screen Rotate
+continues to provide the existing independent rotation control.
+
+After `just switch`, log out and back in. The unlocked system defaults include
+TouchUp; if a customized enabled-extension list takes precedence, enable
+**TouchUp** in Extensions or run:
+
+```sh
+gnome-extensions enable touchup@mityax
+```
+
+Test navigation, the keyboard, portrait/landscape transitions, and interaction
+with O-Tiling and Dash to Dock on Moon. Package compatibility and configuration
+evaluation do not establish runtime behavior on the actual touchscreen.
+
 ### Type Cover touchpad recovery
 
 Moon includes a workaround for the reported Type Cover touchpad problems in
