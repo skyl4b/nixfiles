@@ -96,8 +96,14 @@
     # Required to manage this configuration from any account.
     just
     jq
-    chatgpt
+    agenix
     cachix
+    # Shared networking, download, and Wayland clipboard tools.
+    inetutils
+    curl
+    wget
+    wl-clipboard
+    chatgpt
     mesa-demos
     libva-utils
     vulkan-tools
@@ -106,7 +112,6 @@
     lm_sensors
     pulseaudio
     git
-    curl
     dos2unix
     neovim
     unzip

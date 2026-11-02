@@ -28,8 +28,8 @@ or libvirtd in the current shared system module.
 
 | Profile | Explicit package entries | Scope |
 | --- | --- | --- |
-| Minimal | 59 | Daily CLI tools, Neovim, Emacs, and all shared editor helpers |
-| Complete | 84 | Minimal plus 25 specialized tools, including containers, local AI, plotting, publishing, and extra fonts |
+| Minimal | 54 | Daily CLI tools, Neovim, Emacs, and all shared editor helpers |
+| Complete | 79 | Minimal plus 25 specialized tools, including containers, local AI, plotting, publishing, and extra fonts |
 
 The lists live under `src/home/profiles/`. `complete.nix` extends `minimal.nix`;
 `editor-helpers.nix` holds the 40 shared spell-checking, language-server, linter,
@@ -37,12 +37,13 @@ and formatter entries included in both. Compilers and general language runtimes
 remain project dependencies. Neovim retains its private Node/Python providers;
 Quarto in complete still has its Python/R engines disabled.
 
-Application modules also install packages. With the current pins, integrated
-Home Manager evaluates to 94 package entries for minimal and 119 for complete.
+Shared system tools live in `src/modules/nixos/common.nix`, independently of
+user profiles. This includes `just`, `jq`, `agenix`, `cachix`, `inetutils`,
+`curl`, `wget`, and `wl-clipboard`, making them available to every account.
+
+Application modules also install packages beyond the explicit profile lists.
 These are entry counts, not download or disk-size estimates. Keeping the full
 editor-helper set means minimal still includes substantial dependencies.
-Complete preserves the previous package selection; composition changes its
-list order to place minimal before the extra tools.
 
 ## Constructor arguments
 
