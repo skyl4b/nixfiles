@@ -31,7 +31,7 @@ normally. A cache miss can still require
 a source build. To upgrade Drive, change its release tag in `flake.nix` and run
 `just update-inputs proton-drive-linux`. Existing repository inputs remain pinned.
 Proton Pass CLI currently comes from the repository's main nixpkgs pin at
-**2.4.2**, and updates with that input. Use Nix updates for both applications.
+**2.5.1**, and updates with that input. Use Nix updates for both applications.
 
 ## Mount Proton Drive
 
@@ -125,8 +125,8 @@ files remain local under `~/.local/share/proton-pass-cli/`; no credentials or
 tokens are supplied through Nix, the justfile, or Git.
 
 The host constructor sources Home Manager's generated environment helper from
-the per-user system profile during shell initialization. Home Manager does not
-manage the shell startup files themselves. Pass's backend is also registered in
+the per-user system profile during shell initialization, including unmanaged
+Bash sessions. Home Manager also manages Skylab's Zsh startup files. Pass's backend is registered in
 the systemd user environment (`environment.d/10-home-manager.conf`) for graphical
 applications and user services. Declaring only `home.sessionVariables` without
 a loading hook previously left it unset even after a reboot.
@@ -149,3 +149,51 @@ and the [matching NixOS report](https://github.com/NixOS/nixpkgs/issues/519229).
 
 Runtime authentication and cloud sync must be tested on the target machine.
 Repository validation does not log into either account or modify cloud files.
+
+## Use Proton Pass as the SSH agent
+
+Skylab's Proton module also imports `src/modules/home/proton-ssh-agent.nix` on
+every host. A systemd user service runs the CLI's foreground SSH agent with the
+graphical session and stops it when that session ends. It uses the existing
+desktop Secret Service backend. If credentials are unavailable or the keyring
+is locked during startup, systemd retries failures after 30 seconds.
+
+The socket is `$XDG_RUNTIME_DIR/proton-pass-ssh-agent/agent.sock`, in a private
+runtime directory removed when the service stops. Home Manager publishes
+`SSH_AUTH_SOCK` to Zsh, the systemd user manager, and D-Bus applications. The
+existing session-variable helper also covers login Bash. Incoming SSH sessions
+with a forwarded agent retain their forwarded socket. GNOME's GCR agent service
+and socket are masked only for Skylab; GNOME Keyring remains enabled, and other
+users keep their existing agent setup.
+
+After pulling and running `just switch`, log out and back in. From the unlocked
+graphical session, sign into Pass if needed and restart the agent:
+
+```sh
+pass-cli login
+systemctl --user restart proton-pass-ssh-agent.service
+printf '%s\n' "$SSH_AUTH_SOCK"
+ssh-add -L
+```
+
+The last command should list the public keys stored as SSH-key items in Pass.
+Import an existing key or create a key through Pass first if none are stored;
+see the official [SSH-key commands](https://protonpass.github.io/pass-cli/commands/item/)
+and [SSH agent guide](https://protonpass.github.io/pass-cli/commands/ssh-agent/).
+The agent scans the accessible vaults and refreshes keys periodically using the
+pinned CLI's defaults. This configuration does not automatically upload keys
+added with `ssh-add`, enable agent forwarding, or change server authorized keys.
+It also leaves agenix's root-owned decryption identity unchanged.
+
+Use the service manager rather than `pass-cli ssh-agent daemon start` so there
+is a single managed process. For diagnostics:
+
+```sh
+systemctl --user status proton-pass-ssh-agent.service
+journalctl --user -b -u proton-pass-ssh-agent.service
+```
+
+Run `just test-proton-ssh-agent-nix` for isolated agent integration checks.
+Vault access and an actual SSH connection need a live test on the target
+machine. Repository tests inspect CLI options, unit generation, and socket
+selection without authenticating to Proton or reading any real private keys.

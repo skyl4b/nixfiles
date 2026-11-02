@@ -8,6 +8,8 @@ let
   ];
 in
 {
+  imports = [ ./proton-ssh-agent.nix ];
+
   home.packages = [ drive pkgs.proton-pass-cli ];
 
   # Use the desktop Secret Service; the kernel backend can deny session access
