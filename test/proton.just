@@ -26,7 +26,7 @@ test-proton-ssh-agent-nix:
                        XDG_CONFIG_HOME=str(home / '.config'), ZDOTDIR=str(home))
     environment.pop('__HM_SESS_VARS_SOURCED', None)
     environment.pop('__HM_ZSH_SESS_VARS_SOURCED', None)
-    expected = str(runtime / 'proton-pass-ssh-agent/agent.sock')
+    expected = str(runtime / 'proton-pass-agent')
     for previous, connection, wanted in [
         ('', '', expected),
         ('/tmp/another-local-agent', '', expected),
@@ -47,26 +47,24 @@ test-proton-ssh-agent-nix:
     for suffix in ('service', 'socket'):
         assert (units / f'gcr-ssh-agent.{suffix}').resolve() == Path('/dev/null')
     unit = configparser.ConfigParser(interpolation=None)
-    unit.read(units / 'proton-pass-ssh-agent.service')
-    assert unit['Install']['WantedBy'] == 'graphical-session.target'
-    assert unit['Unit']['PartOf'] == 'graphical-session.target'
-    assert unit['Service']['RuntimeDirectory'] == 'proton-pass-ssh-agent'
-    assert unit['Service']['RuntimeDirectoryMode'] == '0700'
-    assert unit['Service']['UMask'] == '0077'
+    unit.read(units / 'proton-pass-agent.service')
+    assert unit['Install']['WantedBy'] == 'default.target'
+    assert unit['Unit']['StartLimitIntervalSec'] == '0'
     assert unit['Service']['Environment'] == 'PROTON_PASS_LINUX_KEYRING=dbus'
     assert unit['Service']['Restart'] == 'on-failure'
-    assert 'ssh-agent start --socket-path %t/proton-pass-ssh-agent/agent.sock' in unit['Service']['ExecStart']
+    assert 'ssh-agent start --socket-path %t/proton-pass-agent' in unit['Service']['ExecStart']
     assert '--create-new-identities' not in unit['Service']['ExecStart']
     help_text = subprocess.run(['pass-cli', 'ssh-agent', 'start', '--help'], env=environment,
                                check=True, capture_output=True, text=True).stdout
     assert '--socket-path' in help_text
     environment['SYSTEMD_UNIT_PATH'] = f'{units}:{systemd_units}'
     subprocess.run(['systemd-analyze', '--user', '--generators=no', '--man=no', 'verify',
-                    str(units / 'proton-pass-ssh-agent.service'), str(units / 'set-SSH_AUTH_SOCK.service')],
+                    str(units / 'proton-pass-agent.service'), str(units / 'set-SSH_AUTH_SOCK.service')],
                    env=environment, check=True)
     masked = subprocess.run(['systemd-analyze', '--user', '--generators=no', '--man=no', 'verify',
                              str(units / 'gcr-ssh-agent.service')], env=environment, capture_output=True, text=True)
     assert masked.returncode != 0 and 'masked' in masked.stderr, masked
-    print('PASS: unit syntax, private runtime socket, GCR masks, graphical-session lifecycle, pinned CLI options, Bash/Zsh socket selection, and preserved SSH agent forwarding. No credentials accessed.')
+    assert not (units / 'proton-pass-ssh-agent.service').exists()
+    print('PASS: Home Manager agent unit, GCR masks, login startup/retries, pinned CLI options, Bash/Zsh socket selection, and preserved SSH agent forwarding. No credentials accessed.')
     PY
     printf 'Report: %s\n' "$test_dir"

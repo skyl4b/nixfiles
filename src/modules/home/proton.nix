@@ -10,7 +10,7 @@ in
 {
   imports = [ ./proton-ssh-agent.nix ];
 
-  home.packages = [ drive pkgs.proton-pass-cli ];
+  home.packages = [ drive ];
 
   # Use the desktop Secret Service; the kernel backend can deny session access
   # on NixOS and loses its encryption key at reboot.

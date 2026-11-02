@@ -153,13 +153,15 @@ Repository validation does not log into either account or modify cloud files.
 ## Use Proton Pass as the SSH agent
 
 Skylab's Proton module also imports `src/modules/home/proton-ssh-agent.nix` on
-every host. A systemd user service runs the CLI's foreground SSH agent with the
-graphical session and stops it when that session ends. It uses the existing
-desktop Secret Service backend. If credentials are unavailable or the keyring
-is locked during startup, systemd retries failures after 30 seconds.
+every host. It enables Home Manager's built-in
+`services.proton-pass-agent.enable`, which installs the CLI and provides the
+`proton-pass-agent.service` user service, socket selection, and environment hooks.
+The service starts with the user manager and retries failures every 10 seconds
+without hitting a startup rate limit, so it can recover after sign-in or keyring
+unlock. A small override selects the existing desktop Secret Service backend.
 
-The socket is `$XDG_RUNTIME_DIR/proton-pass-ssh-agent/agent.sock`, in a private
-runtime directory removed when the service stops. Home Manager publishes
+The socket is `$XDG_RUNTIME_DIR/proton-pass-agent`, inside the user's private
+runtime directory. Home Manager publishes
 `SSH_AUTH_SOCK` to Zsh, the systemd user manager, and D-Bus applications. The
 existing session-variable helper also covers login Bash. Incoming SSH sessions
 with a forwarded agent retain their forwarded socket. GNOME's GCR agent service
@@ -171,7 +173,7 @@ graphical session, sign into Pass if needed and restart the agent:
 
 ```sh
 pass-cli login
-systemctl --user restart proton-pass-ssh-agent.service
+systemctl --user restart proton-pass-agent.service
 printf '%s\n' "$SSH_AUTH_SOCK"
 ssh-add -L
 ```
@@ -189,8 +191,8 @@ Use the service manager rather than `pass-cli ssh-agent daemon start` so there
 is a single managed process. For diagnostics:
 
 ```sh
-systemctl --user status proton-pass-ssh-agent.service
-journalctl --user -b -u proton-pass-ssh-agent.service
+systemctl --user status proton-pass-agent.service
+journalctl --user -b -u proton-pass-agent.service
 ```
 
 Run `just test-proton-ssh-agent-nix` for isolated agent integration checks.
