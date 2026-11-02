@@ -8,9 +8,15 @@ let
   ];
 in
 {
-  imports = [ ./proton-ssh-agent.nix ];
-
   home.packages = [ drive ];
+  services.proton-pass-agent.enable = true;
+
+  # GCR's socket overwrites SSH_AUTH_SOCK; keep Proton selected for this user.
+  # Related report: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1079246
+  xdg.configFile."systemd/user/gcr-ssh-agent.service".source =
+    config.lib.file.mkOutOfStoreSymlink "/dev/null";
+  xdg.configFile."systemd/user/gcr-ssh-agent.socket".source =
+    config.lib.file.mkOutOfStoreSymlink "/dev/null";
 
   # Use the desktop Secret Service; the kernel backend can deny session access
   # on NixOS and loses its encryption key at reboot.

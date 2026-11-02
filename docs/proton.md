@@ -152,27 +152,29 @@ Repository validation does not log into either account or modify cloud files.
 
 ## Use Proton Pass as the SSH agent
 
-Skylab's Proton module also imports `src/modules/home/proton-ssh-agent.nix` on
-every host. It enables Home Manager's built-in
+Skylab's shared `src/modules/home/proton.nix` enables Home Manager's built-in
 `services.proton-pass-agent.enable`, which installs the CLI and provides the
 `proton-pass-agent.service` user service, socket selection, and environment hooks.
 The service starts with the user manager and retries failures every 10 seconds
 without hitting a startup rate limit, so it can recover after sign-in or keyring
 unlock. It inherits the desktop Secret Service backend from the existing
-systemd user environment setting in the parent Proton module.
+systemd user environment setting in the same module.
 
 The socket is `$XDG_RUNTIME_DIR/proton-pass-agent`, inside the user's private
 runtime directory. Home Manager publishes
-`SSH_AUTH_SOCK` to Zsh, the systemd user manager, and D-Bus applications. The
-existing session-variable helper also covers login Bash. Incoming SSH sessions
+`SSH_AUTH_SOCK` to Zsh, the systemd user manager, and D-Bus applications.
+Incoming SSH sessions
 with a forwarded agent retain their forwarded socket. GNOME's GCR agent service
 and socket are masked only for Skylab; GNOME Keyring remains enabled, and other
 users keep their existing agent setup.
 
-The Bash helper covers the unmanaged login shell; Home Manager already supplies
-Zsh's hooks. The GCR masks prevent its socket unit from replacing
+The GCR masks prevent its socket unit from replacing
 `SSH_AUTH_SOCK` in the user manager when started, as shown in the
 [upstream GCR unit](https://raw.githubusercontent.com/GNOME/gcr/4.4.0.1/gcr/gcr-ssh-agent.socket.in).
+The same behavior is discussed in the related
+[Debian issue #1079246](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1079246),
+also linked beside the masks. Bash terminals launched from the desktop inherit
+the socket; unmanaged Bash login sessions have no additional socket hook.
 
 After pulling and running `just switch`, log out and back in. From the unlocked
 graphical session, sign into Pass if needed and restart the agent:

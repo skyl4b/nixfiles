@@ -9,13 +9,12 @@ test-proton-ssh-agent-nix:
     export NIXFILES_STORE="$NIXFILES_TEST_ROOT"
     eval_args=(--impure --file src/tests/proton-ssh-agent.nix --argstr testHome "$target")
     files=$(just _nix build "${eval_args[@]}" --no-link --print-out-paths files)
-    helper=$(just _nix build "${eval_args[@]}" --no-link --print-out-paths sessionVariables)
     units=$(just _nix eval "${eval_args[@]}" --raw systemdUnits)
-    just _nix shell "${eval_args[@]}" runtime -c python3 - "$target" "$files" "$helper" "$units" <<'PY'
+    just _nix shell "${eval_args[@]}" runtime -c python3 - "$target" "$files" "$units" <<'PY'
     import configparser, os, shutil, subprocess, sys
     from pathlib import Path
 
-    home, files, helper, systemd_units = map(Path, sys.argv[1:])
+    home, files, systemd_units = map(Path, sys.argv[1:])
     shutil.copytree(files, home, dirs_exist_ok=True, symlinks=True)
     for directory in [home, *home.rglob('*')]:
         if directory.is_dir() and not directory.is_symlink():
@@ -35,7 +34,6 @@ test-proton-ssh-agent-nix:
     ]:
         env = dict(environment, SSH_AUTH_SOCK=previous, SSH_CONNECTION=connection)
         commands = [
-            ['bash', '-c', '. "$1/etc/profile.d/hm-session-vars.sh"; printf "%s" "$SSH_AUTH_SOCK"', 'test', str(helper)],
             ['zsh', '-c', 'printf "%s" "$SSH_AUTH_SOCK"'],
             ['zsh', '-l', '-c', 'printf "%s" "$SSH_AUTH_SOCK"'],
         ]
@@ -66,6 +64,6 @@ test-proton-ssh-agent-nix:
                              str(units / 'gcr-ssh-agent.service')], env=environment, capture_output=True, text=True)
     assert masked.returncode != 0 and 'masked' in masked.stderr, masked
     assert not (units / 'proton-pass-ssh-agent.service').exists()
-    print('PASS: Home Manager agent unit, GCR masks, login startup/retries, pinned CLI options, Bash/Zsh socket selection, and preserved SSH agent forwarding. No credentials accessed.')
+    print('PASS: Home Manager agent unit, GCR masks, login startup/retries, pinned CLI options, Zsh socket selection, and preserved SSH agent forwarding. No credentials accessed.')
     PY
     printf 'Report: %s\n' "$test_dir"
