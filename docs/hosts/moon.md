@@ -19,9 +19,9 @@
 The user supplied a read-only inventory from the previous Aurora installation.
 It identifies the CPU, storage, drivers, and firmware state above. On 2026-10-29,
 the user reported a successful NixOS installation with camera, pen, rotation,
-and folio keyboard working. The hardware module generated on Moon has not yet
-been synchronized to this development checkout; preserve and commit it from the
-device before future rebuilds. No reference host's hardware file is copied.
+and folio keyboard working. The hardware module generated on Moon is now
+included and imported directly. It supplies the detected boot/storage drivers
+and Intel microcode default; Disko owns the filesystem declarations.
 
 Use the [installation walkthrough](../install.md) for the live-USB procedure,
 key provisioning, hardware scan, and persistent checkout setup.
@@ -339,7 +339,6 @@ on-device testing demonstrates a specific missing feature or regression.
 
 ## Follow-up after installation
 
-- Commit and push the actual `hardware-configuration.nix` generated on Moon.
 - Complete any checks not covered by the user's working-camera/pen/rotation/folio
   report, especially suspend/resume battery drain, thermal management, and
   Docker/Podman/Waydroid coexistence.

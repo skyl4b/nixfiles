@@ -198,8 +198,10 @@ entries so Disko remains their owner, parses the generated Nix, and registers
 to overwrite an existing hardware module. Review an existing module for the
 actual device instead of regenerating it blindly.
 
-Each host must import its hardware module; Moon imports its generated module
-automatically when present. New host definitions should follow that convention.
+Each host must import its hardware module; existing hosts, including Moon,
+import the committed file directly. A new host can use a conditional import
+during initial preparation, then switch to a direct import once the file is
+generated.
 An alternative mounted root can be supplied as the second recipe argument.
 
 ## 7. Provision credentials when the host uses agenix

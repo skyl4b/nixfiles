@@ -12,8 +12,8 @@ the drive's observed stable device identifier, using `nixos` and `efi`
 labels for the new layout. Recheck the disk from the installer before applying
 that layout. The supplied inventory confirms UEFI and Secure Boot disabled.
 The user reported a successful installation on 2026-10-29, including working
-camera, pen, rotation, and folio keyboard. The generated hardware module still
-needs to be committed from Moon. The [device installation guide](install.md)
+camera, pen, rotation, and folio keyboard. Moon's generated hardware module is
+now included and imported directly. The [device installation guide](install.md)
 covers local TTY setup, optional SSH, confirmed Disko execution, and copying the
 checkout into the installed user's home.
 

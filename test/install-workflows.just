@@ -14,7 +14,6 @@ test-install-workflows:
         (host / 'default.nix').write_text('{ ... }: {}\n')
         marker = fixture / 'NIXOS'
         # Only the disposable copy sees a simulated NixOS marker. Production has no bypass.
-        source = Path(os.environ['NIXFILES_CHECKOUT']) / 'justfile'
         subprocess.run(['just', '_copy-justfiles', str(checkout)], check=True)
         for commands in (checkout / 'src/scripts').glob('*.just'):
             commands.write_text(commands.read_text().replace('/etc/NIXOS', shlex.quote(str(marker))))
@@ -156,25 +155,5 @@ test-install-workflows:
         (root / 'symlink-parent').symlink_to(escape)
         run('install-checkout', 'probe', 'probe', str(root), '/symlink-parent/checkout', success=False)
         assert not list(escape.iterdir())
-        module = fixture / 'optional hardware'
-        module.mkdir()
-        (module / 'default.nix').write_text((source.parent / 'src/hosts/moon/default.nix').read_text())
-        expression = '''{ directory }: let host = import (builtins.toPath (directory + "/default.nix")) {
-          lib.optional = condition: value: if condition then [ value ] else [];
-          inputs.agenix.nixosModules.default = /dev/null;
-          inputs.disko.nixosModules.disko = /dev/null;
-          config = {}; pkgs = {};
-        }; in map toString host.imports'''
-
-        def imports():
-            result = subprocess.run(['nix-instantiate', '--store', 'dummy://', '--eval', '--strict', '--json', '--expr', expression,
-                                     '--argstr', 'directory', str(module)], env=environment,
-                                    capture_output=True, text=True)
-            assert result.returncode == 0, result.stdout + result.stderr
-            return json.loads(result.stdout)
-
-        without_hardware = imports()
-        (module / 'hardware-configuration.nix').write_text('{ ... }: {}\n')
-        assert imports() == without_hardware + [str(module / 'hardware-configuration.nix')]
-    print('Installer workflows passed: guards, Disko confirmation/cancellation, hardware generation/import, and checkout installation with Git history, local edits, cache exclusion, ownership, and anchor protection. No real disks or privileged tools used.')
+    print('Installer workflows passed: guards, Disko confirmation/cancellation, hardware generation, and checkout installation with Git history, local edits, cache exclusion, ownership, and anchor protection. No real disks or privileged tools used.')
     PY
