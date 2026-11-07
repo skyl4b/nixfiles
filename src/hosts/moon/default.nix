@@ -61,8 +61,8 @@
   ];
 
   environment.systemPackages = with pkgs; [
+    koreader
     libcamera
-    readest
     rnote
     xournalpp
     zapzap

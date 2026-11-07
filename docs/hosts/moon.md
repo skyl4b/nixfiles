@@ -281,7 +281,7 @@ The default remains the broad application set. The
 [minimal and complete user profiles](../modernization/user-profiles.md) now
 allow that choice per host; Moon now uses complete through the shared user.
 Selecting minimal would change home packages, not system virtualization services.
-ChatGPT is installed system-wide on all hosts. Moon additionally includes Readest
+ChatGPT is installed system-wide on all hosts. Moon additionally includes KOReader
 for ebooks, Rnote, Xournal++, and ZapZap for WhatsApp; see the
 [application setup](../maintenance.md#desktop-applications).
 The following are proposals for Moon, not changes to either reference host or
