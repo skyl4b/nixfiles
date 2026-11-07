@@ -143,6 +143,14 @@ packages; desktop and system services are configured separately. See
 
 ### Desktop applications
 
+Flatpak is enabled on every host, with Flathub preconfigured system-wide through
+`/etc/flatpak/remotes.d/flathub.flatpakrepo`. GNOME Software can browse and install
+its applications. The shared module pins Flathub's official repository descriptor,
+including its signing key, using Flatpak's [native default remote configuration](https://docs.flatpak.org/en/latest/flatpak-command-reference.html#flatpakrepo).
+After rebuilding, reopen GNOME Software; `flatpak remotes --system` lists the
+available system repositories. Flatpak applications are managed separately from
+Nix packages; use GNOME Software or `just update-flatpak` to update them.
+
 The complete user profile supplies Anki (`anki`), PDF Arranger (`pdfarranger`),
 and GitButler's desktop app (`gitbutler-tauri`) and CLI (`but`). Skylab uses this
 profile on every host. Nix installs the CLI directly; the desktop app's

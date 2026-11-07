@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   imports = [ ./nix.nix ./caches/proton-drive.nix ];
@@ -84,6 +84,14 @@
     input-remapper = {
       enable = lib.mkDefault true;
       enableUdevRules = lib.mkDefault true;
+    };
+  };
+
+  # Flatpak's native default remote configuration, shared by all accounts.
+  environment.etc."flatpak/remotes.d/flathub.flatpakrepo" = lib.mkIf config.services.flatpak.enable {
+    source = pkgs.fetchurl {
+      url = "https://dl.flathub.org/repo/flathub.flatpakrepo";
+      hash = "sha256-M3HdJQ5h2eFjNjAHP+/aFTzUQm9y9K+gwzc64uj+oDo=";
     };
   };
 
