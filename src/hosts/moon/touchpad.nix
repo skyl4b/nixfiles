@@ -51,6 +51,18 @@ let
   '';
 in
 {
+  # USB touchpads need this layout hint to expose disable-while-typing.
+  # Pair with the Type Cover keyboard through their shared 045e:09b5 ID.
+  # https://wayland.freedesktop.org/libinput/doc/latest/device-quirks.html
+  environment.etc."libinput/local-overrides.quirks".text = ''
+    [Surface Go Type Cover touchpad below keyboard]
+    MatchUdevType=touchpad
+    MatchBus=usb
+    MatchVendor=0x045E
+    MatchProduct=0x09B5
+    AttrTPKComboLayout=below
+  '';
+
   environment.systemPackages = [
     (pkgs.writeShellScriptBin "my-reset-touchpad" ''
       exec ${config.systemd.package}/bin/systemctl start surface-touchpad-reset.service

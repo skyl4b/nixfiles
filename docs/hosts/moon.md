@@ -64,6 +64,32 @@ Test navigation, the keyboard, portrait/landscape transitions, and interaction
 with O-Tiling and Dash to Dock on Moon. Package compatibility and configuration
 evaluation do not establish runtime behavior on the actual touchscreen.
 
+### Disable touchpad while typing
+
+Moon's Type Cover (`045e:09b5`) reported `Disable-w-typing: n/a` even with GNOME's
+`disable-while-typing` setting enabled. In the pinned libinput 1.31.3, an external
+USB touchpad only exposes this feature when it has the
+[`AttrTPKComboLayout=below` layout hint](https://wayland.freedesktop.org/libinput/doc/latest/device-quirks.html).
+Moon's touchpad module supplies that hint through
+`/etc/libinput/local-overrides.quirks`, matching only this cover's USB ID and
+touchpad device type. Libinput then pairs it with keyboards sharing its vendor
+and product IDs. GNOME's existing preference controls whether it is enabled.
+
+After switching, log out and back in so GNOME reloads libinput's quirks, or reboot.
+Check the **Microsoft Surface Keyboard Touchpad** entry with:
+
+```sh
+gsettings get org.gnome.desktop.peripherals.touchpad disable-while-typing
+sudo nix shell --inputs-from . nixpkgs#libinput --command libinput list-devices
+```
+
+`Disable-w-typing` should report `enabled` instead of `n/a`; verify that typing
+normal letters suppresses new touchpad motion and taps. Physical button clicks
+remain available. This still needs testing on Moon. If suppression works with
+Input Remapper stopped but fails with it running, capture the additional virtual
+keyboard entries before extending the quirk; this rule only covers the physical
+cover.
+
 ### Type Cover touchpad recovery
 
 Moon includes a workaround for the reported Type Cover touchpad problems in
