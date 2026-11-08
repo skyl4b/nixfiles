@@ -85,7 +85,8 @@ sudo nix shell --inputs-from . nixpkgs#libinput --command libinput list-devices
 
 `Disable-w-typing` should report `enabled` instead of `n/a`; verify that typing
 normal letters suppresses new touchpad motion and taps. Physical button clicks
-remain available. This still needs testing on Moon. If suppression works with
+remain available. The user confirmed on 2026-11-08 that this quirk fixed typing
+suppression on Moon. If suppression works with
 Input Remapper stopped but fails with it running, capture the additional virtual
 keyboard entries before extending the quirk; this rule only covers the physical
 cover.
